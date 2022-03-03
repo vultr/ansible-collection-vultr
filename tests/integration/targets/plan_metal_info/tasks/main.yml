@@ -1,0 +1,23 @@
+# Copyright (c) 2018, Yanis Guenane <yanis+ansible@guenane.org>
+# Copyright (c) 2020, Simon Bärlocher <s.baerlocher@sbaerlocher.ch>
+# Copyright (c) 2021, René Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: test gather vultr plan bare metal info in check mode
+  vultr.cloud.plan_metal_info:
+  check_mode: yes
+  register: result
+
+- name: verify test gather vultr plan bare metal info in check mode
+  assert:
+    that:
+      - result.vultr_plan_metal_info|selectattr('id','equalto','vbm-4c-32gb') | list | count == 1
+
+- name: test gather vultr plan baremetal info
+  vultr.cloud.plan_metal_info:
+  register: result
+
+- name: verify test gather vultr plan bare metal info
+  assert:
+    that:
+      - result.vultr_plan_metal_info|selectattr('id','equalto','vbm-4c-32gb') | list | count == 1

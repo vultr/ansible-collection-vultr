@@ -1,0 +1,7 @@
+---
+- block:
+    - import_tasks: tests.yml
+  always:
+    - import_role:
+        name: cleanup
+        tasks_from: cleanup_dns_domain

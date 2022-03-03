@@ -1,0 +1,143 @@
+# Copyright (c) 2021, René Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: setup
+  vultr.cloud.dns_domain:
+    name: "{{ vultr_dns_domain_name }}"
+    state: absent
+  register: result
+- name: verify setup
+  assert:
+    that:
+    - result is success
+
+- name: test fail if missing name
+  vultr.cloud.dns_domain:
+  register: result
+  ignore_errors: yes
+- name: verify test fail if missing name
+  assert:
+    that:
+    - result is failed
+    - 'result.msg == "missing required arguments: domain"'
+
+- name: test fail if missing params for state=present
+  vultr.cloud.dns_domain:
+    name: "{{ vultr_dns_domain_name }}"
+  register: result
+  ignore_errors: yes
+- name: verify fail if missing params for state=present
+  assert:
+    that:
+    - result is failed
+    - 'result.msg == "state is present but all of the following are missing: ip"'
+
+- name: test create dns domain in check mode
+  vultr.cloud.dns_domain:
+    name: "{{ vultr_dns_domain_name }}"
+    dns_sec: enabled
+    server_ip: 10.10.10.10
+  register: result
+  check_mode: yes
+- name: verify test create dns domain in check mode
+  assert:
+    that:
+    - result is changed
+
+- name: test create dns domain
+  vultr.cloud.dns_domain:
+    name: "{{ vultr_dns_domain_name }}"
+    dns_sec: enabled
+    server_ip: 10.10.10.10
+  register: result
+- name: verify test create dns domain
+  assert:
+    that:
+    - result is changed
+    - result.vultr_dns_domain.domain == vultr_dns_domain_name
+    - result.vultr_dns_domain.dns_sec == 'enabled'
+
+- name: test create dns domain idempotence
+  vultr.cloud.dns_domain:
+    name: "{{ vultr_dns_domain_name }}"
+    dns_sec: enabled
+    server_ip: 10.10.10.10
+  register: result
+- name: verify test create dns domain idempotence
+  assert:
+    that:
+    - result is not changed
+    - result.vultr_dns_domain.domain == vultr_dns_domain_name
+    - result.vultr_dns_domain.dns_sec == 'enabled'
+
+- name: test update dns domain in check mode
+  vultr.cloud.dns_domain:
+    name: "{{ vultr_dns_domain_name }}"
+    dns_sec: disabled
+    server_ip: 10.10.10.10
+  register: result
+  check_mode: yes
+- name: verify test create dns domain in check mode
+  assert:
+    that:
+    - result is changed
+    - result.vultr_dns_domain.dns_sec == 'enabled'
+
+- name: test update dns domain
+  vultr.cloud.dns_domain:
+    name: "{{ vultr_dns_domain_name }}"
+    dns_sec: disabled
+    server_ip: 10.10.10.10
+  register: result
+- name: verify test create dns domain
+  assert:
+    that:
+    - result is changed
+    - result.vultr_dns_domain.domain == vultr_dns_domain_name
+    - result.vultr_dns_domain.dns_sec == 'disabled'
+
+- name: test update dns domain idempotence
+  vultr.cloud.dns_domain:
+    name: "{{ vultr_dns_domain_name }}"
+    dns_sec: disabled
+    server_ip: 10.10.10.10
+  register: result
+- name: verify test create dns domain idempotence
+  assert:
+    that:
+    - result is not changed
+    - result.vultr_dns_domain.domain == vultr_dns_domain_name
+    - result.vultr_dns_domain.dns_sec == 'disabled'
+
+- name: test absent dns domain in check mode
+  vultr.cloud.dns_domain:
+    name: "{{ vultr_dns_domain_name }}"
+    state: absent
+  register: result
+  check_mode: yes
+- name: verify test absent dns domain in check mode
+  assert:
+    that:
+    - result is changed
+    - result.vultr_dns_domain.domain == vultr_dns_domain_name
+
+- name: test absent dns domain
+  vultr.cloud.dns_domain:
+    name: "{{ vultr_dns_domain_name }}"
+    state: absent
+  register: result
+- name: verify test absent dns domain
+  assert:
+    that:
+    - result is changed
+    - result.vultr_dns_domain.domain == vultr_dns_domain_name
+
+- name: test absent dns domain idempotence
+  vultr.cloud.dns_domain:
+    name: "{{ vultr_dns_domain_name }}"
+    state: absent
+  register: result
+- name: verify test absent dns domain idempotence
+  assert:
+    that:
+    - result is not changed

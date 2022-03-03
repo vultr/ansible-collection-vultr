@@ -1,0 +1,23 @@
+---
+requires_ansible: '>=2.9.10'
+action_groups:
+  vultr:
+    - account_info
+    - dns_domain
+    - dns_domain_info
+    - dns_record
+    - firewall_group
+    - firewall_group_info
+    - firewall_rule
+    - network
+    - network_info
+    - os_info
+    - plan_metal_info
+    - plan_info
+    - region_info
+    - ssh_key
+    - ssh_key_info
+    - startup_script
+    - startup_script_info
+    - user
+    - user_info

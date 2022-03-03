@@ -1,0 +1,117 @@
+# Copyright (c) 2018, Yanis Guenane <yanis+ansible@guenane.org>
+# Copyright (c) 2021, René Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: setup
+  network:
+    description: "{{ vultr_network_description }}"
+    state: absent
+  register: result
+- name: verify setup
+  assert:
+    that:
+    - result is success
+
+- name: test fail if missing description
+  network:
+  register: result
+  ignore_errors: yes
+- name: verify test fail if missing description
+  assert:
+    that:
+    - result is failed
+    - 'result.msg == "missing required arguments: description"'
+
+- name: test fail if missing params for state=present
+  network:
+    description: "{{ vultr_network_description }}"
+  register: result
+  ignore_errors: true
+- name: verify fail if missing params for state=present
+  assert:
+    that:
+    - result is failed
+    - 'result.msg == "state is present but all of the following are missing: v4_subnet, region"'
+
+- name: test create network in check mode
+  network:
+    description: "{{ vultr_network_description }}"
+    v4_subnet: "{{ vultr_network_v4_subnet }}"
+    v4_subnet_mask: "{{ vultr_network_v4_subnet_mask }}"
+    region: "{{ vultr_network_region }}"
+  register: result
+  check_mode: true
+- name: verify test create server in check mode
+  assert:
+    that:
+    - result is changed
+
+- name: test create network
+  network:
+    description: "{{ vultr_network_description }}"
+    v4_subnet: "{{ vultr_network_v4_subnet }}"
+    v4_subnet_mask: "{{ vultr_network_v4_subnet_mask }}"
+    region: "{{ vultr_network_region }}"
+  register: result
+
+- name: verify test create network
+  assert:
+    that:
+    - result is changed
+    - result.vultr_network.description == vultr_network_description
+    - result.vultr_network.region == vultr_network_region
+    - result.vultr_network.v4_subnet == vultr_network_v4_subnet
+    - result.vultr_network.v4_subnet_mask == vultr_network_v4_subnet_mask
+
+- name: test create network idempotence
+  network:
+    description: "{{ vultr_network_description }}"
+    v4_subnet: "{{ vultr_network_v4_subnet }}"
+    v4_subnet_mask: "{{ vultr_network_v4_subnet_mask }}"
+    region: "{{ vultr_network_region }}"
+  register: result
+
+- name: verify test network idempotence
+  assert:
+    that:
+    - result is not changed
+    - result.vultr_network.description == vultr_network_description
+    - result.vultr_network.region == vultr_network_region
+    - result.vultr_network.v4_subnet == vultr_network_v4_subnet
+    - result.vultr_network.v4_subnet_mask == vultr_network_v4_subnet_mask
+
+- name: test destroy network in check mode
+  network:
+    description: "{{ vultr_network_description }}"
+    state: absent
+  register: result
+  check_mode: true
+
+- name: verify test destroy network in check mode
+  assert:
+    that:
+    - result is changed
+    - result.vultr_network.description == vultr_network_description
+
+- name: test destroy network volume
+  network:
+    description: "{{ vultr_network_description }}"
+    state: absent
+  register: result
+
+- name: verify test destroy an existing network
+  assert:
+    that:
+    - result is changed
+    - result.vultr_network.description == vultr_network_description
+
+- name: test destroy an existing network idempotence
+  network:
+    description: "{{ vultr_network_description }}"
+    state: absent
+  register: result
+
+- name: verify test destroy an existing network idempotence
+  assert:
+    that:
+    - result is not changed

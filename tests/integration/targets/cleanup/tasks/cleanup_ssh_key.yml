@@ -1,0 +1,20 @@
+---
+- name: List ssh-keys
+  uri:
+    url: "{{ vultr_api_url }}/ssh-keys"
+    headers:
+      Authorization: Bearer {{ vultr_api_key }}
+    status_code: 200
+  register: res
+
+- name: Remove all ssh-keys created by this test run
+  uri:
+    url: "{{ vultr_api_url }}/ssh-keys/{{ item.id }}"
+    method: "DELETE"
+    headers:
+      Authorization: Bearer {{ vultr_api_key }}
+    status_code: 204
+  when: vultr_resource_prefix in item.name
+  with_items: "{{ res.json.ssh_keys }}"
+  loop_control:
+    label: "{{ item.name }}"

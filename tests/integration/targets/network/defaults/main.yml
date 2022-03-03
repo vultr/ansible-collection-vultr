@@ -1,0 +1,5 @@
+---
+vultr_network_description: "{{ vultr_resource_prefix }}_network"
+vultr_network_v4_subnet: 192.168.42.0
+vultr_network_v4_subnet_mask: 24
+vultr_network_region: ewr

@@ -1,0 +1,20 @@
+---
+- name: List dns domains
+  uri:
+    url: "{{ vultr_api_url }}/domains"
+    headers:
+      Authorization: Bearer {{ vultr_api_key }}
+    status_code: 200
+  register: res
+
+- name: Remove all dns domains created by this test run
+  uri:
+    url: "{{ vultr_api_url }}/domains/{{ item.domain }}"
+    method: "DELETE"
+    headers:
+      Authorization: Bearer {{ vultr_api_key }}
+    status_code: 204
+  when: vultr_resource_prefix in item.domain
+  with_items: "{{ res.json.domains }}"
+  loop_control:
+    label: "{{ item.domain }}"

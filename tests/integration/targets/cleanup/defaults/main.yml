@@ -1,0 +1,3 @@
+---
+vultr_api_url: https://api.vultr.com/v2
+vultr_api_key: "{{ lookup('env', 'VULTR_API_KEY') }}"

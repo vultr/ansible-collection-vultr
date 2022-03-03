@@ -1,0 +1,20 @@
+---
+- name: List users
+  uri:
+    url: "{{ vultr_api_url }}/users"
+    headers:
+      Authorization: Bearer {{ vultr_api_key }}
+    status_code: 200
+  register: res
+
+- name: Remove all users created by this test run
+  uri:
+    url: "{{ vultr_api_url }}/users/{{ item.id }}"
+    method: "DELETE"
+    headers:
+      Authorization: Bearer {{ vultr_api_key }}
+    status_code: 204
+  when: vultr_resource_prefix in item.name
+  with_items: "{{ res.json.users }}"
+  loop_control:
+    label: "{{ item.name }}"
