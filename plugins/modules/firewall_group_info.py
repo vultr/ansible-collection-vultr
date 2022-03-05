@@ -60,7 +60,7 @@ vultr_api:
       type: str
       sample: "https://api.vultr.com/v2"
 vultr_firewall_group_info:
-  description: Response from Vultr API
+  description: Response from Vultr API as list
   returned: success
   type: complex
   contains:
