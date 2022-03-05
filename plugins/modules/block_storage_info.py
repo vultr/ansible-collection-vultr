@@ -1,7 +1,7 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 #
-# Copyright (c) 2018, Yanis Guenane <yanis+ansible@guenane.org>
-# Copyright (c) 2021, René Moser <mail@renemoser.net>
+# Copyright (c) 2022, René Moser <mail@renemoser.net>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -10,26 +10,26 @@ __metaclass__ = type
 
 DOCUMENTATION = '''
 ---
-module: network_info
-short_description: Gather information about the Vultr networks available.
-description:
-  - Gather information about networks available in Vultr.
+module: block_storage_info
+short_description: Get information about the Vultr block storage available.
 version_added: "1.0.0"
+description:
+  - Get infos about block storages in Vultr.
 author:
-  - "Yanis Guenane (@Spredzy)"
   - "René Moser (@resmo)"
+  - "Yanis Guenane (@Spredzy)"
 extends_documentation_fragment:
 - vultr.cloud.vultr_v2
 '''
 
 EXAMPLES = '''
-- name: Gather Vultr networks information
-  vultr.cloud.network_info:
+- name: Get Vultr block_storage infos
+  vultr.cloud.block_storage_info:
   register: result
 
-- name: Print the gathered information
+- name: Print the infos
   debug:
-    var: result.vultr_network_info
+    var: result.vultr_block_storage_info
 '''
 
 RETURN = '''
@@ -59,41 +59,56 @@ vultr_api:
       returned: success
       type: str
       sample: "https://api.vultr.com/v2"
-vultr_network_info:
+vultr_block_storage_info:
   description: Response from Vultr API as list
   returned: success
   type: complex
   contains:
-    id:
-      description: ID of the network
+    attached_to_instance:
+      description: The ID of the server instance the volume is attached to
       returned: success
       type: str
-      sample: "cb676a46-66fd-4dfb-b839-443f2e6c0b60"
-    description:
-      description: Description (name) of the network
+      sample: cb676a46-66fd-4dfb-b839-443f2e6c0b60
+    cost:
+      description: Cost per month for the volume.
       returned: success
-      type: str
-      sample: "mynetwork"
+      type: float
+      sample: 1.00
     date_created:
-      description: Date when the network was created
+      description: Date when the volume was created
       returned: success
       type: str
       sample: "2020-10-10T01:56:20+00:00"
+    id:
+      description: ID of the block storage volume
+      returned: success
+      type: str
+      sample: cb676a46-66fd-4dfb-b839-443f2e6c0b60
+    label:
+      description: Label of the volume
+      returned: success
+      type: str
+      sample: my volume
     region:
-      description: Region the network was deployed into
+      description: Region the volume was deployed into
       returned: success
       type: str
-      sample: "Amsterdam"
-    v4_subnet:
-      description: IPv4 Network address
-      returned: success
-      type: str
-      sample: "192.168.42.0"
-    v4_subnet_mask:
-      description: Ipv4 Network mask
+      sample: ews
+    size_gb:
+      description: Information about the volume size in GB
       returned: success
       type: int
-      sample: 24
+      sample: 50
+    status:
+      description: Status about the deployment of the volume
+      returned: success
+      type: str
+      sample: active
+    mount_id:
+      description: Mount ID of the volume
+      returned: success
+      type: str
+      sample: ewr-2f5d7a314fe44f
 '''
 
 from ansible.module_utils.basic import AnsibleModule
@@ -113,9 +128,9 @@ def main():
 
     vultr = AnsibleVultr(
         module=module,
-        namespace="vultr_network_info",
-        resource_path="/private-networks",
-        ressource_result_key_singular="network",
+        namespace="vultr_block_storage_info",
+        resource_path="/blocks",
+        ressource_result_key_singular="block",
     )
 
     vultr.get_result(vultr.query_list())

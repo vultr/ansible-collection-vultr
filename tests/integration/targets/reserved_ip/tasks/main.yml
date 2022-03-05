@@ -7,4 +7,4 @@
         tasks_from: cleanup_reserved_ip
     - import_role:
         name: cleanup
-        tasks_from: cleanup_server
+        tasks_from: cleanup_instance
