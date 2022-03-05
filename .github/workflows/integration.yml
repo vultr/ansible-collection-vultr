@@ -2,13 +2,13 @@
 name: Collection integration
 
 on:
-  push:
-  schedule:
-  - cron: 31 6 * * *  # Run weekly
+  pull_request:
+    types: [ labeled ]
 
 jobs:
   integration-test:
     name: Integration test using Python ${{ matrix.python-version }}
+    if: ${{ github.event.label.name == 'automation' }}
     runs-on: ubuntu-latest
     defaults:
       run:
