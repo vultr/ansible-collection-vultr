@@ -1,0 +1,138 @@
+# Copyright (c) 2018, Yanis Guenane <yanis+ansible@guenane.org>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: setup ensure volume absent
+  vultr.cloud.block_storage:
+    label: "{{ vultr_block_storage_name }}"
+    state: absent
+
+- name: test create block storage volume in check mode
+  vultr.cloud.block_storage:
+    name: "{{ vultr_block_storage_name }}"
+    size_gb: "{{ vultr_block_storage_size }}"
+    region: "{{ vultr_block_storage_region }}"
+  register: result
+  check_mode: true
+- name: verify test create block storage volume in check mode
+  assert:
+    that:
+    - result is changed
+
+- name: test create block storage volume
+  vultr.cloud.block_storage:
+    label: "{{ vultr_block_storage_name }}"
+    size_gb: "{{ vultr_block_storage_size }}"
+    region: "{{ vultr_block_storage_region }}"
+  register: result
+- name: verify test create block storage volume
+  assert:
+    that:
+    - result is changed
+    - result.vultr_block_storage.label == vultr_block_storage_name
+    - result.vultr_block_storage.region == vultr_block_storage_region
+    - result.vultr_block_storage.size_gb == 10
+
+- name: test create block storage volume idempotence
+  vultr.cloud.block_storage:
+    label: "{{ vultr_block_storage_name }}"
+    size_gb: "{{ vultr_block_storage_size }}"
+    region: "{{ vultr_block_storage_region }}"
+  register: result
+- name: verify test create block storage volume idempotence
+  assert:
+    that:
+    - result is not changed
+    - result.vultr_block_storage.label == vultr_block_storage_name
+    - result.vultr_block_storage.region == vultr_block_storage_region
+    - result.vultr_block_storage.size_gb == 10
+
+# volumes size can only be modified every 60s
+- name: wait about 60s before resizing volume
+  wait_for:
+    timeout: 61
+
+- name: test resize block storage volume in check mode
+  vultr.cloud.block_storage:
+    label: "{{ vultr_block_storage_name }}"
+    size_gb: "{{ vultr_block_storage_size_2 }}"
+    region: "{{ vultr_block_storage_region }}"
+  register: result
+  check_mode: true
+- name: verify test resize block storage volume in check mode
+  assert:
+    that:
+    - result is changed
+    - result.vultr_block_storage.size_gb == vultr_block_storage_size
+
+- name: test resize block storage volume
+  vultr.cloud.block_storage:
+    label: "{{ vultr_block_storage_name }}"
+    size_gb: "{{ vultr_block_storage_size_2 }}"
+    region: "{{ vultr_block_storage_region }}"
+  register: result
+- name: verify test resize block storage volume
+  assert:
+    that:
+    - result is changed
+    - result.vultr_block_storage.size_gb == vultr_block_storage_size_2
+
+- name: test resize block storage volume idempotency
+  vultr.cloud.block_storage:
+    label: "{{ vultr_block_storage_name }}"
+    size_gb: "{{ vultr_block_storage_size_2 }}"
+    region: "{{ vultr_block_storage_region }}"
+  register: result
+- name: verify test resize block storage volume idempotency
+  assert:
+    that:
+    - result is not changed
+    - result.vultr_block_storage.size_gb == vultr_block_storage_size_2
+
+- name: wait about 60s before resizing volume
+  wait_for:
+    timeout: 61
+
+- name: test shrinking warning block storage volume
+  vultr.cloud.block_storage:
+    label: "{{ vultr_block_storage_name }}"
+    size_gb: "{{ vultr_block_storage_size }}"
+    region: "{{ vultr_block_storage_region }}"
+  register: result
+- name: verify test shrinking warning block storage volume
+  assert:
+    that:
+    - result is not changed
+    - result.vultr_block_storage.size_gb == vultr_block_storage_size_2
+
+- name: test destroy block storage volume in check mode
+  vultr.cloud.block_storage:
+    label: "{{ vultr_block_storage_name }}"
+    state: absent
+  check_mode: true
+  register: result
+- name: verify test destroy block storage volume in check mode
+  assert:
+    that:
+    - result is changed
+    - result.vultr_block_storage.label == vultr_block_storage_name
+
+- name: test destroy block storage volume
+  vultr.cloud.block_storage:
+    label: "{{ vultr_block_storage_name }}"
+    state: absent
+  register: result
+- name: verify test destroy block storage volume
+  assert:
+    that:
+    - result is changed
+    - result.vultr_block_storage.label == vultr_block_storage_name
+
+- name: test destroy block storage volume idempotence
+  vultr.cloud.block_storage:
+    name: "{{ vultr_block_storage_name }}"
+    state: absent
+  register: result
+- name: verify test destroy block storage volume idempotence
+  assert:
+    that:
+    - result is not changed

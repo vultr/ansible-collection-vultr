@@ -150,7 +150,7 @@ class AnsibleVultr:
             time.sleep(delay)
 
         # Success with content
-        if info['status'] in (200, 201):
+        if info['status'] in (200, 201, 202):
             return self.module.from_json(to_text(resp.read(), errors='surrogate_or_strict'))
 
         # Success without content
@@ -213,13 +213,16 @@ class AnsibleVultr:
         resources = self.api_query(path=path)
         return resources[result_key] if resources else []
 
-    def present(self):
+    def create_or_update(self):
         resource = self.query()
         if not resource:
             resource = self.create()
         else:
             resource = self.update(resource)
-        self.get_result(resource)
+        return resource
+
+    def present(self):
+        self.get_result(self.create_or_update())
 
     def create(self):
         data = dict()

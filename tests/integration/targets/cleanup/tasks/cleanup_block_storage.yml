@@ -1,0 +1,20 @@
+---
+- name: List blocks
+  uri:
+    url: "{{ vultr_api_url }}/blocks"
+    headers:
+      Authorization: Bearer {{ vultr_api_key }}
+    status_code: 200
+  register: res
+
+- name: Remove all blocks created by this test run
+  uri:
+    url: "{{ vultr_api_url }}/blocks/{{ item.id }}"
+    method: "DELETE"
+    headers:
+      Authorization: Bearer {{ vultr_api_key }}
+    status_code: 204
+  when: vultr_resource_prefix in item.label
+  with_items: "{{ res.json.blocks }}"
+  loop_control:
+    label: "{{ item.label }}"

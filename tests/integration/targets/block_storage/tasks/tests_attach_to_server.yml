@@ -1,0 +1,134 @@
+# Copyright (c) 2018, Yanis Guenane <yanis+ansible@guenane.org>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: setup create ssh keys
+  vultr.cloud.ssh_key:
+    name: "{{ item.name }}"
+    ssh_key: "{{ item.key }}"
+  loop: "{{ vultr_server_ssh_keys }}"
+
+- name: setup create server
+  # TODO: subject of change
+  ngine_io.vultr.vultr_server:
+    name: "{{ vultr_server_name }}"
+    os: Debian 11 x64 (bullseye)
+    plan: "{{ vultr_server_plan_1 }}"
+    ssh_keys:
+      - "{{ vultr_resource_prefix }}_key1"
+    region: "{{ vultr_server_region }}"
+    state: started
+  register: result_server_setup
+
+- name: setup block storage volume unattached
+  vultr.cloud.block_storage:
+    label: "{{ vultr_block_storage_name }}"
+    size_gb: "{{ vultr_block_storage_size }}"
+    region: "{{ vultr_block_storage_region }}"
+    attached_to_instance: ""
+  register: result
+- name: verify test create block storage volume
+  assert:
+    that:
+    - result is changed
+    - not result.vultr_block_storage.attached_to_instance
+    - result.vultr_block_storage.label == vultr_block_storage_name
+    - result.vultr_block_storage.region == vultr_block_storage_region
+    - result.vultr_block_storage.size_gb == 10
+
+- name: test attach block volume in check mode
+  vultr.cloud.block_storage:
+    label: "{{ vultr_block_storage_name }}"
+    size_gb: "{{ vultr_block_storage_size }}"
+    region: "{{ vultr_block_storage_region }}"
+    attached_to_instance: "{{ result_server_setup.vultr_server.id }}"
+  register: result
+  check_mode: true
+- name: verify test attach block volume in check mode
+  assert:
+    that:
+      - result is changed
+      - not result.vultr_block_storage.attached_to_instance
+
+- name: test attach block volume
+  vultr.cloud.block_storage:
+    label: "{{ vultr_block_storage_name }}"
+    size_gb: "{{ vultr_block_storage_size }}"
+    region: "{{ vultr_block_storage_region }}"
+    attached_to_instance: "{{ result_server_setup.vultr_server.id }}"
+  register: result
+- name: verify test attach block volume
+  assert:
+    that:
+      - result.changed
+      - result.vultr_block_storage.attached_to_instance == result_server_setup.vultr_server.id
+
+- name: test attach block volume idempotency
+  vultr.cloud.block_storage:
+    label: "{{ vultr_block_storage_name }}"
+    size_gb: "{{ vultr_block_storage_size }}"
+    region: "{{ vultr_block_storage_region }}"
+    attached_to_instance: "{{ result_server_setup.vultr_server.id }}"
+  register: result
+- name: verify test attach block volume idempotency
+  assert:
+    that:
+      - not result.changed
+      - result.vultr_block_storage.attached_to_instance == result_server_setup.vultr_server.id
+
+# volume size can only be modified every 60s
+- name: wait about 60s before resizing volume
+  wait_for:
+    timeout: 61
+
+- name: test resize block storage volume while attaching
+  vultr.cloud.block_storage:
+    label: "{{ vultr_block_storage_name }}"
+    size_gb: "{{ vultr_block_storage_size_2 }}"
+    region: "{{ vultr_block_storage_region }}"
+    attached_to_instance: "{{ result_server_setup.vultr_server.id }}"
+  register: result
+- name: verify test resize block storage volume while attaching
+  assert:
+    that:
+    - result is changed
+    - result.vultr_block_storage.attached_to_instance == result_server_setup.vultr_server.id
+
+- name: test detach block volume in check mode
+  vultr.cloud.block_storage:
+    label: "{{ vultr_block_storage_name }}"
+    size_gb: "{{ vultr_block_storage_size_2 }}"
+    region: "{{ vultr_block_storage_region }}"
+    attached_to_instance: ""
+  register: result
+  check_mode: true
+- name: verify test detach block volume in check mode
+  assert:
+    that:
+      - result is changed
+      - not result.vultr_block_storage.attached_to_instance
+
+- name: test detach block volume
+  vultr.cloud.block_storage:
+    label: "{{ vultr_block_storage_name }}"
+    size_gb: "{{ vultr_block_storage_size_2 }}"
+    region: "{{ vultr_block_storage_region }}"
+    attached_to_instance: ""
+  register: result
+- name: verify test detach block volume
+  assert:
+    that:
+      - result is changed
+      - not result.vultr_block_storage.attached_to_instance
+
+- name: test detach block volume idempotency
+  vultr.cloud.block_storage:
+    label: "{{ vultr_block_storage_name }}"
+    size_gb: "{{ vultr_block_storage_size_2 }}"
+    region: "{{ vultr_block_storage_region }}"
+    attached_to_instance: ""
+  register: result
+- name: verify test detach block volume idempotency
+  assert:
+    that:
+      - result is not changed
+      - not result.vultr_block_storage.attached_to_instance
