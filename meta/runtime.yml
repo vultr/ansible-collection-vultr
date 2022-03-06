@@ -3,6 +3,8 @@ requires_ansible: '>=2.9.10'
 action_groups:
   vultr:
     - account_info
+    - block_storage
+    - block_storage_info
     - dns_domain
     - dns_domain_info
     - dns_record
@@ -12,8 +14,8 @@ action_groups:
     - network
     - network_info
     - os_info
-    - plan_metal_info
     - plan_info
+    - plan_metal_info
     - region_info
     - ssh_key
     - ssh_key_info
