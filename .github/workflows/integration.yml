@@ -17,10 +17,9 @@ jobs:
       fail-fast: false
       matrix:
         runner-python-version:
-          - 3.6
+          - 3.8
         python-version:
-          - 3.6
-          - 2.7
+          - 3.8
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -56,10 +55,9 @@ jobs:
           -v
           --diff
           --color
-          --python ${{ matrix.python-version }}
           --continue-on-error
           --coverage
-          cloud/vultr
+          cloud/vultr/
 
       - name: Generate coverage report
         run: >-
