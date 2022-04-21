@@ -4,11 +4,14 @@ name: Collection integration
 on:
   pull_request:
     types: [labeled]
+  push:
+    branches:
+      - main
 
 jobs:
   integration-test:
     name: Integration test using Python ${{ matrix.python-version }}
-    if: ${{ github.event.label.name == 'automation' }}
+    if: ${{ github.event.label.name == 'automation' || github.ref_name == 'main' }}
     runs-on: ubuntu-latest
     defaults:
       run:
