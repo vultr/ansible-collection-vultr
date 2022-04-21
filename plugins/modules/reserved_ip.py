@@ -4,11 +4,12 @@
 # Copyright (c) 2021, René Moser <mail@renemoser.net>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 
-DOCUMENTATION = '''
+DOCUMENTATION = """
 ---
 module: reserved_ip
 short_description: Manages reserved IPs on Vultr.
@@ -53,9 +54,9 @@ options:
     type: str
 extends_documentation_fragment:
 - vultr.cloud.vultr_v2
-'''
+"""
 
-EXAMPLES = '''
+EXAMPLES = """
 - name: Ensure a reserved IP present and attached to an instance
   vultr.cloud.reserved_ip:
     label: my attached IP
@@ -76,9 +77,9 @@ EXAMPLES = '''
     region: ewr
     ip_type: v4
     state: absent
-'''
+"""
 
-RETURN = '''
+RETURN = """
 ---
 vultr_api:
   description: Response from Vultr API with a few additions/modification
@@ -145,27 +146,25 @@ vultr_reserved_ip:
       returned: success
       type: str
       sample: cb676a46-66fd-4dfb-b839-443f2e6c0b
-'''
+"""
 
 import urllib
+
 from ansible.module_utils.basic import AnsibleModule
-from ..module_utils.vultr_v2 import (
-    AnsibleVultr,
-    vultr_argument_spec,
-)
+
+from ..module_utils.vultr_v2 import AnsibleVultr, vultr_argument_spec
 
 
 class AnsibleVultrReservedIp(AnsibleVultr):
-
     def configure(self):
         self.instance_id = self.get_instance_id()
 
     def get_instance_id(self):
-        instance_id = self.module.params['instance_id']
+        instance_id = self.module.params["instance_id"]
         if instance_id is not None:
             return instance_id
 
-        instance_name = self.module.params['instance_name']
+        instance_name = self.module.params["instance_name"]
         if instance_name is not None:
 
             # Empty string ID means detach instance
@@ -174,42 +173,51 @@ class AnsibleVultrReservedIp(AnsibleVultr):
 
             # URL encode label
             try:
-                label = urllib.quote(instance_name)
+                label = urllib.quote(instance_name)  # type: ignore
             except AttributeError:
-                label = urllib.parse.quote(instance_name)
+                label = urllib.parse.quote(instance_name)  # type: ignore
 
             # Filter instances by label
-            resources = self.api_query(path='/instances?label=%s' % label)
-            if not resources or not resources['instances']:
-                self.module.fail_json(msg="No instance with name found: %s" % instance_name)
+            resources = self.api_query(path="/instances?label=%s" % label) or dict()
+            if not resources or not resources["instances"]:
+                self.module.fail_json(
+                    msg="No instance with name found: %s" % instance_name
+                )
 
-            if len(resources['instances']) > 1:
-                self.module.fail_json(msg="More then one instance with name found: %s" % instance_name)
+            if len(resources["instances"]) > 1:
+                self.module.fail_json(
+                    msg="More then one instance with name found: %s" % instance_name
+                )
 
-            return resources['instances'][0]['id']
+            return resources["instances"][0]["id"]
 
     def query_list(self, path=None, result_key=None):
-        resources = self.api_query(path=self.resource_path)
+        resources = self.api_query(path=self.resource_path) or dict()
 
         resources_filtered = list()
         for resource in resources[self.ressource_result_key_plural]:
             # Skip IP with different type
-            if resource['ip_type'] != self.module.params['ip_type']:
+            if resource["ip_type"] != self.module.params["ip_type"]:
                 continue
             # Skip IP in different region
-            if resource['region'] != self.module.params['region']:
+            if resource["region"] != self.module.params["region"]:
                 continue
             resources_filtered.append(resource)
 
         return resources_filtered
 
     def create(self):
-        resource = super().create()
+        resource = super().create() or dict()
         if resource and self.instance_id:
             if not self.module.check_mode:
                 # Attach instance
                 self.api_query(
-                    path="%s/%s/%s" % (self.resource_path, self.resource[self.resource_key_id], "attach"),
+                    path="%s/%s/%s"
+                    % (
+                        self.resource_path,
+                        resource[self.resource_key_id],
+                        "attach",
+                    ),
                     method="POST",
                     data=dict(instance_id=self.instance_id),
                 )
@@ -222,11 +230,12 @@ class AnsibleVultrReservedIp(AnsibleVultr):
             return resource
 
         # Detach instance
-        elif resource['instance_id'] and not self.instance_id:
-            self.result['changed'] = True
+        elif resource["instance_id"] and not self.instance_id:
+            self.result["changed"] = True
             if not self.module.check_mode:
                 self.api_query(
-                    path="%s/%s/%s" % (self.resource_path, resource[self.resource_key_id], "detach"),
+                    path="%s/%s/%s"
+                    % (self.resource_path, resource[self.resource_key_id], "detach"),
                     method="POST",
                     data=dict(instance_id=self.instance_id),
                 )
@@ -234,11 +243,12 @@ class AnsibleVultrReservedIp(AnsibleVultr):
                 resource = self.query_by_id(resource_id=resource[self.resource_key_id])
 
         # Attach instance or change attached instance
-        elif self.instance_id and resource['instance_id'] != self.instance_id:
-            self.result['changed'] = True
+        elif self.instance_id and resource["instance_id"] != self.instance_id:
+            self.result["changed"] = True
             if not self.module.check_mode:
                 self.api_query(
-                    path="%s/%s/%s" % (self.resource_path, resource[self.resource_key_id], "attach"),
+                    path="%s/%s/%s"
+                    % (self.resource_path, resource[self.resource_key_id], "attach"),
                     method="POST",
                     data=dict(instance_id=self.instance_id),
                 )
@@ -250,20 +260,20 @@ class AnsibleVultrReservedIp(AnsibleVultr):
 
 def main():
     argument_spec = vultr_argument_spec()
-    argument_spec.update(dict(
-        label=dict(type='str', required=True, aliases=['name']),
-        instance_id=dict(type='str'),
-        instance_name=dict(type='str'),
-        ip_type=dict(type='str', required=True, choices=['v4', 'v6']),
-        region=dict(type='str', required=True),
-        state=dict(type='str', choices=['present', 'absent'], default='present'),
-    ))
+    argument_spec.update(
+        dict(
+            label=dict(type="str", required=True, aliases=["name"]),
+            instance_id=dict(type="str"),
+            instance_name=dict(type="str"),
+            ip_type=dict(type="str", required=True, choices=["v4", "v6"]),
+            region=dict(type="str", required=True),
+            state=dict(type="str", choices=["present", "absent"], default="present"),
+        )  # type: ignore
+    )
 
     module = AnsibleModule(
         argument_spec=argument_spec,
-        mutually_exclusive=(
-            ['instance_id', 'instance_name'],
-        ),
+        mutually_exclusive=(["instance_id", "instance_name"],),
         supports_check_mode=True,
     )
 
@@ -272,15 +282,15 @@ def main():
         namespace="vultr_reserved_ip",
         resource_path="/reserved-ips",
         ressource_result_key_singular="reserved_ip",
-        resource_create_param_keys=['region', 'ip_type', 'label'],
+        resource_create_param_keys=["region", "ip_type", "label"],
         resource_key_name="label",
     )
 
-    if module.params.get('state') == "absent":
+    if module.params.get("state") == "absent":
         vultr.absent()
     else:
         vultr.present()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -9,28 +9,28 @@
 - name: verify setup
   assert:
     that:
-    - result is success
+      - result is success
 
 - name: test fail if missing name
   vultr.cloud.user:
   register: result
-  ignore_errors: yes
+  ignore_errors: true
 - name: verify test fail if missing name
   assert:
     that:
-    - result is failed
-    - 'result.msg == "missing required arguments: name"'
+      - result is failed
+      - 'result.msg == "missing required arguments: name"'
 
 - name: test fail if missing params for state=present
   vultr.cloud.user:
     name: "{{ vultr_user_name }}"
   register: result
-  ignore_errors: yes
+  ignore_errors: true
 - name: verify fail if missing params for state=present
   assert:
     that:
-    - result is failed
-    - 'result.msg.startswith("state is present but all of the following are missing")'
+      - result is failed
+      - 'result.msg.startswith("state is present but all of the following are missing")'
 
 - name: test fail param not in choices
   vultr.cloud.user:
@@ -42,12 +42,12 @@
       - dns
       - manage_users
   register: result
-  ignore_errors: yes
+  ignore_errors: true
 - name: verify test fail if missing name
   assert:
     that:
-    - result is failed
-    - 'result.msg.startswith("value of acls must be one or more of")'
+      - result is failed
+      - 'result.msg.startswith("value of acls must be one or more of")'
 
 - name: test create user in check mode
   vultr.cloud.user:
@@ -59,11 +59,11 @@
       - dns
       - manage_users
   register: result
-  check_mode: yes
+  check_mode: true
 - name: verify test create user in check mode
   assert:
     that:
-    - result is changed
+      - result is changed
 
 - name: test create user
   vultr.cloud.user:
@@ -78,13 +78,13 @@
 - name: verify test create user
   assert:
     that:
-    - result is changed
-    - result.vultr_user.name == vultr_user_name
-    - result.vultr_user.email == 'john.doe{{ vultr_resource_prefix }}@example.com'
-    - result.vultr_user.api_enabled == true
-    - "'upgrade' in result.vultr_user.acls"
-    - "'manage_users' in result.vultr_user.acls"
-    - "'dns' in result.vultr_user.acls"
+      - result is changed
+      - result.vultr_user.name == vultr_user_name
+      - result.vultr_user.email == 'john.doe{{ vultr_resource_prefix }}@example.com'
+      - result.vultr_user.api_enabled == true
+      - "'upgrade' in result.vultr_user.acls"
+      - "'manage_users' in result.vultr_user.acls"
+      - "'dns' in result.vultr_user.acls"
 
 - name: test create user idempotence
   vultr.cloud.user:
@@ -99,13 +99,13 @@
 - name: verify test create user idempotence
   assert:
     that:
-    - result is not changed
-    - result.vultr_user.name == vultr_user_name
-    - result.vultr_user.email == 'john.doe{{ vultr_resource_prefix }}@example.com'
-    - result.vultr_user.api_enabled == true
-    - "'upgrade' in result.vultr_user.acls"
-    - "'manage_users' in result.vultr_user.acls"
-    - "'dns' in result.vultr_user.acls"
+      - result is not changed
+      - result.vultr_user.name == vultr_user_name
+      - result.vultr_user.email == 'john.doe{{ vultr_resource_prefix }}@example.com'
+      - result.vultr_user.api_enabled == true
+      - "'upgrade' in result.vultr_user.acls"
+      - "'manage_users' in result.vultr_user.acls"
+      - "'dns' in result.vultr_user.acls"
 
 - name: test update user in check mode
   vultr.cloud.user:
@@ -118,17 +118,17 @@
       - upgrade
       - support
   register: result
-  check_mode: yes
+  check_mode: true
 - name: verify test update user in check mode
   assert:
     that:
-    - result is changed
-    - result.vultr_user.name == vultr_user_name
-    - result.vultr_user.email == 'john.doe{{ vultr_resource_prefix }}@example.com'
-    - "'upgrade' in result.vultr_user.acls"
-    - "'manage_users' in result.vultr_user.acls"
-    - "'dns' in result.vultr_user.acls"
-    - result.vultr_user.api_enabled == true
+      - result is changed
+      - result.vultr_user.name == vultr_user_name
+      - result.vultr_user.email == 'john.doe{{ vultr_resource_prefix }}@example.com'
+      - "'upgrade' in result.vultr_user.acls"
+      - "'manage_users' in result.vultr_user.acls"
+      - "'dns' in result.vultr_user.acls"
+      - result.vultr_user.api_enabled == true
 
 - name: test update user
   vultr.cloud.user:
@@ -144,13 +144,13 @@
 - name: verify test update user
   assert:
     that:
-    - result is changed
-    - result.vultr_user.name == vultr_user_name
-    - result.vultr_user.email == 'jimmy{{ vultr_resource_prefix }}@example.com'
-    - "'upgrade' in result.vultr_user.acls"
-    - "'manage_users' in result.vultr_user.acls"
-    - "'support' in result.vultr_user.acls"
-    - result.vultr_user.api_enabled == false
+      - result is changed
+      - result.vultr_user.name == vultr_user_name
+      - result.vultr_user.email == 'jimmy{{ vultr_resource_prefix }}@example.com'
+      - "'upgrade' in result.vultr_user.acls"
+      - "'manage_users' in result.vultr_user.acls"
+      - "'support' in result.vultr_user.acls"
+      - result.vultr_user.api_enabled == false
 
 - name: test update user idempotence
   vultr.cloud.user:
@@ -166,30 +166,30 @@
 - name: verify test update user idempotence
   assert:
     that:
-    - result is not changed
-    - result.vultr_user.name == vultr_user_name
-    - result.vultr_user.email == 'jimmy{{ vultr_resource_prefix }}@example.com'
-    - "'upgrade' in result.vultr_user.acls"
-    - "'manage_users' in result.vultr_user.acls"
-    - "'support' in result.vultr_user.acls"
-    - result.vultr_user.api_enabled == false
+      - result is not changed
+      - result.vultr_user.name == vultr_user_name
+      - result.vultr_user.email == 'jimmy{{ vultr_resource_prefix }}@example.com'
+      - "'upgrade' in result.vultr_user.acls"
+      - "'manage_users' in result.vultr_user.acls"
+      - "'support' in result.vultr_user.acls"
+      - result.vultr_user.api_enabled == false
 
 - name: test absent user in check mode
   vultr.cloud.user:
     name: "{{ vultr_user_name }}"
     state: absent
   register: result
-  check_mode: yes
+  check_mode: true
 - name: verify test absent user in check mode
   assert:
     that:
-    - result is changed
-    - result.vultr_user.name == vultr_user_name
-    - result.vultr_user.email == 'jimmy{{ vultr_resource_prefix }}@example.com'
-    - "'upgrade' in result.vultr_user.acls"
-    - "'manage_users' in result.vultr_user.acls"
-    - "'support' in result.vultr_user.acls"
-    - result.vultr_user.api_enabled == false
+      - result is changed
+      - result.vultr_user.name == vultr_user_name
+      - result.vultr_user.email == 'jimmy{{ vultr_resource_prefix }}@example.com'
+      - "'upgrade' in result.vultr_user.acls"
+      - "'manage_users' in result.vultr_user.acls"
+      - "'support' in result.vultr_user.acls"
+      - result.vultr_user.api_enabled == false
 
 - name: test absent user
   vultr.cloud.user:
@@ -199,13 +199,13 @@
 - name: verify test absent user
   assert:
     that:
-    - result is changed
-    - result.vultr_user.name == vultr_user_name
-    - result.vultr_user.email == 'jimmy{{ vultr_resource_prefix }}@example.com'
-    - "'upgrade' in result.vultr_user.acls"
-    - "'manage_users' in result.vultr_user.acls"
-    - "'support' in result.vultr_user.acls"
-    - result.vultr_user.api_enabled == false
+      - result is changed
+      - result.vultr_user.name == vultr_user_name
+      - result.vultr_user.email == 'jimmy{{ vultr_resource_prefix }}@example.com'
+      - "'upgrade' in result.vultr_user.acls"
+      - "'manage_users' in result.vultr_user.acls"
+      - "'support' in result.vultr_user.acls"
+      - result.vultr_user.api_enabled == false
 
 - name: test absent user idempotence
   vultr.cloud.user:
@@ -215,4 +215,4 @@
 - name: verify test absent user idempotence
   assert:
     that:
-    - result is not changed
+      - result is not changed

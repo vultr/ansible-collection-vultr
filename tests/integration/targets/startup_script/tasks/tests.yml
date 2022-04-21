@@ -9,39 +9,39 @@
 - name: verify setup
   assert:
     that:
-    - result is success
+      - result is success
 
 - name: test fail if missing name
   vultr.cloud.startup_script:
   register: result
-  ignore_errors: yes
+  ignore_errors: true
 - name: verify test fail if missing name
   assert:
     that:
-    - result is failed
-    - 'result.msg == "missing required arguments: name"'
+      - result is failed
+      - 'result.msg == "missing required arguments: name"'
 
 - name: test fail if missing params for state=present
   vultr.cloud.startup_script:
     name: "{{ vultr_startup_script_name }}"
   register: result
-  ignore_errors: yes
+  ignore_errors: true
 - name: verify fail if missing params for state=present
   assert:
     that:
-    - result is failed
-    - 'result.msg == "state is present but all of the following are missing: script"'
+      - result is failed
+      - 'result.msg == "state is present but all of the following are missing: script"'
 
 - name: test create startup script in check mode
   vultr.cloud.startup_script:
     name: "{{ vultr_startup_script_name }}"
     script: "{{ vultr_startup_script }}"
   register: result
-  check_mode: yes
+  check_mode: true
 - name: verify test create startup script in check mode
   assert:
     that:
-    - result is changed
+      - result is changed
 
 - name: test create startup script
   vultr.cloud.startup_script:
@@ -51,9 +51,9 @@
 - name: verify test create startup script
   assert:
     that:
-    - result is changed
-    - result.vultr_startup_script.name == vultr_startup_script_name
-    - result.vultr_startup_script.script == vultr_startup_script
+      - result is changed
+      - result.vultr_startup_script.name == vultr_startup_script_name
+      - result.vultr_startup_script.script == vultr_startup_script
 
 - name: test create startup script idempotence
   vultr.cloud.startup_script:
@@ -63,22 +63,22 @@
 - name: verify test create startup script idempotence
   assert:
     that:
-    - result is not changed
-    - result.vultr_startup_script.name == vultr_startup_script_name
-    - result.vultr_startup_script.script == vultr_startup_script
+      - result is not changed
+      - result.vultr_startup_script.name == vultr_startup_script_name
+      - result.vultr_startup_script.script == vultr_startup_script
 
 - name: test update startup script in check mode
   vultr.cloud.startup_script:
     name: "{{ vultr_startup_script_name }}"
     script: "{{ vultr_startup_script2 }}"
   register: result
-  check_mode: yes
+  check_mode: true
 - name: verify test update startup script in check mode
   assert:
     that:
-    - result is changed
-    - result.vultr_startup_script.name == vultr_startup_script_name
-    - result.vultr_startup_script.script == vultr_startup_script
+      - result is changed
+      - result.vultr_startup_script.name == vultr_startup_script_name
+      - result.vultr_startup_script.script == vultr_startup_script
 
 - name: test update startup script
   vultr.cloud.startup_script:
@@ -88,9 +88,9 @@
 - name: verify test update startup script
   assert:
     that:
-    - result is changed
-    - result.vultr_startup_script.name == vultr_startup_script_name
-    - result.vultr_startup_script.script == vultr_startup_script2
+      - result is changed
+      - result.vultr_startup_script.name == vultr_startup_script_name
+      - result.vultr_startup_script.script == vultr_startup_script2
 
 - name: test update startup script idempotence
   vultr.cloud.startup_script:
@@ -100,22 +100,22 @@
 - name: verify test update startup script idempotence
   assert:
     that:
-    - result is not changed
-    - result.vultr_startup_script.name == vultr_startup_script_name
-    - result.vultr_startup_script.script == vultr_startup_script2
+      - result is not changed
+      - result.vultr_startup_script.name == vultr_startup_script_name
+      - result.vultr_startup_script.script == vultr_startup_script2
 
 - name: test absent startup script in check mode
   vultr.cloud.startup_script:
     name: "{{ vultr_startup_script_name }}"
     state: absent
   register: result
-  check_mode: yes
+  check_mode: true
 - name: verify test absent startup script in check mode
   assert:
     that:
-    - result is changed
-    - result.vultr_startup_script.name == vultr_startup_script_name
-    - result.vultr_startup_script.script == vultr_startup_script2
+      - result is changed
+      - result.vultr_startup_script.name == vultr_startup_script_name
+      - result.vultr_startup_script.script == vultr_startup_script2
 
 - name: test absent startup script
   vultr.cloud.startup_script:
@@ -125,9 +125,9 @@
 - name: verify test absent startup script
   assert:
     that:
-    - result is changed
-    - result.vultr_startup_script.name == vultr_startup_script_name
-    - result.vultr_startup_script.script == vultr_startup_script2
+      - result is changed
+      - result.vultr_startup_script.name == vultr_startup_script_name
+      - result.vultr_startup_script.script == vultr_startup_script2
 
 - name: test absent startup script idempotence
   vultr.cloud.startup_script:
@@ -137,4 +137,4 @@
 - name: verify test absent startup script idempotence
   assert:
     that:
-    - result is not changed
+      - result is not changed

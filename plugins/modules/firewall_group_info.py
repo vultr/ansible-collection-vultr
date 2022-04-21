@@ -4,11 +4,12 @@
 # Copyright (c) 2021, René Moser <mail@renemoser.net>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 
-DOCUMENTATION = '''
+DOCUMENTATION = """
 ---
 module: firewall_group_info
 short_description: Gather information about the Vultr firewall groups available.
@@ -20,9 +21,9 @@ author:
   - "René Moser (@resmo)"
 extends_documentation_fragment:
 - vultr.cloud.vultr_v2
-'''
+"""
 
-EXAMPLES = '''
+EXAMPLES = """
 - name: Gather Vultr firewall groups information
   vultr.cloud.firewall_group_info:
   register: result
@@ -30,9 +31,9 @@ EXAMPLES = '''
 - name: Print the gathered information
   debug:
     var: result.vultr_firewall_group_info
-'''
+"""
 
-RETURN = '''
+RETURN = """
 ---
 vultr_api:
   description: Response from Vultr API with a few additions/modification
@@ -84,13 +85,11 @@ vultr_firewall_group_info:
       returned: success
       type: str
       sample: "2020-10-10T01:56:20+00:00"
-'''
+"""
 
 from ansible.module_utils.basic import AnsibleModule
-from ..module_utils.vultr_v2 import (
-    AnsibleVultr,
-    vultr_argument_spec,
-)
+
+from ..module_utils.vultr_v2 import AnsibleVultr, vultr_argument_spec
 
 
 def main():
@@ -111,5 +110,5 @@ def main():
     vultr.get_result(vultr.query_list())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

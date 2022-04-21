@@ -6,6 +6,7 @@
       Authorization: Bearer {{ vultr_api_key }}
     status_code: 200
   register: res
+  no_log: true
 
 - name: Remove all ssh-keys created by this test run
   uri:
@@ -18,3 +19,4 @@
   with_items: "{{ res.json.ssh_keys }}"
   loop_control:
     label: "{{ item.name }}"
+  no_log: true

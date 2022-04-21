@@ -4,11 +4,12 @@
 # Copyright (c) 2021, René Moser <mail@renemoser.net>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 
-DOCUMENTATION = '''
+DOCUMENTATION = """
 ---
 module: dns_record
 short_description: Manages DNS records on Vultr.
@@ -72,10 +73,10 @@ options:
     type: str
 extends_documentation_fragment:
 - vultr.cloud.vultr_v2
-'''
+"""
 
 
-EXAMPLES = '''
+EXAMPLES = """
 - name: Ensure an A record exists
   vultr.cloud.dns_record:
     name: www
@@ -123,9 +124,9 @@ EXAMPLES = '''
     data: mx1.example.com
     multiple: true
     state: absent
-'''
+"""
 
-RETURN = '''
+RETURN = """
 ---
 vultr_api:
   description: Response from Vultr API with a few additions/modification
@@ -187,70 +188,64 @@ dns_record:
       returned: success
       type: int
       sample: 300
-'''
+"""
 
 from ansible.module_utils.basic import AnsibleModule
-from ..module_utils.vultr_v2 import (
-    AnsibleVultr,
-    vultr_argument_spec,
-)
 
-RECORD_TYPES = [
-    'A',
-    'AAAA',
-    'CNAME',
-    'MX',
-    'TXT',
-    'NS',
-    'SRV',
-    'CAA',
-    'SSHFP'
-]
+from ..module_utils.vultr_v2 import AnsibleVultr, vultr_argument_spec
+
+RECORD_TYPES = ["A", "AAAA", "CNAME", "MX", "TXT", "NS", "SRV", "CAA", "SSHFP"]
 
 
 class AnsibleVultrDnsRecord(AnsibleVultr):
-
     def query(self):
-        multiple = self.module.params.get('multiple')
-        name = self.module.params.get('name')
-        data = self.module.params.get('data')
-        record_type = self.module.params.get('type')
+        multiple = self.module.params.get("multiple")
+        name = self.module.params.get("name")
+        data = self.module.params.get("data")
+        record_type = self.module.params.get("type")
 
         result = dict()
         for resource in self.query_list():
-            if resource.get('type') != record_type:
+            if resource.get("type") != record_type:
                 continue
 
-            if resource.get('name') == name:
+            if resource.get("name") == name:
                 if not multiple:
                     if result:
-                        self.module.fail_json(msg="More than one record with record_type=%s and name=%s params. "
-                                                  "Use multiple=yes for more than one record." % (record_type, name))
+                        self.module.fail_json(
+                            msg="More than one record with record_type=%s and name=%s params. "
+                            "Use multiple=yes for more than one record."
+                            % (record_type, name)
+                        )
                     else:
                         result = resource
-                elif resource.get('data') == data:
+                elif resource.get("data") == data:
                     return resource
         return result
 
 
 def main():
     argument_spec = vultr_argument_spec()
-    argument_spec.update(dict(
-        domain=dict(type='str', required=True),
-        name=dict(type='str', default=""),
-        state=dict(type='str', choices=['present', 'absent'], default='present'),
-        ttl=dict(type='int', default=300),
-        type=dict(type='str', choices=RECORD_TYPES, default='A', aliases=['record_type']),
-        multiple=dict(type='bool', default=False),
-        priority=dict(type='int', default=0),
-        data=dict(type='str',)
-    ))
+    argument_spec.update(
+        dict(
+            domain=dict(type="str", required=True),
+            name=dict(type="str", default=""),
+            state=dict(type="str", choices=["present", "absent"], default="present"),
+            ttl=dict(type="int", default=300),
+            type=dict(
+                type="str", choices=RECORD_TYPES, default="A", aliases=["record_type"]
+            ),
+            multiple=dict(type="bool", default=False),
+            priority=dict(type="int", default=0),
+            data=dict(type="str"),
+        )  # type: ignore
+    )
 
     module = AnsibleModule(
         argument_spec=argument_spec,
         required_if=[
-            ('state', 'present', ['data']),
-            ('multiple', True, ['data']),
+            ("state", "present", ["data"]),
+            ("multiple", True, ["data"]),
         ],
         supports_check_mode=True,
     )
@@ -258,18 +253,18 @@ def main():
     vultr = AnsibleVultrDnsRecord(
         module=module,
         namespace="vultr_dns_record",
-        resource_path="/domains/%s/records" % module.params.get('domain'),
+        resource_path="/domains/%s/records" % module.params.get("domain"),
         ressource_result_key_singular="record",
-        resource_create_param_keys=['name', 'ttl', 'data', 'priority', 'type'],
-        resource_update_param_keys=['name', 'ttl', 'data', 'priority'],
+        resource_create_param_keys=["name", "ttl", "data", "priority", "type"],
+        resource_update_param_keys=["name", "ttl", "data", "priority"],
         resource_key_name="name",
     )
 
-    if module.params.get('state') == "absent":
+    if module.params.get("state") == "absent":
         vultr.absent()
     else:
         vultr.present()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

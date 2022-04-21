@@ -29,11 +29,11 @@
 - name: verify test create block storage volume
   assert:
     that:
-    - result is changed
-    - not result.vultr_block_storage.attached_to_instance
-    - result.vultr_block_storage.label == vultr_block_storage_name
-    - result.vultr_block_storage.region == vultr_block_storage_region
-    - result.vultr_block_storage.size_gb == 10
+      - result is changed
+      - not result.vultr_block_storage.attached_to_instance
+      - result.vultr_block_storage.label == vultr_block_storage_name
+      - result.vultr_block_storage.region == vultr_block_storage_region
+      - result.vultr_block_storage.size_gb == 10
 
 - name: test attach block volume in check mode
   vultr.cloud.block_storage:
@@ -90,8 +90,8 @@
 - name: verify test resize block storage volume while attaching
   assert:
     that:
-    - result is changed
-    - result.vultr_block_storage.attached_to_instance == result_server_setup.vultr_server.id
+      - result is changed
+      - result.vultr_block_storage.attached_to_instance == result_server_setup.vultr_server.id
 
 - name: test detach block volume in check mode
   vultr.cloud.block_storage:

@@ -4,11 +4,12 @@
 # Copyright (c) 2021, René Moser <mail@renemoser.net>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 
-DOCUMENTATION = '''
+DOCUMENTATION = """
 ---
 module: firewall_group
 short_description: Manages firewall groups on Vultr.
@@ -31,9 +32,9 @@ options:
     type: str
 extends_documentation_fragment:
 - vultr.cloud.vultr_v2
-'''
+"""
 
-EXAMPLES = '''
+EXAMPLES = """
 - name: ensure a firewall group is present
   vultr.cloud.firewall_group:
     description: my http firewall
@@ -42,9 +43,9 @@ EXAMPLES = '''
   vultr.cloud.firewall_group:
     description: my http firewall
     state: absent
-'''
+"""
 
-RETURN = '''
+RETURN = """
 ---
 vultr_api:
   description: Response from Vultr API with a few additions/modification
@@ -96,21 +97,21 @@ vultr_firewall_group:
       returned: success
       type: str
       sample: "2020-10-10T01:56:20+00:00"
-'''
+"""
 
 from ansible.module_utils.basic import AnsibleModule
-from ..module_utils.vultr_v2 import (
-    AnsibleVultr,
-    vultr_argument_spec,
-)
+
+from ..module_utils.vultr_v2 import AnsibleVultr, vultr_argument_spec
 
 
 def main():
     argument_spec = vultr_argument_spec()
-    argument_spec.update(dict(
-        description=dict(type='str', required=True, aliases=['name']),
-        state=dict(type='str', choices=['present', 'absent'], default='present'),
-    ))
+    argument_spec.update(
+        dict(
+            description=dict(type="str", required=True, aliases=["name"]),
+            state=dict(type="str", choices=["present", "absent"], default="present"),
+        )  # type: ignore
+    )
 
     module = AnsibleModule(
         argument_spec=argument_spec,
@@ -122,16 +123,16 @@ def main():
         namespace="vultr_firewall_group",
         resource_path="/firewalls",
         ressource_result_key_singular="firewall_group",
-        resource_create_param_keys=['description'],
-        resource_update_param_keys=['description'],
+        resource_create_param_keys=["description"],
+        resource_update_param_keys=["description"],
         resource_key_name="description",
     )
 
-    if module.params.get('state') == "absent":
+    if module.params.get("state") == "absent":
         vultr.absent()
     else:
         vultr.present()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

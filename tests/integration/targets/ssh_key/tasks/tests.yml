@@ -9,39 +9,39 @@
 - name: verify setup
   assert:
     that:
-    - result is success
+      - result is success
 
 - name: test fail if missing name
   vultr.cloud.ssh_key:
   register: result
-  ignore_errors: yes
+  ignore_errors: true
 - name: verify test fail if missing name
   assert:
     that:
-    - result is failed
-    - 'result.msg == "missing required arguments: name"'
+      - result is failed
+      - 'result.msg == "missing required arguments: name"'
 
 - name: test fail if missing params for state=present
   vultr.cloud.ssh_key:
     name: "{{ vultr_ssh_key_name }}"
   register: result
-  ignore_errors: yes
+  ignore_errors: true
 - name: verify fail if missing params for state=present
   assert:
     that:
-    - result is failed
-    - 'result.msg == "state is present but all of the following are missing: ssh_key"'
+      - result is failed
+      - 'result.msg == "state is present but all of the following are missing: ssh_key"'
 
 - name: test create ssh key in check mode
   vultr.cloud.ssh_key:
     name: "{{ vultr_ssh_key_name }}"
     ssh_key: "{{ vultr_ssh_key }}"
   register: result
-  check_mode: yes
+  check_mode: true
 - name: verify test create ssh key in check mode
   assert:
     that:
-    - result is changed
+      - result is changed
 
 - name: test create ssh key
   vultr.cloud.ssh_key:
@@ -51,9 +51,9 @@
 - name: verify test create ssh key
   assert:
     that:
-    - result is changed
-    - result.vultr_ssh_key.name == vultr_ssh_key_name
-    - result.vultr_ssh_key.ssh_key == vultr_ssh_key
+      - result is changed
+      - result.vultr_ssh_key.name == vultr_ssh_key_name
+      - result.vultr_ssh_key.ssh_key == vultr_ssh_key
 
 - name: test create ssh key idempotence
   vultr.cloud.ssh_key:
@@ -63,9 +63,9 @@
 - name: verify test create ssh key idempotence
   assert:
     that:
-    - result is not changed
-    - result.vultr_ssh_key.name == vultr_ssh_key_name
-    - result.vultr_ssh_key.ssh_key == vultr_ssh_key
+      - result is not changed
+      - result.vultr_ssh_key.name == vultr_ssh_key_name
+      - result.vultr_ssh_key.ssh_key == vultr_ssh_key
 
 - name: test update ssh key in check mode
   vultr.cloud.ssh_key:
@@ -76,9 +76,9 @@
 - name: verify test update ssh key in check mode
   assert:
     that:
-    - result is changed
-    - result.vultr_ssh_key.name == vultr_ssh_key_name
-    - result.vultr_ssh_key.ssh_key == vultr_ssh_key
+      - result is changed
+      - result.vultr_ssh_key.name == vultr_ssh_key_name
+      - result.vultr_ssh_key.ssh_key == vultr_ssh_key
 
 - name: test update ssh key
   vultr.cloud.ssh_key:
@@ -88,9 +88,9 @@
 - name: verify test update ssh key
   assert:
     that:
-    - result is changed
-    - result.vultr_ssh_key.name == vultr_ssh_key_name
-    - result.vultr_ssh_key.ssh_key == vultr_ssh_key2
+      - result is changed
+      - result.vultr_ssh_key.name == vultr_ssh_key_name
+      - result.vultr_ssh_key.ssh_key == vultr_ssh_key2
 
 - name: test update ssh key idempotence
   vultr.cloud.ssh_key:
@@ -100,22 +100,22 @@
 - name: verify test update ssh key idempotence
   assert:
     that:
-    - result is not changed
-    - result.vultr_ssh_key.name == vultr_ssh_key_name
-    - result.vultr_ssh_key.ssh_key == vultr_ssh_key2
+      - result is not changed
+      - result.vultr_ssh_key.name == vultr_ssh_key_name
+      - result.vultr_ssh_key.ssh_key == vultr_ssh_key2
 
 - name: test absent ssh key in check mode
   vultr.cloud.ssh_key:
     name: "{{ vultr_ssh_key_name }}"
     state: absent
   register: result
-  check_mode: yes
+  check_mode: true
 - name: verify test absent ssh key in check mode
   assert:
     that:
-    - result is changed
-    - result.vultr_ssh_key.name == vultr_ssh_key_name
-    - result.vultr_ssh_key.ssh_key == vultr_ssh_key2
+      - result is changed
+      - result.vultr_ssh_key.name == vultr_ssh_key_name
+      - result.vultr_ssh_key.ssh_key == vultr_ssh_key2
 
 - name: test absent ssh key
   vultr.cloud.ssh_key:
@@ -125,9 +125,9 @@
 - name: verify test absent ssh key
   assert:
     that:
-    - result is changed
-    - result.vultr_ssh_key.name == vultr_ssh_key_name
-    - result.vultr_ssh_key.ssh_key == vultr_ssh_key2
+      - result is changed
+      - result.vultr_ssh_key.name == vultr_ssh_key_name
+      - result.vultr_ssh_key.ssh_key == vultr_ssh_key2
 
 - name: test absent ssh key idempotence
   vultr.cloud.ssh_key:
@@ -137,4 +137,4 @@
 - name: verify test absent ssh key idempotence
   assert:
     that:
-    - result is not changed
+      - result is not changed

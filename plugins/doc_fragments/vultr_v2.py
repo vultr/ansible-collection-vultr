@@ -3,12 +3,13 @@
 # Copyright (c) 2021 René Moser <mail@renemoser.net>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 
 class ModuleDocFragment(object):
 
-    DOCUMENTATION = '''
+    DOCUMENTATION = """
 options:
   api_key:
     description:
@@ -47,4 +48,4 @@ options:
     default: true
 notes:
   - Also see the API documentation on https://www.vultr.com/api/.
-'''
+"""

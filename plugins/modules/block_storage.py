@@ -4,11 +4,12 @@
 # Copyright (c) 2022, René Moser <mail@renemoser.net>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 
-DOCUMENTATION = '''
+DOCUMENTATION = """
 ---
 module: block_storage
 short_description: Manages block storage volumes on Vultr.
@@ -56,9 +57,9 @@ options:
 extends_documentation_fragment:
 - vultr.cloud.vultr_v2
 
-'''
+"""
 
-EXAMPLES = '''
+EXAMPLES = """
 - name: Ensure a block storage volume is present
   vultr.cloud.block_storage:
     name: myvolume
@@ -81,9 +82,9 @@ EXAMPLES = '''
     name: myvolume
     attached_to_instance: ""
     size_gb: 50
-'''
+"""
 
-RETURN = '''
+RETURN = """
 ---
 vultr_api:
   description: Response from Vultr API with a few additions/modification
@@ -165,48 +166,51 @@ vultr_block_storage:
       returned: success
       type: str
       sample: ewr-2f5d7a314fe44f
-'''
+"""
 
 from ansible.module_utils.basic import AnsibleModule
-from ..module_utils.vultr_v2 import (
-    AnsibleVultr,
-    vultr_argument_spec,
-)
+
+from ..module_utils.vultr_v2 import AnsibleVultr, vultr_argument_spec
 
 
 class AnsibleVultrBlockStorage(AnsibleVultr):
-
     def update(self, resource):
-        current_size = resource['size_gb']
-        desired_size = self.module.params['size_gb']
+        current_size = resource["size_gb"]
+        desired_size = self.module.params["size_gb"]
         if desired_size < current_size:
-            self.module.params['size_gb'] = current_size
-            self.module.warn('Shrinking is not supported: current size %s, desired size %s' % (current_size, desired_size))
+            self.module.params["size_gb"] = current_size
+            self.module.warn(
+                "Shrinking is not supported: current size %s, desired size %s"
+                % (current_size, desired_size)
+            )
         return super(AnsibleVultrBlockStorage, self).update(resource=resource)
 
     def present(self):
-        resource = self.create_or_update()
+        resource = self.create_or_update() or dict()
 
-        instance_to_attach = self.module.params.get('attached_to_instance')
+        instance_to_attach = self.module.params.get("attached_to_instance")
         if instance_to_attach is None:
             # exit and show result if no attach/detach needed.
             self.get_result(resource)
 
-        instance_attached = resource.get('attached_to_instance', "")
+        instance_attached = resource.get("attached_to_instance", "")
         if instance_attached != instance_to_attach:
-            self.result['changed'] = True
+            self.result["changed"] = True
 
             mode = "detach" if instance_to_attach == "" else "attach"
-            self.result['diff']['after'].update({'attached_to_instance': instance_to_attach})
+            self.result["diff"]["after"].update(
+                {"attached_to_instance": instance_to_attach}
+            )
 
             data = {
-                'instance_id': instance_to_attach if instance_to_attach else None,
-                'live': self.module.params.get('live'),
+                "instance_id": instance_to_attach if instance_to_attach else None,
+                "live": self.module.params.get("live"),
             }
 
             if not self.module.check_mode:
                 self.api_query(
-                    path="%s/%s/%s" % (self.resource_path, resource[self.resource_key_id], mode),
+                    path="%s/%s/%s"
+                    % (self.resource_path, resource[self.resource_key_id], mode),
                     method="POST",
                     data=data,
                 )
@@ -217,25 +221,23 @@ class AnsibleVultrBlockStorage(AnsibleVultr):
 
 def main():
     argument_spec = vultr_argument_spec()
-    argument_spec.update(dict(
-        label=dict(type='str', required=True, aliases=['name']),
-        size_gb=dict(type='int', aliases=['size']),
-        region=dict(type='str'),
-        state=dict(
-            type='str',
-            choices=['present', 'absent'],
-            default='present'
-        ),
-        attached_to_instance=dict(type='str'),
-        live=dict(type='bool', default=True),
-    ))
+    argument_spec.update(
+        dict(
+            label=dict(type="str", required=True, aliases=["name"]),
+            size_gb=dict(type="int", aliases=["size"]),
+            region=dict(type="str"),
+            state=dict(type="str", choices=["present", "absent"], default="present"),
+            attached_to_instance=dict(type="str"),
+            live=dict(type="bool", default=True),
+        )  # type: ignore
+    )
 
     module = AnsibleModule(
         argument_spec=argument_spec,
         supports_check_mode=True,
         required_if=[
-            ['state', 'present', ['size_gb', 'region']],
-        ]
+            ["state", "present", ["size_gb", "region"]],
+        ],
     )
 
     vultr = AnsibleVultrBlockStorage(
@@ -243,12 +245,12 @@ def main():
         namespace="vultr_block_storage",
         resource_path="/blocks",
         ressource_result_key_singular="block",
-        resource_create_param_keys=['label', 'size_gb', 'region'],
-        resource_update_param_keys=['size_gb'],
+        resource_create_param_keys=["label", "size_gb", "region"],
+        resource_update_param_keys=["size_gb"],
         resource_key_name="label",
     )
 
-    state = module.params.get('state')
+    state = module.params.get("state")
 
     if state == "absent":
         vultr.absent()
@@ -256,5 +258,5 @@ def main():
         vultr.present()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

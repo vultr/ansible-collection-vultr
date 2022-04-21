@@ -4,11 +4,12 @@
 # Copyright (c) 2021, René Moser <mail@renemoser.net>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 
-DOCUMENTATION = '''
+DOCUMENTATION = """
 ---
 module: ssh_key
 short_description: Manages ssh keys on Vultr.
@@ -36,9 +37,9 @@ options:
 extends_documentation_fragment:
 - vultr.cloud.vultr_v2
 
-'''
+"""
 
-EXAMPLES = '''
+EXAMPLES = """
 - name: ensure an SSH key is present
   vultr.cloud.ssh_key:
     name: my ssh key
@@ -48,9 +49,9 @@ EXAMPLES = '''
   vultr.cloud.ssh_key:
     name: my ssh key
     state: absent
-'''
+"""
 
-RETURN = '''
+RETURN = """
 ---
 vultr_api:
   description: Response from Vultr API with a few additions/modification
@@ -102,27 +103,27 @@ vultr_ssh_key:
       returned: success
       type: str
       sample: ssh-rsa AA... someother@example.com
-'''
+"""
 
 from ansible.module_utils.basic import AnsibleModule
-from ..module_utils.vultr_v2 import (
-    AnsibleVultr,
-    vultr_argument_spec,
-)
+
+from ..module_utils.vultr_v2 import AnsibleVultr, vultr_argument_spec
 
 
 def main():
     argument_spec = vultr_argument_spec()
-    argument_spec.update(dict(
-        name=dict(type='str', required=True),
-        ssh_key=dict(type='str', no_log=False),
-        state=dict(type='str', choices=['present', 'absent'], default='present'),
-    ))
+    argument_spec.update(
+        dict(
+            name=dict(type="str", required=True),
+            ssh_key=dict(type="str", no_log=False),
+            state=dict(type="str", choices=["present", "absent"], default="present"),
+        )  # type: ignore
+    )
 
     module = AnsibleModule(
         argument_spec=argument_spec,
         required_if=[
-            ('state', 'present', ['ssh_key']),
+            ("state", "present", ["ssh_key"]),
         ],
         supports_check_mode=True,
     )
@@ -132,16 +133,16 @@ def main():
         namespace="vultr_ssh_key",
         resource_path="/ssh-keys",
         ressource_result_key_singular="ssh_key",
-        resource_create_param_keys=['name', 'ssh_key'],
-        resource_update_param_keys=['name', 'ssh_key'],
+        resource_create_param_keys=["name", "ssh_key"],
+        resource_update_param_keys=["name", "ssh_key"],
         resource_key_name="name",
     )
 
-    if module.params.get('state') == "absent":
+    if module.params.get("state") == "absent":
         vultr.absent()
     else:
         vultr.present()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

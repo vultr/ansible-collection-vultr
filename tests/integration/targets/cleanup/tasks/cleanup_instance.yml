@@ -6,6 +6,7 @@
       Authorization: Bearer {{ vultr_api_key }}
     status_code: 200
   register: res
+  no_log: true
 
 - name: Remove all instances created by this test run
   uri:
@@ -18,3 +19,4 @@
   with_items: "{{ res.json.instances }}"
   loop_control:
     label: "{{ item.label }}"
+  no_log: true

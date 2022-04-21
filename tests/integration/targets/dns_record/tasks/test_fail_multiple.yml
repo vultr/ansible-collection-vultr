@@ -11,7 +11,7 @@
 - name: verify setup a dns record
   assert:
     that:
-    - result is successful
+      - result is successful
 
 - name: setup second dns record
   dns_record:
@@ -23,7 +23,7 @@
 - name: verify setup second dns record
   assert:
     that:
-    - result is successful
+      - result is successful
 
 - name: test-multiple fail multiple identical records found
   dns_record:
@@ -35,7 +35,7 @@
 - name: verify test fail multiple identical records found
   assert:
     that:
-    - result is failed
+      - result is failed
 
 - name: test-multiple fail absent multiple identical records but not data
   dns_record:
@@ -48,8 +48,8 @@
 - name: verify test-multiple success absent multiple identical records found
   assert:
     that:
-    - result is failed
-    - "result.msg == 'multiple is True but all of the following are missing: data'"
+      - result is failed
+      - "result.msg == 'multiple is True but all of the following are missing: data'"
 
 - name: test-multiple success absent multiple identical records second found
   dns_record:
@@ -62,7 +62,7 @@
 - name: verify test-multiple success absent multiple identical records second found
   assert:
     that:
-    - result is changed
+      - result is changed
 
 - name: test-multiple success absent multiple identical records first found
   dns_record:
@@ -75,4 +75,4 @@
 - name: verify test-multiple success absent multiple identical records firstfound
   assert:
     that:
-    - result is changed
+      - result is changed

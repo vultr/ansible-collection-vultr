@@ -4,11 +4,12 @@
 # Copyright (c) 2021, René Moser <mail@renemoser.net>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 
-DOCUMENTATION = '''
+DOCUMENTATION = """
 ---
 module: startup_script
 short_description: Manages startup scripts on Vultr.
@@ -42,9 +43,9 @@ options:
     type: str
 extends_documentation_fragment:
 - vultr.cloud.vultr_v2
-'''
+"""
 
-EXAMPLES = '''
+EXAMPLES = """
 - name: ensure a pxe script exists, source from a file
   vultr.cloud.startup_script:
     name: my_web_script
@@ -60,9 +61,9 @@ EXAMPLES = '''
   vultr.cloud.startup_script:
     name: my_web_script
     state: absent
-'''
+"""
 
-RETURN = '''
+RETURN = """
 ---
 vultr_api:
   description: Response from Vultr API with a few additions/modification
@@ -124,18 +125,16 @@ vultr_startup_script:
       returned: success
       type: str
       sample: "2020-10-10T01:56:20+00:00"
-'''
+"""
 
 import base64
+
 from ansible.module_utils.basic import AnsibleModule
-from ..module_utils.vultr_v2 import (
-    AnsibleVultr,
-    vultr_argument_spec,
-)
+
+from ..module_utils.vultr_v2 import AnsibleVultr, vultr_argument_spec
 
 
 class AnsibleVultrStartupScript(AnsibleVultr):
-
     def is_diff(self, data, resource):
         for key, value in data.items():
             if value is not None:
@@ -149,28 +148,39 @@ class AnsibleVultrStartupScript(AnsibleVultr):
         return False
 
     def configure(self):
-        if self.module.params['script']:
-            self.module.params['script'] = base64.b64encode(self.module.params['script'].encode())
+        if self.module.params["script"]:
+            self.module.params["script"] = base64.b64encode(
+                self.module.params["script"].encode()
+            )
 
     def transform_result(self, resource):
         if resource:
-            resource['script'] = base64.b64decode(resource['script']).decode()
+            resource["script"] = base64.b64decode(resource["script"]).decode()
         return resource
 
 
 def main():
     argument_spec = vultr_argument_spec()
-    argument_spec.update(dict(
-        name=dict(type='str', required=True),
-        script=dict(type='str',),
-        type=dict(type='str', default='boot', choices=['boot', 'pxe'], aliases=['script_type']),
-        state=dict(type='str', choices=['present', 'absent'], default='present'),
-    ))
+    argument_spec.update(
+        dict(
+            name=dict(type="str", required=True),
+            script=dict(
+                type="str",
+            ),
+            type=dict(
+                type="str",
+                default="boot",
+                choices=["boot", "pxe"],
+                aliases=["script_type"],
+            ),
+            state=dict(type="str", choices=["present", "absent"], default="present"),
+        )  # type: ignore
+    )
 
     module = AnsibleModule(
         argument_spec=argument_spec,
         required_if=[
-            ('state', 'present', ['script']),
+            ("state", "present", ["script"]),
         ],
         supports_check_mode=True,
     )
@@ -181,16 +191,16 @@ def main():
         resource_path="/startup-scripts",
         ressource_result_key_singular="startup_script",
         resource_get_details=True,
-        resource_create_param_keys=['name', 'type', 'script'],
-        resource_update_param_keys=['name', 'script'],
+        resource_create_param_keys=["name", "type", "script"],
+        resource_update_param_keys=["name", "script"],
         resource_key_name="name",
     )
 
-    if module.params.get('state') == "absent":
+    if module.params.get("state") == "absent":
         vultr.absent()
     else:
         vultr.present()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
