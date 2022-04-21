@@ -1,4 +1,4 @@
-![Collection integration](https://github.com/vultr/ansible-collection-vultr/workflows/Collection%20integration/badge.svg)
+[![Collection integration](https://github.com/vultr/ansible-collection-vultr/actions/workflows/integration.yml/badge.svg?branch=main)](https://github.com/vultr/ansible-collection-vultr/actions/workflows/integration.yml)
  [![Codecov](https://img.shields.io/codecov/c/github/vultr/ansible-collection-vultr)](https://codecov.io/gh/vultr/ansible-collection-vultr)
 [![License](https://img.shields.io/badge/license-GPL%20v3.0-brightgreen.svg)](LICENSE)
 
