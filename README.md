@@ -1,3 +1,5 @@
+TEST CI
+
 ![Collection integration](https://github.com/vultr/ansible-collection-vultr/workflows/Collection%20integration/badge.svg)
  [![Codecov](https://img.shields.io/codecov/c/github/vultr/ansible-collection-vultr)](https://codecov.io/gh/vultr/ansible-collection-vultr)
 [![License](https://img.shields.io/badge/license-GPL%20v3.0-brightgreen.svg)](LICENSE)

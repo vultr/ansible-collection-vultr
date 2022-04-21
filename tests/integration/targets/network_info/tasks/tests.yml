@@ -6,20 +6,21 @@
   vultr.cloud.network_info:
 
 - name: Create the network
-  vultr_network:
-    name: '{{ vultr_network_name }}'
-    cidr: '{{ vultr_network_cidr }}'
-    region: '{{ vultr_network_region }}'
+  vultr.cloud.network:
+    description: "{{ vultr_network_description }}"
+    v4_subnet: "{{ vultr_network_v4_subnet }}"
+    v4_subnet_mask: "{{ vultr_network_v4_subnet_mask }}"
+    region: "{{ vultr_network_region }}"
 
 - name: test gather vultr network info in check mode
   vultr.cloud.network_info:
-  check_mode: yes
+  check_mode: true
   register: result
 
 - name: verify test gather vultr network info in check mode
   assert:
     that:
-    - result.vultr_network_info|selectattr('description','equalto','{{ vultr_network_name }}') | list | count == 1
+      - result.vultr_network_info|selectattr('description','equalto','{{ vultr_network_description }}') | list | count == 1
 
 - name: test gather vultr network info
   vultr.cloud.network_info:
@@ -28,9 +29,9 @@
 - name: verify test gather vultr network info
   assert:
     that:
-    - result.vultr_network_info|selectattr('description','equalto','{{ vultr_network_name }}') | list | count == 1
+      - result.vultr_network_info|selectattr('description','equalto','{{ vultr_network_description }}') | list | count == 1
 
 - name: Delete the script
-  vultr_network:
-    name: '{{ vultr_network_name }}'
+  vultr.cloud.network:
+    name: "{{ vultr_network_description }}"
     state: absent

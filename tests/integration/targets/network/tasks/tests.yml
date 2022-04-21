@@ -3,7 +3,7 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 ---
 - name: setup
-  network:
+  vultr.cloud.network:
     description: "{{ vultr_network_description }}"
     state: absent
   register: result
@@ -13,7 +13,7 @@
       - result is success
 
 - name: test fail if missing description
-  network:
+  vultr.cloud.network:
   register: result
   ignore_errors: true
 - name: verify test fail if missing description
@@ -23,7 +23,7 @@
       - 'result.msg == "missing required arguments: description"'
 
 - name: test fail if missing params for state=present
-  network:
+  vultr.cloud.network:
     description: "{{ vultr_network_description }}"
   register: result
   ignore_errors: true
@@ -34,7 +34,7 @@
       - 'result.msg == "state is present but all of the following are missing: v4_subnet, region"'
 
 - name: test create network in check mode
-  network:
+  vultr.cloud.network:
     description: "{{ vultr_network_description }}"
     v4_subnet: "{{ vultr_network_v4_subnet }}"
     v4_subnet_mask: "{{ vultr_network_v4_subnet_mask }}"
@@ -47,7 +47,7 @@
       - result is changed
 
 - name: test create network
-  network:
+  vultr.cloud.network:
     description: "{{ vultr_network_description }}"
     v4_subnet: "{{ vultr_network_v4_subnet }}"
     v4_subnet_mask: "{{ vultr_network_v4_subnet_mask }}"
@@ -64,7 +64,7 @@
       - result.vultr_network.v4_subnet_mask == vultr_network_v4_subnet_mask
 
 - name: test create network idempotence
-  network:
+  vultr.cloud.network:
     description: "{{ vultr_network_description }}"
     v4_subnet: "{{ vultr_network_v4_subnet }}"
     v4_subnet_mask: "{{ vultr_network_v4_subnet_mask }}"
@@ -81,7 +81,7 @@
       - result.vultr_network.v4_subnet_mask == vultr_network_v4_subnet_mask
 
 - name: test destroy network in check mode
-  network:
+  vultr.cloud.network:
     description: "{{ vultr_network_description }}"
     state: absent
   register: result
@@ -94,7 +94,7 @@
       - result.vultr_network.description == vultr_network_description
 
 - name: test destroy network volume
-  network:
+  vultr.cloud.network:
     description: "{{ vultr_network_description }}"
     state: absent
   register: result
@@ -106,7 +106,7 @@
       - result.vultr_network.description == vultr_network_description
 
 - name: test destroy an existing network idempotence
-  network:
+  vultr.cloud.network:
     description: "{{ vultr_network_description }}"
     state: absent
   register: result
