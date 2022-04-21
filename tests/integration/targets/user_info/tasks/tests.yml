@@ -4,20 +4,20 @@
 ---
 - name: Create the user
   vultr.cloud.user:
-    name: '{{ user_name }}'
-    email: '{{ user_email }}'
-    password: '{{ user_password }}'
-    acls: '{{ user_acls }}'
+    name: "{{ user_name }}"
+    email: "{{ user_email }}"
+    password: "{{ user_password }}"
+    acls: "{{ user_acls }}"
 
 - name: test get vultr user info in check mode
   vultr.cloud.user_info:
   register: result
-  check_mode: yes
+  check_mode: true
 
 - name: verify test get vultr user info in check mode
   assert:
     that:
-    - result.vultr_user_info|selectattr('name','equalto','{{ user_name }}') | list | count == 1
+      - result.vultr_user_info|selectattr('name','equalto','{{ user_name }}') | list | count == 1
 
 - name: test get vultr user info
   vultr.cloud.user_info:
@@ -26,9 +26,9 @@
 - name: verify test get vultr user info
   assert:
     that:
-    - result.vultr_user_info|selectattr('name','equalto','{{ user_name }}') | list | count == 1
+      - result.vultr_user_info|selectattr('name','equalto','{{ user_name }}') | list | count == 1
 
 - name: Delete the user
   vultr.cloud.user:
-    name: '{{ user_name }}'
+    name: "{{ user_name }}"
     state: absent

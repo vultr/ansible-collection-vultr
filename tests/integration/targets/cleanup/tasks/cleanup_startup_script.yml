@@ -8,6 +8,10 @@
   register: res
   no_log: true
 
+- name: Found resources
+  debug:
+    var: res.json
+
 - name: Remove all startup-scripts created by this test run
   uri:
     url: "{{ vultr_api_url }}/startup-scripts/{{ item.id }}"
