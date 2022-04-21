@@ -4,8 +4,8 @@
 ---
 - name: Create a domain
   vultr.cloud.dns_domain:
-    name: '{{ dns_domain_name }}'
-    server_ip: '{{ dns_domain_server_ip }}'
+    name: "{{ dns_domain_name }}"
+    server_ip: "{{ dns_domain_server_ip }}"
 
 - name: test gather vultr dns domain info in check mode
   vultr.cloud.dns_domain_info:
@@ -15,7 +15,7 @@
 - name: verify test gather vultr dns domain info in check mode
   assert:
     that:
-    - result.vultr_dns_domain_info|selectattr('domain','equalto','{{ dns_domain_name }}') | list | count == 1
+      - result.vultr_dns_domain_info|selectattr('domain','equalto','{{ dns_domain_name }}') | list | count == 1
 
 - name: test gather vultr dns domain info
   vultr.cloud.dns_domain_info:
@@ -24,10 +24,10 @@
 - name: verify test gather vultr dns domain info
   assert:
     that:
-    - result.vultr_dns_domain_info|selectattr('domain','equalto','{{ dns_domain_name }}') | list | count == 1
+      - result.vultr_dns_domain_info|selectattr('domain','equalto','{{ dns_domain_name }}') | list | count == 1
 
 - name: Delete the record
   vultr.cloud.dns_domain:
-    name: '{{ dns_domain_name }}'
-    server_ip: '{{ dns_domain_server_ip }}'
+    name: "{{ dns_domain_name }}"
+    server_ip: "{{ dns_domain_server_ip }}"
     state: absent

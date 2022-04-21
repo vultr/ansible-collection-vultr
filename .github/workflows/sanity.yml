@@ -6,7 +6,7 @@ on:
     branches:
       - main
   schedule:
-  - cron: "5 12 * * *"
+    - cron: "5 12 * * *"
   pull_request:
 
 jobs:
@@ -19,24 +19,24 @@ jobs:
     strategy:
       matrix:
         ansible:
-        - stable-2.9
-        - stable-2.10
-        - stable-2.11
-        - stable-2.12
-        - devel
+          - stable-2.9
+          - stable-2.10
+          - stable-2.11
+          - stable-2.12
+          - devel
     steps:
-    - name: Check out code
-      uses: actions/checkout@v2
-      with:
-        path: ansible_collections/vultr/cloud
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          path: ansible_collections/vultr/cloud
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
 
-    - name: Install ansible-base (${{ matrix.ansible }})
-      run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
+      - name: Install ansible-base (${{ matrix.ansible }})
+        run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
 
-    - name: Run sanity tests
-      run: ansible-test sanity --docker -v --color
+      - name: Run sanity tests
+        run: ansible-test sanity --docker -v --color

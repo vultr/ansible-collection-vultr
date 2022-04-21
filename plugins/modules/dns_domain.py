@@ -4,11 +4,12 @@
 # Copyright (c) 2021, René Moser <mail@renemoser.net>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 
-DOCUMENTATION = '''
+DOCUMENTATION = """
 ---
 module: dns_domain
 short_description: Manages DNS domains on Vultr.
@@ -44,9 +45,9 @@ options:
     type: str
 extends_documentation_fragment:
 - vultr.cloud.vultr_v2
-'''
+"""
 
-EXAMPLES = '''
+EXAMPLES = """
 - name: Ensure a domain exists with DNSSEC
   vultr.cloud.dns_domain:
     name: example.com
@@ -57,9 +58,9 @@ EXAMPLES = '''
   vultr.cloud.dns_domain:
     name: example.com
     state: absent
-'''
+"""
 
-RETURN = '''
+RETURN = """
 ---
 vultr_api:
   description: Response from Vultr API with a few additions/modification
@@ -106,28 +107,30 @@ vultr_dns_domain:
       returned: success
       type: str
       sample: "2020-10-10T01:56:20+00:00"
-'''
+"""
 
 from ansible.module_utils.basic import AnsibleModule
-from ..module_utils.vultr_v2 import (
-    AnsibleVultr,
-    vultr_argument_spec,
-)
+
+from ..module_utils.vultr_v2 import AnsibleVultr, vultr_argument_spec
 
 
 def main():
     argument_spec = vultr_argument_spec()
-    argument_spec.update(dict(
-        domain=dict(type='str', required=True, aliases=['name']),
-        ip=dict(type='str', aliases=['server_ip']),
-        dns_sec=dict(type='str', choices=['enabled', 'disabled'], default='disabled'),
-        state=dict(type='str', choices=['present', 'absent'], default='present'),
-    ))
+    argument_spec.update(
+        dict(
+            domain=dict(type="str", required=True, aliases=["name"]),
+            ip=dict(type="str", aliases=["server_ip"]),
+            dns_sec=dict(
+                type="str", choices=["enabled", "disabled"], default="disabled"
+            ),
+            state=dict(type="str", choices=["present", "absent"], default="present"),
+        )  # type: ignore
+    )
 
     module = AnsibleModule(
         argument_spec=argument_spec,
         required_if=[
-            ('state', 'present', ['ip']),
+            ("state", "present", ["ip"]),
         ],
         supports_check_mode=True,
     )
@@ -137,18 +140,18 @@ def main():
         namespace="vultr_dns_domain",
         resource_path="/domains",
         ressource_result_key_singular="domain",
-        resource_create_param_keys=['domain', 'dns_sec', 'ip'],
-        resource_update_param_keys=['domain', 'dns_sec'],
+        resource_create_param_keys=["domain", "dns_sec", "ip"],
+        resource_update_param_keys=["domain", "dns_sec"],
         resource_key_name="domain",
         resource_key_id="domain",
         resource_update_method="PUT",
     )
 
-    if module.params.get('state') == "absent":
+    if module.params.get("state") == "absent":
         vultr.absent()
     else:
         vultr.present()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

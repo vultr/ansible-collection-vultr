@@ -5,11 +5,12 @@
 # Copyright (c) 2021, René Moser <mail@renemoser.net>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 
-DOCUMENTATION = '''
+DOCUMENTATION = """
 ---
 module: user_info
 short_description: Get information about the Vultr user available.
@@ -21,9 +22,9 @@ author:
   - "René Moser (@resmo)"
 extends_documentation_fragment:
 - vultr.cloud.vultr_v2
-'''
+"""
 
-EXAMPLES = '''
+EXAMPLES = """
 - name: Get Vultr user infos
   vultr.cloud.user_info:
   register: result
@@ -31,9 +32,9 @@ EXAMPLES = '''
 - name: Print the infos
   debug:
     var: result.vultr_user_info
-'''
+"""
 
-RETURN = '''
+RETURN = """
 ---
 vultr_api:
   description: Response from Vultr API with a few additions/modification
@@ -95,13 +96,11 @@ vultr_user_info:
       returned: success
       type: list
       sample: [ manage_users, support, upgrade ]
-'''
+"""
 
 from ansible.module_utils.basic import AnsibleModule
-from ..module_utils.vultr_v2 import (
-    AnsibleVultr,
-    vultr_argument_spec,
-)
+
+from ..module_utils.vultr_v2 import AnsibleVultr, vultr_argument_spec
 
 
 def main():
@@ -122,5 +121,5 @@ def main():
     vultr.get_result(vultr.query_list())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -6,8 +6,8 @@
 - name: verify test fail if missing label
   assert:
     that:
-    - result is failed
-    - 'result.msg == "missing required arguments: label"'
+      - result is failed
+      - 'result.msg == "missing required arguments: label"'
 
 - name: test fail if missing params for state=present
   vultr.cloud.block_storage:
@@ -17,5 +17,5 @@
 - name: verify fail if missing params for state=present
   assert:
     that:
-    - result is failed
-    - 'result.msg == "state is present but all of the following are missing: size_gb, region"'
+      - result is failed
+      - 'result.msg == "state is present but all of the following are missing: size_gb, region"'

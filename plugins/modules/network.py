@@ -5,11 +5,12 @@
 # Copyright (c) 2021, René Moser <mail@renemoser.net>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 
-DOCUMENTATION = '''
+DOCUMENTATION = """
 ---
 module: network
 short_description: Manages networks on Vultr.
@@ -47,9 +48,9 @@ options:
     type: str
 extends_documentation_fragment:
 - vultr.cloud.vultr_v2
-'''
+"""
 
-EXAMPLES = '''
+EXAMPLES = """
 - name: Ensure a network is present
   vultr.cloud.network:
     name: mynet
@@ -61,9 +62,9 @@ EXAMPLES = '''
   vultr.cloud.network:
     name: mynet
     state: absent
-'''
+"""
 
-RETURN = '''
+RETURN = """
 ---
 vultr_api:
   description: Response from Vultr API with a few additions/modification
@@ -125,29 +126,29 @@ network:
       returned: success
       type: int
       sample: 24
-'''
+"""
 
 from ansible.module_utils.basic import AnsibleModule
-from ..module_utils.vultr_v2 import (
-    AnsibleVultr,
-    vultr_argument_spec,
-)
+
+from ..module_utils.vultr_v2 import AnsibleVultr, vultr_argument_spec
 
 
 def main():
     argument_spec = vultr_argument_spec()
-    argument_spec.update(dict(
-        description=dict(type='str', required=True, aliases=['name']),
-        v4_subnet=dict(type='str',),
-        v4_subnet_mask=dict(type='int', default=24),
-        region=dict(type='str',),
-        state=dict(choices=['present', 'absent'], default='present'),
-    ))
+    argument_spec.update(
+        dict(
+            description=dict(type="str", required=True, aliases=["name"]),
+            v4_subnet=dict(type="str"),
+            v4_subnet_mask=dict(type="int", default=24),
+            region=dict(type="str"),
+            state=dict(choices=["present", "absent"], default="present"),
+        )  # type: ignore
+    )
 
     module = AnsibleModule(
         argument_spec=argument_spec,
         supports_check_mode=True,
-        required_if=[['state', 'present', ['v4_subnet', 'v4_subnet_mask', 'region']]]
+        required_if=[["state", "present", ["v4_subnet", "v4_subnet_mask", "region"]]],
     )
 
     vultr = AnsibleVultr(
@@ -155,17 +156,22 @@ def main():
         namespace="vultr_network",
         resource_path="/private-networks",
         ressource_result_key_singular="network",
-        resource_create_param_keys=['region', 'description', 'v4_subnet', 'v4_subnet_mask'],
-        resource_update_param_keys=['description'],
+        resource_create_param_keys=[
+            "region",
+            "description",
+            "v4_subnet",
+            "v4_subnet_mask",
+        ],
+        resource_update_param_keys=["description"],
         resource_key_name="description",
         resource_update_method="PUT",
     )
 
-    if module.params.get('state') == "absent":
+    if module.params.get("state") == "absent":
         vultr.absent()
     else:
         vultr.present()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

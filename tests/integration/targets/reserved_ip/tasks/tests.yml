@@ -11,17 +11,17 @@
 - name: verify setup
   assert:
     that:
-    - result is success
+      - result is success
 
 - name: test fail if missing args
   vultr.cloud.reserved_ip:
   register: result
-  ignore_errors: yes
+  ignore_errors: true
 - name: verify test fail if missing args
   assert:
     that:
-    - result is failed
-    - 'result.msg == "missing required arguments: ip_type, label, region"'
+      - result is failed
+      - 'result.msg == "missing required arguments: ip_type, label, region"'
 
 # TODO: topic of changes
 - name: setup create the server
@@ -42,7 +42,7 @@
 - name: verify test create reserved ip in check mode
   assert:
     that:
-    - result is changed
+      - result is changed
 
 - name: test create reserved ip
   vultr.cloud.reserved_ip:
@@ -53,11 +53,11 @@
 - name: verify test create reserved ip
   assert:
     that:
-    - result is changed
-    - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-    - not result.vultr_reserved_ip.instance_id
-    - result.vultr_reserved_ip.subnet is defined
-    - result.vultr_reserved_ip.ip_type == 'v4'
+      - result is changed
+      - result.vultr_reserved_ip.label == vultr_reserved_ip_name
+      - not result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.subnet is defined
+      - result.vultr_reserved_ip.ip_type == 'v4'
 
 - name: test create reserved ip idempotence
   vultr.cloud.reserved_ip:
@@ -68,11 +68,11 @@
 - name: verify test create reserved ip idempotence
   assert:
     that:
-    - result is not changed
-    - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-    - not result.vultr_reserved_ip.instance_id
-    - result.vultr_reserved_ip.subnet is defined
-    - result.vultr_reserved_ip.ip_type == 'v4'
+      - result is not changed
+      - result.vultr_reserved_ip.label == vultr_reserved_ip_name
+      - not result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.subnet is defined
+      - result.vultr_reserved_ip.ip_type == 'v4'
 
 - name: test attach instance of reserved ip in check mode
   vultr.cloud.reserved_ip:
@@ -81,15 +81,15 @@
     region: ewr
     instance_name: "{{ vultr_server_name }}"
   register: result
-  check_mode: yes
+  check_mode: true
 - name: verify test detach instance of reserved ip in check mode
   assert:
     that:
-    - result is changed
-    - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-    - not result.vultr_reserved_ip.instance_id
-    - result.vultr_reserved_ip.subnet
-    - result.vultr_reserved_ip.ip_type == 'v4'
+      - result is changed
+      - result.vultr_reserved_ip.label == vultr_reserved_ip_name
+      - not result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.subnet
+      - result.vultr_reserved_ip.ip_type == 'v4'
 
 - name: test attach instance of reserved ip
   vultr.cloud.reserved_ip:
@@ -101,11 +101,11 @@
 - name: verify test attach instance of reserved ip
   assert:
     that:
-    - result is changed
-    - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-    - result.vultr_reserved_ip.instance_id
-    - result.vultr_reserved_ip.subnet
-    - result.vultr_reserved_ip.ip_type == 'v4'
+      - result is changed
+      - result.vultr_reserved_ip.label == vultr_reserved_ip_name
+      - result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.subnet
+      - result.vultr_reserved_ip.ip_type == 'v4'
 
 - name: test attach instance of reserved ip idempotence
   vultr.cloud.reserved_ip:
@@ -117,11 +117,11 @@
 - name: verify test attach instance of reserved ip idempotence
   assert:
     that:
-    - result is not changed
-    - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-    - result.vultr_reserved_ip.instance_id
-    - result.vultr_reserved_ip.subnet
-    - result.vultr_reserved_ip.ip_type == 'v4'
+      - result is not changed
+      - result.vultr_reserved_ip.label == vultr_reserved_ip_name
+      - result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.subnet
+      - result.vultr_reserved_ip.ip_type == 'v4'
 
 - name: test ignore instance attached reserved ip idempotence
   vultr.cloud.reserved_ip:
@@ -132,11 +132,11 @@
 - name: verify test test ignore instance attached reserved ip idempotence
   assert:
     that:
-    - result is not changed
-    - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-    - result.vultr_reserved_ip.instance_id
-    - result.vultr_reserved_ip.subnet
-    - result.vultr_reserved_ip.ip_type == 'v4'
+      - result is not changed
+      - result.vultr_reserved_ip.label == vultr_reserved_ip_name
+      - result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.subnet
+      - result.vultr_reserved_ip.ip_type == 'v4'
 
 - name: test detach instance of reserved ip in check mode
   vultr.cloud.reserved_ip:
@@ -145,15 +145,15 @@
     region: ewr
     instance_id: ""
   register: result
-  check_mode: yes
+  check_mode: true
 - name: verify test detach instance of reserved ip in check mode
   assert:
     that:
-    - result is changed
-    - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-    - result.vultr_reserved_ip.instance_id
-    - result.vultr_reserved_ip.subnet
-    - result.vultr_reserved_ip.ip_type == 'v4'
+      - result is changed
+      - result.vultr_reserved_ip.label == vultr_reserved_ip_name
+      - result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.subnet
+      - result.vultr_reserved_ip.ip_type == 'v4'
 
 - name: test detach instance of reserved ip
   vultr.cloud.reserved_ip:
@@ -165,11 +165,11 @@
 - name: verify test detach instance of reserved ip
   assert:
     that:
-    - result is changed
-    - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-    - not result.vultr_reserved_ip.instance_id
-    - result.vultr_reserved_ip.subnet
-    - result.vultr_reserved_ip.ip_type == 'v4'
+      - result is changed
+      - result.vultr_reserved_ip.label == vultr_reserved_ip_name
+      - not result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.subnet
+      - result.vultr_reserved_ip.ip_type == 'v4'
 
 - name: test detach instance of reserved ip idempotence
   vultr.cloud.reserved_ip:
@@ -181,11 +181,11 @@
 - name: verify test detach instance of reserved ip idempotence
   assert:
     that:
-    - result is not changed
-    - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-    - not result.vultr_reserved_ip.instance_id
-    - result.vultr_reserved_ip.subnet
-    - result.vultr_reserved_ip.ip_type == 'v4'
+      - result is not changed
+      - result.vultr_reserved_ip.label == vultr_reserved_ip_name
+      - not result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.subnet
+      - result.vultr_reserved_ip.ip_type == 'v4'
 
 - name: test absent reserved ip in check mode
   vultr.cloud.reserved_ip:
@@ -194,15 +194,15 @@
     region: ewr
     state: absent
   register: result
-  check_mode: yes
+  check_mode: true
 - name: verify test absent reserved ip in check mode
   assert:
     that:
-    - result is changed
-    - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-    - not result.vultr_reserved_ip.instance_id
-    - result.vultr_reserved_ip.subnet
-    - result.vultr_reserved_ip.ip_type == 'v4'
+      - result is changed
+      - result.vultr_reserved_ip.label == vultr_reserved_ip_name
+      - not result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.subnet
+      - result.vultr_reserved_ip.ip_type == 'v4'
 
 - name: test absent reserved ip
   vultr.cloud.reserved_ip:
@@ -214,12 +214,12 @@
 - name: verify test absent reserved ip
   assert:
     that:
-    - result is changed
-    - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-    - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-    - not result.vultr_reserved_ip.instance_id
-    - result.vultr_reserved_ip.subnet
-    - result.vultr_reserved_ip.ip_type == 'v4'
+      - result is changed
+      - result.vultr_reserved_ip.label == vultr_reserved_ip_name
+      - result.vultr_reserved_ip.label == vultr_reserved_ip_name
+      - not result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.subnet
+      - result.vultr_reserved_ip.ip_type == 'v4'
 
 - name: test absent reserved ip idempotence
   vultr.cloud.reserved_ip:
@@ -231,7 +231,7 @@
 - name: verify test absent reserved ip idempotence
   assert:
     that:
-    - result is not changed
+      - result is not changed
 
 # TODO: topic of changes
 - name: cleanup the server

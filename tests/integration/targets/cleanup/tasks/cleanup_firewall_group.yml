@@ -6,6 +6,7 @@
       Authorization: Bearer {{ vultr_api_key }}
     status_code: 200
   register: res
+  no_log: true
 
 - name: Remove all firewall groups created by this test run
   uri:

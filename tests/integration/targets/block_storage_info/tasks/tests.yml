@@ -18,7 +18,7 @@
 - name: verify test gather vultr block storage volume info in check mode
   assert:
     that:
-    - result.vultr_block_storage_info|selectattr('label','equalto','{{ vultr_block_storage_name }}') | list | count == 1
+      - result.vultr_block_storage_info|selectattr('label','equalto','{{ vultr_block_storage_name }}') | list | count == 1
 
 - name: test gather vultr block storage volume info
   vultr.cloud.block_storage_info:
@@ -27,7 +27,7 @@
 - name: verify test gather vultr block storage volume info
   assert:
     that:
-    - result.vultr_block_storage_info|selectattr('label','equalto','{{ vultr_block_storage_name }}') | list | count == 1
+      - result.vultr_block_storage_info|selectattr('label','equalto','{{ vultr_block_storage_name }}') | list | count == 1
 
 - name: Delete the block storage volume
   vultr.cloud.block_storage:

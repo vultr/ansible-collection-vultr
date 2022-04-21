@@ -5,7 +5,7 @@
 ---
 - name: test gather vultr plan bare metal info in check mode
   vultr.cloud.plan_metal_info:
-  check_mode: yes
+  check_mode: true
   register: result
 
 - name: verify test gather vultr plan bare metal info in check mode

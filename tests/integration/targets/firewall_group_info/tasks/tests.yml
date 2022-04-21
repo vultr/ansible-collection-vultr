@@ -7,17 +7,17 @@
 
 - name: Create the firewall group
   vultr.cloud.firewall_group:
-    name: '{{ firewall_group_name }}'
+    name: "{{ firewall_group_name }}"
 
 - name: test gather vultr firewall group info in check mode
   vultr.cloud.firewall_group_info:
-  check_mode: yes
+  check_mode: true
   register: result
 
 - name: verify test gather vultr firewall group info in check mode
   assert:
     that:
-    - result.vultr_firewall_group_info|selectattr('description','equalto','{{ firewall_group_name }}') | list | count == 1
+      - result.vultr_firewall_group_info|selectattr('description','equalto','{{ firewall_group_name }}') | list | count == 1
 
 - name: test gather vultr firewall group info
   vultr.cloud.firewall_group_info:
@@ -26,9 +26,9 @@
 - name: verify test gather vultr firewall group info
   assert:
     that:
-    - result.vultr_firewall_group_info|selectattr('description','equalto','{{ firewall_group_name }}') | list | count == 1
+      - result.vultr_firewall_group_info|selectattr('description','equalto','{{ firewall_group_name }}') | list | count == 1
 
 - name: Delete the firewall group
   vultr.cloud.firewall_group:
-    name: '{{ firewall_group_name }}'
+    name: "{{ firewall_group_name }}"
     state: absent

@@ -4,13 +4,13 @@
 ---
 - name: test gather vultr plan info in check mode
   vultr.cloud.plan_info:
-  check_mode: yes
+  check_mode: true
   register: result
 
 - name: verify test gather vultr plan info in check mode
   assert:
     that:
-    - result.vultr_plan_info|selectattr('id','equalto','vhf-8c-32gb') | list | count == 1
+      - result.vultr_plan_info|selectattr('id','equalto','vhf-8c-32gb') | list | count == 1
 
 - name: test gather vultr plan info
   vultr.cloud.plan_info:
@@ -19,4 +19,4 @@
 - name: verify test gather vultr plan info
   assert:
     that:
-    - result.vultr_plan_info|selectattr('id','equalto','vhf-8c-32gb') | list | count == 1
+      - result.vultr_plan_info|selectattr('id','equalto','vhf-8c-32gb') | list | count == 1

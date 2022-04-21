@@ -21,7 +21,7 @@
 - name: verify test create a dns record in check mode
   assert:
     that:
-    - result is changed
+      - result is changed
 
 - name: test create a dns record
   dns_record:
@@ -35,12 +35,12 @@
 - name: verify test create a dns record
   assert:
     that:
-    - result is changed
-    - result.vultr_dns_record.data == "{{ item.data }}"
-    - result.vultr_dns_record.name == "{{ item.name | default("") }}"
-    - result.vultr_dns_record.type == "{{ item.record_type | default('A') }}"
-    - result.vultr_dns_record.ttl == {{ item.ttl | default(300) }}
-    - result.vultr_dns_record.priority == {{ item.priority | default(0) }}
+      - result is changed
+      - result.vultr_dns_record.data == "{{ item.data }}"
+      - result.vultr_dns_record.name == "{{ item.name | default("") }}"
+      - result.vultr_dns_record.type == "{{ item.record_type | default('A') }}"
+      - result.vultr_dns_record.ttl == {{ item.ttl | default(300) }}
+      - result.vultr_dns_record.priority == {{ item.priority | default(0) }}
 
 - name: test create a dns record idempotence
   dns_record:
@@ -54,9 +54,9 @@
 - name: verify test create a dns record idempotence
   assert:
     that:
-    - result is not changed
-    - result.vultr_dns_record.data == "{{ item.data }}"
-    - result.vultr_dns_record.name == "{{ item.name | default("") }}"
-    - result.vultr_dns_record.type == "{{ item.record_type | default('A') }}"
-    - result.vultr_dns_record.ttl == {{ item.ttl | default(300) }}
-    - result.vultr_dns_record.priority == {{ item.priority | default(0) }}
+      - result is not changed
+      - result.vultr_dns_record.data == "{{ item.data }}"
+      - result.vultr_dns_record.name == "{{ item.name | default("") }}"
+      - result.vultr_dns_record.type == "{{ item.record_type | default('A') }}"
+      - result.vultr_dns_record.ttl == {{ item.ttl | default(300) }}
+      - result.vultr_dns_record.priority == {{ item.priority | default(0) }}
