@@ -7,6 +7,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - ".github/workflows/integration.yml"
+      - "plugins/**"
+      - "tests/**"
 
 jobs:
   integration-test:
