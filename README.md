@@ -50,24 +50,97 @@ There are many ways in which you can participate in the project, for example:
 
 ## Run Tests
 
-```
-# For ansible-test we need to source the ansible repo
-git clone git@github.com:ansible/ansible.git
-cd ansible && source ./hacking/env-setup
+### Clone the source
 
+```
 git clone git@github.com:vultr/ansible-collection-vultr.git
 cd ansible-collection-vultr
+```
 
-# Key to use
+### Create a virtual environent
+
+```
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+### Install ansible for ansible-test
+```
+pip install ansible
+```
+
+### Setup your Vultr API key
+
+```
 cp tests/integration/cloud-config-vultr.ini.origin tests/integration/cloud-config-vultr.ini
 edit tests/integration/cloud-config-vultr.ini
+```
 
-# Runs all tests
+### Runs tests in Docker
+
+All vultr tests:
+
+```
 ansible-test integration --docker --diff -v cloud/vultr/
+```
 
-# Runs one test e.g. ssh_key_info
+Specific vultr test e.g. ssh_key_info:
+
+```
 ansible-test integration --docker --diff -v cloud/vultr/ssh_key_info
 ```
+
+## Releasing
+
+### Update Changelog
+
+The changelog is managed using the `antsibull` tool. You can install
+it using `pip install antsibull`
+
+1. Set version in galaxy.yml
+2. Create a release summary fragment and store in in _changelog/fragements/<version>.yml_:
+```yaml
+release_summary: |
+  In this release...
+```
+3. Generate changelog of all fragments using antsibull
+```
+antsibull-changelog release
+```
+Modify or delete the release summary in
+4. Commit changelog and new version
+```
+git commit -m "Release version X.Y.Z" galaxy.yml CHANGELOG.rst changelogs/
+```
+
+### Tag the release
+
+1. Tag the release. Preferably create GPG signed tag if you have a GPG
+key. Version tags should be prefixed with "v".
+```
+git tag -s -m "Release X.Y.Z" vX.Y.Z
+```
+2. Push the release and tag
+```
+git push origin main vX.Y.Z
+```
+
+### Publish to Ansible Galaxy
+
+After the _GitHub Release_ has been created the CI job _publish_ gets triggered which pushes the release to _Ansible Galaxy_.
+
+1. Draft a new _GitHub Release_
+2. Select the tag `vX.Y.Z`.
+3. Set the title:
+```
+Release vX.Y.Z
+```
+3. Set the content:
+```
+See changelog for more information https://github.com/vultr/ansible-collection-vultr/blob/vX.Y.Z/CHANGELOG.rst#vX.Y.Z
+```
+4. Verify the release is [processed by CI](https://github.com/vultr/ansible-collection-vultr/actions/workflows/publish.yml)
+
 
 ## License
 
