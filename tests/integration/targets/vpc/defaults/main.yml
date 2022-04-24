@@ -1,0 +1,5 @@
+---
+vultr_vpc_description: "{{ vultr_resource_prefix }}_vpc"
+vultr_vpc_v4_subnet: 192.168.42.0
+vultr_vpc_v4_subnet_mask: 24
+vultr_vpc_region: ewr
