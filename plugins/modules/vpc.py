@@ -51,14 +51,14 @@ extends_documentation_fragment:
 
 EXAMPLES = """
 - name: Ensure a VPC is present
-  vultr.cloud.firewall_group:
+  vultr.cloud.vpc:
     description: my VPC
     subnet: 10.99.1.0
     subnet_mask: 24
     region: ewr
 
-- name: Ensure a firewall group is absent
-  vultr.cloud.firewall_group:
+- name: Ensure a VPC is absent
+  vultr.cloud.vpc:
     description: my VPC
     state: absent
 """
