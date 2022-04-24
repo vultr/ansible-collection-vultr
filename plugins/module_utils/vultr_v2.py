@@ -137,7 +137,7 @@ class AnsibleVultr:
                 timeout=self.module.params["api_timeout"],
             )
 
-            resp_body = resp.read()
+            resp_body = resp.read() if resp is not None else ""
 
             # 429 Too Many Requests
             if info["status"] != 429:

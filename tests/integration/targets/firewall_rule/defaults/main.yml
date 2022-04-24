@@ -1,0 +1,40 @@
+# Copyright (c) 2018, René Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+vultr_firewall_group_name: "{{ vultr_resource_prefix }}_firewall-group"
+vultr_firewall_rules:
+  - notes: DNS TCP v4
+    port: "53"
+    subnet: "0.0.0.0"
+    subnet_size: 0
+
+  - notes: DNS UDP v4
+    port: "53"
+    protocol: udp
+    subnet: "0.0.0.0"
+    subnet_size: 0
+
+  - notes: DNS tcp v6
+    port: "53"
+    port_update: "5353"
+    protocol: tcp
+    ip_type: v6
+    subnet: "::"
+    subnet_size: 0
+
+  - notes: DNS UDP v6
+    port: "53"
+    protocol: udp
+    ip_type: v6
+    subnet: "::"
+    subnet_size: 0
+
+  - notes: allow ICMP
+    protocol: icmp
+    subnet: "0.0.0.0"
+    subnet_size: 0
+
+  - notes: web app
+    port: "8000:8080"
+    subnet: "192.168.23.0"
+    subnet_size: 24

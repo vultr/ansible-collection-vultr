@@ -1,0 +1,28 @@
+# Copyright (c) 2022, René Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: setup firewall group
+  vultr.cloud.firewall_group:
+    name: "{{ vultr_firewall_group_name }}"
+
+- name: test fail if missing group
+  vultr.cloud.firewall_rule:
+  register: result
+  ignore_errors: true
+- name: verify test fail if missing group
+  assert:
+    that:
+      - result is failed
+      - 'result.msg == "missing required arguments: group"'
+
+- include_tasks: rule_present.yml
+  with_items: "{{ vultr_firewall_rules }}"
+  loop_control:
+    loop_var: rule
+    label: "{{ rule.notes }}"
+
+- include_tasks: rule_absent.yml
+  with_items: "{{ vultr_firewall_rules }}"
+  loop_control:
+    loop_var: rule
+    label: "{{ rule.notes }}"
