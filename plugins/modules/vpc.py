@@ -96,32 +96,32 @@ vultr_vpc:
   type: complex
   contains:
     id:
-      description: ID of the vpc
+      description: ID of the VPC
       returned: success
       type: str
       sample: cb676a46-66fd-4dfb-b839-443f2e6c0b60
     description:
-      description: Description of the vpc
+      description: Description of the VPC
       returned: success
       type: str
       sample: my vpc
     v4_subnet:
-      description: Subnet of the vpc
+      description: Subnet of the VPC
       returned: success
       type: str
       sample: 10.99.1.0
     v4_subnet_maks:
-      description: Subnet mask of the vpc
+      description: Subnet mask of the VPC
       returned: success
       type: str
       sample: 10.99.1.0
     date_created:
-      description: Date the vpc was created
+      description: Date the VPC was created
       returned: success
       type: str
       sample: "2020-10-10T01:56:20+00:00"
     date_modified:
-      description: Date the vpc was modified
+      description: Date the VPC was modified
       returned: success
       type: str
       sample: "2020-10-10T01:56:20+00:00"
