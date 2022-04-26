@@ -1,0 +1,112 @@
+# Copyright (c) 2022, René Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: setup
+  vultr.cloud.vpc:
+    description: "{{ vultr_vpc_description }}"
+    state: absent
+
+- name: test fail if missing description
+  vultr.cloud.vpc:
+  register: result
+  ignore_errors: true
+- name: verify test fail if missing description
+  assert:
+    that:
+      - result is failed
+      - 'result.msg == "missing required arguments: description"'
+
+- name: test fail if missing params for state=present
+  vultr.cloud.vpc:
+    description: "{{ vultr_vpc_description }}"
+  register: result
+  ignore_errors: true
+- name: verify fail if missing params for state=present
+  assert:
+    that:
+      - result is failed
+      - 'result.msg == "state is present but all of the following are missing: v4_subnet, v4_subnet_mask, region"'
+
+- name: test create vpc in check mode
+  vultr.cloud.vpc:
+    description: "{{ vultr_vpc_description }}"
+    v4_subnet: "{{ vultr_vpc_v4_subnet }}"
+    v4_subnet_mask: "{{ vultr_vpc_v4_subnet_mask }}"
+    region: "{{ vultr_vpc_region }}"
+  register: result
+  check_mode: true
+- name: verify test create server in check mode
+  assert:
+    that:
+      - result is changed
+
+- name: test create vpc
+  vultr.cloud.vpc:
+    description: "{{ vultr_vpc_description }}"
+    v4_subnet: "{{ vultr_vpc_v4_subnet }}"
+    v4_subnet_mask: "{{ vultr_vpc_v4_subnet_mask }}"
+    region: "{{ vultr_vpc_region }}"
+  register: result
+- name: verify test create vpc
+  assert:
+    that:
+      - result is changed
+      - result.vultr_vpc.description == vultr_vpc_description
+      - result.vultr_vpc.region == vultr_vpc_region
+      - result.vultr_vpc.v4_subnet == vultr_vpc_v4_subnet
+      - result.vultr_vpc.v4_subnet_mask == vultr_vpc_v4_subnet_mask
+
+- name: test create vpc idempotence
+  vultr.cloud.vpc:
+    description: "{{ vultr_vpc_description }}"
+    v4_subnet: "{{ vultr_vpc_v4_subnet }}"
+    v4_subnet_mask: "{{ vultr_vpc_v4_subnet_mask }}"
+    region: "{{ vultr_vpc_region }}"
+  register: result
+- name: verify test vpc idempotence
+  assert:
+    that:
+      - result is not changed
+      - result.vultr_vpc.description == vultr_vpc_description
+      - result.vultr_vpc.region == vultr_vpc_region
+      - result.vultr_vpc.v4_subnet == vultr_vpc_v4_subnet
+      - result.vultr_vpc.v4_subnet_mask == vultr_vpc_v4_subnet_mask
+
+- name: test destroy vpc in check mode
+  vultr.cloud.vpc:
+    description: "{{ vultr_vpc_description }}"
+    state: absent
+  register: result
+  check_mode: true
+- name: verify test destroy vpc in check mode
+  assert:
+    that:
+      - result is changed
+      - result.vultr_vpc.description == vultr_vpc_description
+      - result.vultr_vpc.region == vultr_vpc_region
+      - result.vultr_vpc.v4_subnet == vultr_vpc_v4_subnet
+      - result.vultr_vpc.v4_subnet_mask == vultr_vpc_v4_subnet_mask
+
+- name: test destroy vpc
+  vultr.cloud.vpc:
+    description: "{{ vultr_vpc_description }}"
+    state: absent
+  register: result
+- name: verify test destroy vpc
+  assert:
+    that:
+      - result is changed
+      - result.vultr_vpc.description == vultr_vpc_description
+      - result.vultr_vpc.region == vultr_vpc_region
+      - result.vultr_vpc.v4_subnet == vultr_vpc_v4_subnet
+      - result.vultr_vpc.v4_subnet_mask == vultr_vpc_v4_subnet_mask
+
+- name: test destroy an existing vpc idempotence
+  vultr.cloud.vpc:
+    description: "{{ vultr_vpc_description }}"
+    state: absent
+  register: result
+- name: verify test destroy an existing vpc idempotence
+  assert:
+    that:
+      - result is not changed
