@@ -1,0 +1,8 @@
+---
+- block:
+    - import_tasks: tests.yml
+  always:
+    - name: cleanup firewall group and rules
+      vultr.cloud.firewall_group:
+        name: "{{ vultr_firewall_group_name }}"
+        state: absent
