@@ -228,14 +228,8 @@ class AnsibleVultrFirewallRule(AnsibleVultr):
                 if param is None:
                     continue
 
-                # TODO: API return missmatch: type -> ip_type
-                if key == "ip_type":
-                    if resource.get("type") != param:
-                        break
-
-                elif resource.get(key) != param:
+                if resource.get(key) != param:
                     break
-
             else:
                 result = resource
 
