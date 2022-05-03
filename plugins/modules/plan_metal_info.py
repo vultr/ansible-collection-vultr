@@ -32,7 +32,7 @@ EXAMPLES = """
   register: result
 
 - name: Print the gathered information
-  debug:
+  ansible.builtin.debug:
     var: result.vultr_plan_metal_info
 """
 

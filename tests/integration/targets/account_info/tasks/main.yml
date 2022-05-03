@@ -7,7 +7,7 @@
   register: result
 
 - name: verify test get vultr account infos in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result.vultr_account_info.balance is defined
       - result.vultr_account_info.last_payment_amount is defined
@@ -19,7 +19,7 @@
   register: result
 
 - name: verify test get vultr account infos
-  assert:
+  ansible.builtin.assert:
     that:
       - result.vultr_account_info.balance is defined
       - result.vultr_account_info.last_payment_amount is defined

@@ -11,7 +11,7 @@
   register: result
   ignore_errors: true
 - name: verify test fail if missing description
-  assert:
+  ansible.builtin.assert:
     that:
       - result is failed
       - 'result.msg == "missing required arguments: description"'
@@ -22,7 +22,7 @@
   register: result
   ignore_errors: true
 - name: verify fail if missing params for state=present
-  assert:
+  ansible.builtin.assert:
     that:
       - result is failed
       - 'result.msg == "state is present but all of the following are missing: v4_subnet, v4_subnet_mask, region"'
@@ -36,7 +36,7 @@
   register: result
   check_mode: true
 - name: verify test create server in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
 
@@ -48,7 +48,7 @@
     region: "{{ vultr_vpc_region }}"
   register: result
 - name: verify test create vpc
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_vpc.description == vultr_vpc_description
@@ -64,7 +64,7 @@
     region: "{{ vultr_vpc_region }}"
   register: result
 - name: verify test vpc idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
       - result.vultr_vpc.description == vultr_vpc_description
@@ -79,7 +79,7 @@
   register: result
   check_mode: true
 - name: verify test destroy vpc in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_vpc.description == vultr_vpc_description
@@ -93,7 +93,7 @@
     state: absent
   register: result
 - name: verify test destroy vpc
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_vpc.description == vultr_vpc_description
@@ -107,6 +107,6 @@
     state: absent
   register: result
 - name: verify test destroy an existing vpc idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed

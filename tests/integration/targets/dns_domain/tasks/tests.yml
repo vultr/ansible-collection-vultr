@@ -7,7 +7,7 @@
     state: absent
   register: result
 - name: verify setup
-  assert:
+  ansible.builtin.assert:
     that:
       - result is success
 
@@ -16,7 +16,7 @@
   register: result
   ignore_errors: true
 - name: verify test fail if missing name
-  assert:
+  ansible.builtin.assert:
     that:
       - result is failed
       - 'result.msg == "missing required arguments: domain"'
@@ -27,7 +27,7 @@
   register: result
   ignore_errors: true
 - name: verify fail if missing params for state=present
-  assert:
+  ansible.builtin.assert:
     that:
       - result is failed
       - 'result.msg == "state is present but all of the following are missing: ip"'
@@ -40,7 +40,7 @@
   register: result
   check_mode: true
 - name: verify test create dns domain in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
 
@@ -51,7 +51,7 @@
     server_ip: 10.10.10.10
   register: result
 - name: verify test create dns domain
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_dns_domain.domain == vultr_dns_domain_name
@@ -64,7 +64,7 @@
     server_ip: 10.10.10.10
   register: result
 - name: verify test create dns domain idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
       - result.vultr_dns_domain.domain == vultr_dns_domain_name
@@ -78,7 +78,7 @@
   register: result
   check_mode: true
 - name: verify test create dns domain in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_dns_domain.dns_sec == 'enabled'
@@ -90,7 +90,7 @@
     server_ip: 10.10.10.10
   register: result
 - name: verify test create dns domain
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_dns_domain.domain == vultr_dns_domain_name
@@ -103,7 +103,7 @@
     server_ip: 10.10.10.10
   register: result
 - name: verify test create dns domain idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
       - result.vultr_dns_domain.domain == vultr_dns_domain_name
@@ -116,7 +116,7 @@
   register: result
   check_mode: true
 - name: verify test absent dns domain in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_dns_domain.domain == vultr_dns_domain_name
@@ -127,7 +127,7 @@
     state: absent
   register: result
 - name: verify test absent dns domain
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_dns_domain.domain == vultr_dns_domain_name
@@ -138,6 +138,6 @@
     state: absent
   register: result
 - name: verify test absent dns domain idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed

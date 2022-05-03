@@ -14,7 +14,7 @@
   register: result
   check_mode: true
 - name: verify test create block storage volume in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
 
@@ -25,7 +25,7 @@
     region: "{{ vultr_block_storage_region }}"
   register: result
 - name: verify test create block storage volume
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_block_storage.label == vultr_block_storage_name
@@ -39,7 +39,7 @@
     region: "{{ vultr_block_storage_region }}"
   register: result
 - name: verify test create block storage volume idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
       - result.vultr_block_storage.label == vultr_block_storage_name
@@ -59,7 +59,7 @@
   register: result
   check_mode: true
 - name: verify test resize block storage volume in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_block_storage.size_gb == vultr_block_storage_size
@@ -71,7 +71,7 @@
     region: "{{ vultr_block_storage_region }}"
   register: result
 - name: verify test resize block storage volume
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_block_storage.size_gb == vultr_block_storage_size_2
@@ -83,7 +83,7 @@
     region: "{{ vultr_block_storage_region }}"
   register: result
 - name: verify test resize block storage volume idempotency
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
       - result.vultr_block_storage.size_gb == vultr_block_storage_size_2
@@ -99,7 +99,7 @@
     region: "{{ vultr_block_storage_region }}"
   register: result
 - name: verify test shrinking warning block storage volume
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
       - result.vultr_block_storage.size_gb == vultr_block_storage_size_2
@@ -111,7 +111,7 @@
   check_mode: true
   register: result
 - name: verify test destroy block storage volume in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_block_storage.label == vultr_block_storage_name
@@ -122,7 +122,7 @@
     state: absent
   register: result
 - name: verify test destroy block storage volume
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_block_storage.label == vultr_block_storage_name
@@ -133,6 +133,6 @@
     state: absent
   register: result
 - name: verify test destroy block storage volume idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed

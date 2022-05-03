@@ -30,7 +30,7 @@ EXAMPLES = """
   register: results
 
 - name: Print the gathered infos
-  debug:
+  ansible.builtin.debug:
     var: results.vultr_os_info
 """
 

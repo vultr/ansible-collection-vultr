@@ -7,7 +7,7 @@
     state: absent
   register: result
 - name: verify setup
-  assert:
+  ansible.builtin.assert:
     that:
       - result is success
 
@@ -16,7 +16,7 @@
   register: result
   ignore_errors: true
 - name: verify test fail if missing name
-  assert:
+  ansible.builtin.assert:
     that:
       - result is failed
       - 'result.msg == "missing required arguments: name"'
@@ -27,7 +27,7 @@
   register: result
   ignore_errors: true
 - name: verify fail if missing params for state=present
-  assert:
+  ansible.builtin.assert:
     that:
       - result is failed
       - 'result.msg.startswith("state is present but all of the following are missing")'
@@ -44,7 +44,7 @@
   register: result
   ignore_errors: true
 - name: verify test fail if missing name
-  assert:
+  ansible.builtin.assert:
     that:
       - result is failed
       - 'result.msg.startswith("value of acls must be one or more of")'
@@ -61,7 +61,7 @@
   register: result
   check_mode: true
 - name: verify test create user in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
 
@@ -76,7 +76,7 @@
       - manage_users
   register: result
 - name: verify test create user
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_user.name == vultr_user_name
@@ -97,7 +97,7 @@
       - manage_users
   register: result
 - name: verify test create user idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
       - result.vultr_user.name == vultr_user_name
@@ -120,7 +120,7 @@
   register: result
   check_mode: true
 - name: verify test update user in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_user.name == vultr_user_name
@@ -142,7 +142,7 @@
       - support
   register: result
 - name: verify test update user
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_user.name == vultr_user_name
@@ -164,7 +164,7 @@
       - support
   register: result
 - name: verify test update user idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
       - result.vultr_user.name == vultr_user_name
@@ -181,7 +181,7 @@
   register: result
   check_mode: true
 - name: verify test absent user in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_user.name == vultr_user_name
@@ -197,7 +197,7 @@
     state: absent
   register: result
 - name: verify test absent user
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_user.name == vultr_user_name
@@ -213,6 +213,6 @@
     state: absent
   register: result
 - name: verify test absent user idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed

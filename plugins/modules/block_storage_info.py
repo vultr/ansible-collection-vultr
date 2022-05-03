@@ -29,7 +29,7 @@ EXAMPLES = """
   register: result
 
 - name: Print the infos
-  debug:
+  ansible.builtin.debug:
     var: result.vultr_block_storage_info
 """
 

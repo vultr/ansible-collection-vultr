@@ -27,7 +27,7 @@ EXAMPLES = """
   register: result
 
 - name: Print the infos
-  debug:
+  ansible.builtin.debug:
     var: result.vultr_account_info
 """
 

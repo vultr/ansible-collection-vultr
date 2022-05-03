@@ -27,7 +27,7 @@
     attached_to_instance: ""
   register: result
 - name: verify test create block storage volume
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - not result.vultr_block_storage.attached_to_instance
@@ -44,7 +44,7 @@
   register: result
   check_mode: true
 - name: verify test attach block volume in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - not result.vultr_block_storage.attached_to_instance
@@ -57,7 +57,7 @@
     attached_to_instance: "{{ result_server_setup.vultr_server.id }}"
   register: result
 - name: verify test attach block volume
-  assert:
+  ansible.builtin.assert:
     that:
       - result.changed
       - result.vultr_block_storage.attached_to_instance == result_server_setup.vultr_server.id
@@ -70,7 +70,7 @@
     attached_to_instance: "{{ result_server_setup.vultr_server.id }}"
   register: result
 - name: verify test attach block volume idempotency
-  assert:
+  ansible.builtin.assert:
     that:
       - not result.changed
       - result.vultr_block_storage.attached_to_instance == result_server_setup.vultr_server.id
@@ -88,7 +88,7 @@
     attached_to_instance: "{{ result_server_setup.vultr_server.id }}"
   register: result
 - name: verify test resize block storage volume while attaching
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_block_storage.attached_to_instance == result_server_setup.vultr_server.id
@@ -102,7 +102,7 @@
   register: result
   check_mode: true
 - name: verify test detach block volume in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - not result.vultr_block_storage.attached_to_instance
@@ -115,7 +115,7 @@
     attached_to_instance: ""
   register: result
 - name: verify test detach block volume
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - not result.vultr_block_storage.attached_to_instance
@@ -128,7 +128,7 @@
     attached_to_instance: ""
   register: result
 - name: verify test detach block volume idempotency
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
       - not result.vultr_block_storage.attached_to_instance

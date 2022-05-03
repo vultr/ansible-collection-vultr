@@ -1,6 +1,6 @@
 ---
 - name: List startup-scripts
-  uri:
+  ansible.builtin.uri:
     url: "{{ vultr_api_url }}/startup-scripts"
     headers:
       Authorization: Bearer {{ vultr_api_key }}
@@ -9,11 +9,11 @@
   no_log: true
 
 - name: Found resources
-  debug:
+  ansible.builtin.debug:
     var: res.json
 
 - name: Remove all startup-scripts created by this test run
-  uri:
+  ansible.builtin.uri:
     url: "{{ vultr_api_url }}/startup-scripts/{{ item.id }}"
     method: "DELETE"
     headers:

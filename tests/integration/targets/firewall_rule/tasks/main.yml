@@ -1,6 +1,6 @@
 ---
 - block:
-    - import_tasks: tests.yml
+    - ansible.builtin.import_tasks: tests.yml
   always:
     - name: cleanup firewall group and rules
       vultr.cloud.firewall_group:

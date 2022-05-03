@@ -32,7 +32,7 @@ EXAMPLES = """
   register: result
 
 - name: Print the infos
-  debug:
+  ansible.builtin.debug:
     var: result.vultr_ssh_key_info
 """
 

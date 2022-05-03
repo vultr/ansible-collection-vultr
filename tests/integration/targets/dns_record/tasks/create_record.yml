@@ -2,14 +2,14 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 ---
 - name: setup dns record absent
-  dns_record:
+  vultr.cloud.dns_record:
     name: "{{ item.name | default(omit) }}"
     domain: "{{ vultr_dns_domain_name }}"
     record_type: "{{ item.record_type | default(omit) }}"
     state: absent
 
 - name: test create a dns record in check mode
-  dns_record:
+  vultr.cloud.dns_record:
     name: "{{ item.name | default(omit) }}"
     domain: "{{ vultr_dns_domain_name }}"
     data: "{{ item.data }}"
@@ -19,12 +19,12 @@
   check_mode: True
   register: result
 - name: verify test create a dns record in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
 
 - name: test create a dns record
-  dns_record:
+  vultr.cloud.dns_record:
     name: "{{ item.name | default(omit) }}"
     domain: "{{ vultr_dns_domain_name }}"
     data: "{{ item.data }}"
@@ -33,7 +33,7 @@
     priority: "{{ item.priority | default(omit) }}"
   register: result
 - name: verify test create a dns record
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_dns_record.data == "{{ item.data }}"
@@ -43,7 +43,7 @@
       - result.vultr_dns_record.priority == {{ item.priority | default(0) }}
 
 - name: test create a dns record idempotence
-  dns_record:
+  vultr.cloud.dns_record:
     name: "{{ item.name | default(omit) }}"
     domain: "{{ vultr_dns_domain_name }}"
     data: "{{ item.data }}"
@@ -52,7 +52,7 @@
     priority: "{{ item.priority | default(omit) }}"
   register: result
 - name: verify test create a dns record idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
       - result.vultr_dns_record.data == "{{ item.data }}"
