@@ -11,6 +11,8 @@ on:
       - ".github/workflows/integration.yml"
       - "plugins/**"
       - "tests/**"
+  schedule:
+    - cron: 56 3 * * * # Run weekly
 
 jobs:
   integration-test:
