@@ -1,43 +1,47 @@
-[![Collection integration](https://github.com/vultr/ansible-collection-vultr/actions/workflows/integration.yml/badge.svg?branch=main)](https://github.com/vultr/ansible-collection-vultr/actions/workflows/integration.yml)
- [![Codecov](https://img.shields.io/codecov/c/github/vultr/ansible-collection-vultr)](https://codecov.io/gh/vultr/ansible-collection-vultr)
-[![License](https://img.shields.io/badge/license-GPL%20v3.0-brightgreen.svg)](LICENSE)
+[![Collection integration](https://github.com/vultr/ansible-collection-vultr/actions/workflows/integration.yml/badge.svg?branch=main)](https://github.com/vultr/ansible-collection-vultr/actions/workflows/integration.yml) [![Codecov](https://img.shields.io/codecov/c/github/vultr/ansible-collection-vultr)](https://codecov.io/gh/vultr/ansible-collection-vultr) [![License](https://img.shields.io/badge/license-GPL%20v3.0-brightgreen.svg)](LICENSE)
 
 # Ansible Collection for Vultr Cloud
 
-This collection provides a series of Ansible modules and plugins for interacting with the [Vultr](https://www.vultr.com) Cloud.
+This repository contains the `vultr.cloud` Ansible Collection . The collection is a part of the Ansible package and provides a series of Ansible modules and plugins for interacting with the [Vultr](https://www.vultr.com) Cloud.
 
-## Requirements
+You can find the documentation for this collection on the [Ansible docs site](https://docs.ansible.com/ansible/latest/collections/vultr/cloud/).
 
-- ansible version >= 2.9
+## Ansible version compatibility
 
-## Installation
+Tested with all Ansible versions >= 2.9.
 
-To install the collection hosted in Galaxy:
+## Release notes
 
-```bash
-ansible-galaxy collection install vultr.cloud
-```
+Release notes are available in our [changelog](https://github.com/vultr/ansible-collection-vultr/blob/main/CHANGELOG.rst).
 
-To upgrade to the latest version of the collection:
+## Using this collection
 
-```bash
-ansible-galaxy collection install vultr.cloud --force
-```
+This collection is shipped with the Ansible package. So if you have it installed, no more action is required.
 
-## Usage
+If you have a minimal installation (only Ansible Core installed) or you want to use the latest version of the collection along with the whole Ansible package, you need to install the collection from [Ansible Galaxy](https://galaxy.ansible.com/vultr/cloud) manually with the `ansible-galaxy` command-line tool:
 
-### Playbooks
+    ansible-galaxy collection install vultr.cloud
 
-To use a module from Vultr collection, please reference the full namespace, collection name, and modules name that you want to use:
+You can also include it in a `requirements.yml` file and install it via `ansible-galaxy collection install -r requirements.yml` using the format:
 
 ```yaml
----
-- name: Using Vultr collection
-  hosts: localhost
-  tasks:
-    - vultr.cloud.instance:
-      ...
+collections:
+  - name: vultr.cloud
 ```
+
+Note that if you install the collection manually, it will not be upgraded automatically when you upgrade the Ansible package. To upgrade the collection to the latest available version, run the following command:
+
+```bash
+ansible-galaxy collection install vultr.cloud --upgrade
+```
+
+You can also install a specific version of the collection, for example, if you need to downgrade when something is broken in the latest version (please report an issue in this repository). Use the following syntax where `X.Y.Z` can be any [available version](https://galaxy.ansible.com/vultr/cloud):
+
+```bash
+ansible-galaxy collection install vultr.cloud:==X.Y.Z
+```
+
+See [Ansible Using collections](https://docs.ansible.com/ansible/latest/user_guide/collections_using.html) for more details.
 
 ## Contributing
 
@@ -48,7 +52,10 @@ There are many ways in which you can participate in the project, for example:
 - Review the documentation and make pull requests for anything from typos to new content
 - If you are interested in fixing issues and contributing directly to the code base, please see the [CONTRIBUTING](CONTRIBUTING.md) document.
 
+
 ## Run Tests
+
+See [Testing collections](https://docs.ansible.com/ansible/devel/dev_guide/developing_collections_testing.html) to learn how to test a collection.
 
 ### Clone the source
 
@@ -65,13 +72,14 @@ source .venv/bin/activate
 ```
 
 ### Install ansible for ansible-test
-```
+
+```bash
 pip install ansible
 ```
 
 ### Setup your Vultr API key
 
-```
+```bash
 cp tests/integration/cloud-config-vultr.ini.origin tests/integration/cloud-config-vultr.ini
 edit tests/integration/cloud-config-vultr.ini
 ```
@@ -80,67 +88,25 @@ edit tests/integration/cloud-config-vultr.ini
 
 All vultr tests:
 
-```
+```bash
 ansible-test integration --docker --diff -v cloud/vultr/
 ```
 
 Specific vultr test e.g. ssh_key_info:
 
-```
+```bash
 ansible-test integration --docker --diff -v cloud/vultr/ssh_key_info
 ```
 
 ## Releasing
 
-### Update Changelog
+See the [Releasing Guidelines](https://docs.ansible.com/ansible/devel/community/collection_contributors/collection_releasing.html#releasing) to learn how to release this collection.
 
-The changelog is managed using the `antsibull` tool. You can install
-it using `pip install antsibull`
+## Code of Conduct
 
-1. Set version in galaxy.yml
-2. Create a release summary fragment and store in in _changelog/fragements/<version>.yml_:
-```yaml
-release_summary: |
-  In this release...
-```
-3. Generate changelog of all fragments using antsibull
-```
-antsibull-changelog release
-```
-Modify or delete the release summary in
-4. Commit changelog and new version
-```
-git commit -m "Release version X.Y.Z" galaxy.yml CHANGELOG.rst changelogs/
-```
+We follow the Ansible Code of Conduct in all our interactions within this project.
 
-### Tag the release
-
-1. Tag the release. Preferably create GPG signed tag if you have a GPG
-key. Version tags should be prefixed with "v".
-```
-git tag -s -m "Release X.Y.Z" vX.Y.Z
-```
-2. Push the release and tag
-```
-git push origin main vX.Y.Z
-```
-
-### Publish to Ansible Galaxy
-
-After the _GitHub Release_ has been created the CI job _publish_ gets triggered which pushes the release to _Ansible Galaxy_.
-
-1. Draft a new _GitHub Release_
-2. Select the tag `vX.Y.Z`.
-3. Set the title:
-```
-Release vX.Y.Z
-```
-3. Set the content:
-```
-See changelog for more information https://github.com/vultr/ansible-collection-vultr/blob/vX.Y.Z/CHANGELOG.rst#vX.Y.Z
-```
-4. Verify the release is [processed by CI](https://github.com/vultr/ansible-collection-vultr/actions/workflows/publish.yml)
-
+If you encounter abusive behavior violating the Ansible Code of Conduct, please refer to the policy violations section of the Code of Conduct for information on how to raise a complaint.
 
 ## License
 
