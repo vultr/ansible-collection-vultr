@@ -18,7 +18,7 @@ description:
 version_added: "1.0.0"
 author: "René Moser (@resmo)"
 extends_documentation_fragment:
-- vultr.cloud.vultr_v2
+  - vultr.cloud.vultr_v2
 """
 
 EXAMPLES = """
@@ -34,22 +34,22 @@ EXAMPLES = """
 RETURN = """
 ---
 vultr_api:
-  description: Response from Vultr API with a few additions/modification
+  description: Response from Vultr API with a few additions/modification.
   returned: success
   type: complex
   contains:
     api_account:
-      description: Account used in the ini file to select the key
+      description: Account used in the ini file to select the key.
       returned: success
       type: str
       sample: default
     api_timeout:
-      description: Timeout used for the API requests
+      description: Timeout used for the API requests.
       returned: success
       type: int
       sample: 60
     api_retries:
-      description: Amount of max retries for the API requests
+      description: Amount of max retries for the API requests.
       returned: success
       type: int
       sample: 5
@@ -59,12 +59,12 @@ vultr_api:
       type: int
       sample: 12
     api_endpoint:
-      description: Endpoint used for the API requests
+      description: Endpoint used for the API requests.
       returned: success
       type: str
       sample: "https://api.vultr.com/v2"
 vultr_account_info:
-  description: Response from Vultr API
+  description: Response from Vultr API.
   returned: success
   type: complex
   contains:

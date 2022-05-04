@@ -27,17 +27,17 @@ options:
   v4_subnet:
     description:
       - IPv4 subnet of the VPC.
-      - Required if I(state=present)
+      - Required if I(state=present).
     type: str
   v4_subnet_mask:
     description:
       - IPv4 subnet mask of the VPC.
-      - Required if I(state=present)
+      - Required if I(state=present).
     type: int
   region:
     description:
       - Region the VPC will be related to.
-      - Required if I(state=present)
+      - Required if I(state=present).
     type: str
   state:
     description:
@@ -46,37 +46,37 @@ options:
     choices: [ present, absent ]
     type: str
 extends_documentation_fragment:
-- vultr.cloud.vultr_v2
+  - vultr.cloud.vultr_v2
 """
 
 EXAMPLES = """
 - name: Ensure a VPC is present
   vultr.cloud.vpc:
-    description: my VPC
+    description: my VPC.
     subnet: 10.99.1.0
     subnet_mask: 24
     region: ewr
 
 - name: Ensure a VPC is absent
   vultr.cloud.vpc:
-    description: my VPC
+    description: my VPC.
     state: absent
 """
 
 RETURN = """
 ---
 vultr_api:
-  description: Response from Vultr API with a few additions/modification
+  description: Response from Vultr API with a few additions/modification.
   returned: success
   type: complex
   contains:
     api_timeout:
-      description: Timeout used for the API requests
+      description: Timeout used for the API requests.
       returned: success
       type: int
       sample: 60
     api_retries:
-      description: Amount of max retries for the API requests
+      description: Amount of max retries for the API requests.
       returned: success
       type: int
       sample: 5
@@ -86,42 +86,42 @@ vultr_api:
       type: int
       sample: 12
     api_endpoint:
-      description: Endpoint used for the API requests
+      description: Endpoint used for the API requests.
       returned: success
       type: str
       sample: "https://api.vultr.com/v2"
 vultr_vpc:
-  description: Response from Vultr API
+  description: Response from Vultr API.
   returned: success
   type: complex
   contains:
     id:
-      description: ID of the VPC
+      description: ID of the VPC.
       returned: success
       type: str
       sample: cb676a46-66fd-4dfb-b839-443f2e6c0b60
     description:
-      description: Description of the VPC
+      description: Description of the VPC.
       returned: success
       type: str
       sample: my vpc
     v4_subnet:
-      description: Subnet of the VPC
+      description: Subnet of the VPC.
       returned: success
       type: str
       sample: 10.99.1.0
     v4_subnet_maks:
-      description: Subnet mask of the VPC
+      description: Subnet mask of the VPC.
       returned: success
       type: str
       sample: 10.99.1.0
     date_created:
-      description: Date the VPC was created
+      description: Date the VPC was created.
       returned: success
       type: str
       sample: "2020-10-10T01:56:20+00:00"
     date_modified:
-      description: Date the VPC was modified
+      description: Date the VPC was modified.
       returned: success
       type: str
       sample: "2020-10-10T01:56:20+00:00"

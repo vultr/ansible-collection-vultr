@@ -18,7 +18,7 @@ version_added: "1.0.0"
 author:
   - "René Moser (@resmo)"
 extends_documentation_fragment:
-- vultr.cloud.vultr_v2
+  - vultr.cloud.vultr_v2
 """
 
 EXAMPLES = """
@@ -34,17 +34,17 @@ EXAMPLES = """
 RETURN = """
 ---
 vultr_api:
-  description: Response from Vultr API with a few additions/modification
+  description: Response from Vultr API with a few additions/modification.
   returned: success
   type: complex
   contains:
     api_timeout:
-      description: Timeout used for the API requests
+      description: Timeout used for the API requests.
       returned: success
       type: int
       sample: 60
     api_retries:
-      description: Amount of max retries for the API requests
+      description: Amount of max retries for the API requests.
       returned: success
       type: int
       sample: 5
@@ -54,32 +54,32 @@ vultr_api:
       type: int
       sample: 12
     api_endpoint:
-      description: Endpoint used for the API requests
+      description: Endpoint used for the API requests.
       returned: success
       type: str
       sample: "https://api.vultr.com/v2"
 vultr_vpc_info:
-  description: Response from Vultr API as list
+  description: Response from Vultr API as list.
   returned: success
   type: complex
   contains:
     id:
-      description: ID of the VPC
+      description: ID of the VPC.
       returned: success
       type: str
       sample: "cb676a46-66fd-4dfb-b839-443f2e6c0b60"
     description:
-      description: Description of the VPC
+      description: Description of the VPC.
       returned: success
       type: str
       sample: myvpc
     date_created:
-      description: Date when the VPC was created
+      description: Date when the VPC was created.
       returned: success
       type: str
       sample: "2020-10-10T01:56:20+00:00"
     region:
-      description: Region the VPC was deployed into
+      description: Region the VPC was deployed into.
       returned: success
       type: str
       sample: ewr
