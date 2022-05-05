@@ -55,7 +55,7 @@ There are many ways in which you can participate in the project, for example:
 
 ## Run Tests
 
-See [Testing collections](https://docs.ansible.com/ansible/devel/dev_guide/developing_collections_testing.html) to learn how to test a collection.
+See [Testing collections](https://docs.ansible.com/ansible/devel/dev_guide/developing_collections_testing.html) to learn how to test a collection.
 
 ### Clone the source
 
