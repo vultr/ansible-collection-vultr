@@ -9,7 +9,7 @@
     state: absent
   register: result
 - name: verify setup
-  assert:
+  ansible.builtin.assert:
     that:
       - result is success
 
@@ -18,7 +18,7 @@
   register: result
   ignore_errors: true
 - name: verify test fail if missing args
-  assert:
+  ansible.builtin.assert:
     that:
       - result is failed
       - 'result.msg == "missing required arguments: ip_type, label, region"'
@@ -40,7 +40,7 @@
   register: result
   check_mode: true
 - name: verify test create reserved ip in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
 
@@ -51,7 +51,7 @@
     region: ewr
   register: result
 - name: verify test create reserved ip
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
@@ -66,7 +66,7 @@
     region: ewr
   register: result
 - name: verify test create reserved ip idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
@@ -83,7 +83,7 @@
   register: result
   check_mode: true
 - name: verify test detach instance of reserved ip in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
@@ -99,7 +99,7 @@
     instance_name: "{{ vultr_server_name }}"
   register: result
 - name: verify test attach instance of reserved ip
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
@@ -115,7 +115,7 @@
     instance_name: "{{ vultr_server_name }}"
   register: result
 - name: verify test attach instance of reserved ip idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
@@ -130,7 +130,7 @@
     region: ewr
   register: result
 - name: verify test test ignore instance attached reserved ip idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
@@ -147,7 +147,7 @@
   register: result
   check_mode: true
 - name: verify test detach instance of reserved ip in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
@@ -163,7 +163,7 @@
     instance_id: ""
   register: result
 - name: verify test detach instance of reserved ip
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
@@ -179,7 +179,7 @@
     instance_id: ""
   register: result
 - name: verify test detach instance of reserved ip idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
@@ -196,7 +196,7 @@
   register: result
   check_mode: true
 - name: verify test absent reserved ip in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
@@ -212,7 +212,7 @@
     state: absent
   register: result
 - name: verify test absent reserved ip
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
@@ -229,7 +229,7 @@
     state: absent
   register: result
 - name: verify test absent reserved ip idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
 

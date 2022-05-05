@@ -16,7 +16,7 @@
   register: result
 
 - name: verify test gather vultr block storage volume info in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result.vultr_block_storage_info|selectattr('label','equalto','{{ vultr_block_storage_name }}') | list | count == 1
 
@@ -25,7 +25,7 @@
   register: result
 
 - name: verify test gather vultr block storage volume info
-  assert:
+  ansible.builtin.assert:
     that:
       - result.vultr_block_storage_info|selectattr('label','equalto','{{ vultr_block_storage_name }}') | list | count == 1
 

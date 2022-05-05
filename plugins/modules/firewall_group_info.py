@@ -20,7 +20,7 @@ author:
   - "Yanis Guenane (@Spredzy)"
   - "René Moser (@resmo)"
 extends_documentation_fragment:
-- vultr.cloud.vultr_v2
+  - vultr.cloud.vultr_v2
 """
 
 EXAMPLES = """
@@ -29,24 +29,24 @@ EXAMPLES = """
   register: result
 
 - name: Print the gathered information
-  debug:
+  ansible.builtin.debug:
     var: result.vultr_firewall_group_info
 """
 
 RETURN = """
 ---
 vultr_api:
-  description: Response from Vultr API with a few additions/modification
+  description: Response from Vultr API with a few additions/modification.
   returned: success
   type: complex
   contains:
     api_timeout:
-      description: Timeout used for the API requests
+      description: Timeout used for the API requests.
       returned: success
       type: int
       sample: 60
     api_retries:
-      description: Amount of max retries for the API requests
+      description: Amount of max retries for the API requests.
       returned: success
       type: int
       sample: 5
@@ -56,32 +56,32 @@ vultr_api:
       type: int
       sample: 12
     api_endpoint:
-      description: Endpoint used for the API requests
+      description: Endpoint used for the API requests.
       returned: success
       type: str
       sample: "https://api.vultr.com/v2"
 vultr_firewall_group_info:
-  description: Response from Vultr API as list
+  description: Response from Vultr API as list.
   returned: success
   type: complex
   contains:
     id:
-      description: ID of the firewall group
+      description: ID of the firewall group.
       returned: success
       type: str
       sample: cb676a46-66fd-4dfb-b839-443f2e6c0b60
     description:
-      description: Name of the firewall group
+      description: Name of the firewall group.
       returned: success
       type: str
       sample: my firewall group
     date_created:
-      description: Date the firewall group was created
+      description: Date the firewall group was created.
       returned: success
       type: str
       sample: "2020-10-10T01:56:20+00:00"
     date_modified:
-      description: Date the firewall group was modified
+      description: Date the firewall group was modified.
       returned: success
       type: str
       sample: "2020-10-10T01:56:20+00:00"

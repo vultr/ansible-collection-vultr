@@ -2,7 +2,7 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 ---
 - name: test remove a dns record in check mode
-  dns_record:
+  vultr.cloud.dns_record:
     name: "{{ item.name | default(omit) }}"
     domain: "{{ vultr_dns_domain_name }}"
     data: "{{ item.update_data | default(item.data) }}"
@@ -12,7 +12,7 @@
   check_mode: true
   register: result
 - name: verify test remove a dns record in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_dns_record.data == "{{ item.update_data | default(item.data) }}"
@@ -22,7 +22,7 @@
       - result.vultr_dns_record.priority == {{ item.update_priority | default(item.priority | default(0)) }}
 
 - name: test remove second dns record in check mode
-  dns_record:
+  vultr.cloud.dns_record:
     name: "{{ item.name | default(omit) }}"
     domain: "{{ vultr_dns_domain_name }}"
     data: "{{ item.data | default(item.data) }}"
@@ -33,7 +33,7 @@
   register: result
   when: item.multiple is defined and item.multiple == true
 - name: verify test remove a dns record in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_dns_record.data == "{{ item.data | default(item.data) }}"
@@ -44,7 +44,7 @@
   when: item.multiple is defined and item.multiple == true
 
 - name: test remove a dns record
-  dns_record:
+  vultr.cloud.dns_record:
     name: "{{ item.name | default(omit) }}"
     domain: "{{ vultr_dns_domain_name }}"
     data: "{{ item.update_data | default(item.data) }}"
@@ -53,7 +53,7 @@
     state: absent
   register: result
 - name: verify test remove a dns record
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_dns_record.data == "{{ item.update_data | default(item.data) }}"
@@ -63,7 +63,7 @@
       - result.vultr_dns_record.priority == {{ item.update_priority | default(item.priority | default(0)) }}
 
 - name: test remove second dns record
-  dns_record:
+  vultr.cloud.dns_record:
     name: "{{ item.name | default(omit) }}"
     domain: "{{ vultr_dns_domain_name }}"
     data: "{{ item.data }}"
@@ -73,7 +73,7 @@
   register: result
   when: item.multiple is defined and item.multiple == true
 - name: verify test remove a dns record
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_dns_record.data == "{{ item.data }}"
@@ -84,7 +84,7 @@
   when: item.multiple is defined and item.multiple == true
 
 - name: test remove a dns record idempotence
-  dns_record:
+  vultr.cloud.dns_record:
     name: "{{ item.name | default(omit) }}"
     domain: "{{ vultr_dns_domain_name }}"
     data: "{{ item.update_data | default(item.data) }}"
@@ -93,12 +93,12 @@
     state: absent
   register: result
 - name: verify test remove a dns record idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
 
 - name: test remove second dns record idempotence
-  dns_record:
+  vultr.cloud.dns_record:
     name: "{{ item.name | default(omit) }}"
     domain: "{{ vultr_dns_domain_name }}"
     data: "{{ item.data }}"
@@ -108,7 +108,7 @@
   register: result
   when: item.multiple is defined and item.multiple == true
 - name: verify test remove a dns record idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
   when: item.multiple is defined and item.multiple == true

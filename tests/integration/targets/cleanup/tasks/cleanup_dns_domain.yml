@@ -1,26 +1,29 @@
 ---
-- name: List dns domains
-  uri:
-    url: "{{ vultr_api_url }}/domains"
-    headers:
-      Authorization: Bearer {{ vultr_api_key }}
-    status_code: 200
-  register: res
-  no_log: true
+- name: cleanup
+  when: vultr_api_key
+  block:
+    - name: List dns domains
+      ansible.builtin.uri:
+        url: "{{ vultr_api_url }}/domains"
+        headers:
+          Authorization: Bearer {{ vultr_api_key }}
+        status_code: 200
+      register: res
+      no_log: true
 
-- name: Found resources
-  debug:
-    var: res.json
+    - name: Found resources
+      ansible.builtin.debug:
+        var: res.json
 
-- name: Remove all dns domains created by this test run
-  uri:
-    url: "{{ vultr_api_url }}/domains/{{ item.domain }}"
-    method: "DELETE"
-    headers:
-      Authorization: Bearer {{ vultr_api_key }}
-    status_code: 204
-  when: vultr_resource_prefix in item.domain
-  with_items: "{{ res.json.domains }}"
-  loop_control:
-    label: "{{ item.domain }}"
-  no_log: true
+    - name: Remove all dns domains created by this test run
+      ansible.builtin.uri:
+        url: "{{ vultr_api_url }}/domains/{{ item.domain }}"
+        method: "DELETE"
+        headers:
+          Authorization: Bearer {{ vultr_api_key }}
+        status_code: 204
+      when: vultr_resource_prefix in item.domain
+      with_items: "{{ res.json.domains }}"
+      loop_control:
+        label: "{{ item.domain }}"
+      no_log: true

@@ -8,7 +8,7 @@
   register: result
 
 - name: verify test gather vultr region info in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result.vultr_region_info|selectattr('city','equalto','Atlanta') | list | count == 1
 
@@ -17,6 +17,6 @@
   register: result
 
 - name: verify test gather vultr region info
-  assert:
+  ansible.builtin.assert:
     that:
       - result.vultr_region_info|selectattr('city','equalto','Atlanta') | list | count == 1

@@ -17,7 +17,7 @@
   register: result
 
 - name: verify test gather vultr vpc info in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result.vultr_vpc_info|selectattr('description','equalto','{{ vultr_vpc_description }}') | list | count == 1
 
@@ -26,7 +26,7 @@
   register: result
 
 - name: verify test gather vultr vpc info
-  assert:
+  ansible.builtin.assert:
     that:
       - result.vultr_vpc_info|selectattr('description','equalto','{{ vultr_vpc_description }}') | list | count == 1
 

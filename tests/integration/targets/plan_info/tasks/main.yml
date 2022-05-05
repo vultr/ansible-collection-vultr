@@ -8,7 +8,7 @@
   register: result
 
 - name: verify test gather vultr plan info in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result.vultr_plan_info|selectattr('id','equalto','vhf-8c-32gb') | list | count == 1
 
@@ -17,6 +17,6 @@
   register: result
 
 - name: verify test gather vultr plan info
-  assert:
+  ansible.builtin.assert:
     that:
       - result.vultr_plan_info|selectattr('id','equalto','vhf-8c-32gb') | list | count == 1

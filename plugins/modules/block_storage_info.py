@@ -20,7 +20,7 @@ author:
   - "René Moser (@resmo)"
   - "Yanis Guenane (@Spredzy)"
 extends_documentation_fragment:
-- vultr.cloud.vultr_v2
+  - vultr.cloud.vultr_v2
 """
 
 EXAMPLES = """
@@ -29,24 +29,24 @@ EXAMPLES = """
   register: result
 
 - name: Print the infos
-  debug:
+  ansible.builtin.debug:
     var: result.vultr_block_storage_info
 """
 
 RETURN = """
 ---
 vultr_api:
-  description: Response from Vultr API with a few additions/modification
+  description: Response from Vultr API with a few additions/modification.
   returned: success
   type: complex
   contains:
     api_timeout:
-      description: Timeout used for the API requests
+      description: Timeout used for the API requests.
       returned: success
       type: int
       sample: 60
     api_retries:
-      description: Amount of max retries for the API requests
+      description: Amount of max retries for the API requests.
       returned: success
       type: int
       sample: 5
@@ -56,17 +56,17 @@ vultr_api:
       type: int
       sample: 12
     api_endpoint:
-      description: Endpoint used for the API requests
+      description: Endpoint used for the API requests.
       returned: success
       type: str
       sample: "https://api.vultr.com/v2"
 vultr_block_storage_info:
-  description: Response from Vultr API as list
+  description: Response from Vultr API as list.
   returned: success
   type: complex
   contains:
     attached_to_instance:
-      description: The ID of the server instance the volume is attached to
+      description: The ID of the server instance the volume is attached to.
       returned: success
       type: str
       sample: cb676a46-66fd-4dfb-b839-443f2e6c0b60
@@ -76,37 +76,37 @@ vultr_block_storage_info:
       type: float
       sample: 1.00
     date_created:
-      description: Date when the volume was created
+      description: Date when the volume was created.
       returned: success
       type: str
       sample: "2020-10-10T01:56:20+00:00"
     id:
-      description: ID of the block storage volume
+      description: ID of the block storage volume.
       returned: success
       type: str
       sample: cb676a46-66fd-4dfb-b839-443f2e6c0b60
     label:
-      description: Label of the volume
+      description: Label of the volume.
       returned: success
       type: str
       sample: my volume
     region:
-      description: Region the volume was deployed into
+      description: Region the volume was deployed into.
       returned: success
       type: str
       sample: ews
     size_gb:
-      description: Information about the volume size in GB
+      description: Information about the volume size in GB.
       returned: success
       type: int
       sample: 50
     status:
-      description: Status about the deployment of the volume
+      description: Status about the deployment of the volume.
       returned: success
       type: str
       sample: active
     mount_id:
-      description: Mount ID of the volume
+      description: Mount ID of the volume.
       returned: success
       type: str
       sample: ewr-2f5d7a314fe44f

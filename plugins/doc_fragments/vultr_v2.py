@@ -47,5 +47,5 @@ options:
     type: bool
     default: true
 notes:
-  - Also see the API documentation on https://www.vultr.com/api/.
+  - Also see the API documentation on U(https://www.vultr.com/api/).
 """

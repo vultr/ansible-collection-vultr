@@ -35,7 +35,7 @@ options:
     choices: [ present, absent ]
     type: str
 extends_documentation_fragment:
-- vultr.cloud.vultr_v2
+  - vultr.cloud.vultr_v2
 
 """
 
@@ -54,17 +54,17 @@ EXAMPLES = """
 RETURN = """
 ---
 vultr_api:
-  description: Response from Vultr API with a few additions/modification
+  description: Response from Vultr API with a few additions/modification.
   returned: success
   type: complex
   contains:
     api_timeout:
-      description: Timeout used for the API requests
+      description: Timeout used for the API requests.
       returned: success
       type: int
       sample: 60
     api_retries:
-      description: Amount of max retries for the API requests
+      description: Amount of max retries for the API requests.
       returned: success
       type: int
       sample: 5
@@ -74,32 +74,32 @@ vultr_api:
       type: int
       sample: 12
     api_endpoint:
-      description: Endpoint used for the API requests
+      description: Endpoint used for the API requests.
       returned: success
       type: str
       sample: "https://api.vultr.com/v2"
 vultr_ssh_key:
-  description: Response from Vultr API
+  description: Response from Vultr API.
   returned: success
   type: complex
   contains:
     id:
-      description: ID of the ssh key
+      description: ID of the ssh key.
       returned: success
       type: str
       sample: cb676a46-66fd-4dfb-b839-443f2e6c0b60
     name:
-      description: Name of the ssh key
+      description: Name of the ssh key.
       returned: success
       type: str
       sample: my ssh key
     date_created:
-      description: Date the ssh key was created
+      description: Date the ssh key was created.
       returned: success
       type: str
       sample: "2020-10-10T01:56:20+00:00"
     ssh_key:
-      description: SSH public key
+      description: SSH public key.
       returned: success
       type: str
       sample: ssh-rsa AA... someother@example.com

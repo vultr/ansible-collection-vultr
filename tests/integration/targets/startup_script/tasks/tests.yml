@@ -7,7 +7,7 @@
     state: absent
   register: result
 - name: verify setup
-  assert:
+  ansible.builtin.assert:
     that:
       - result is success
 
@@ -16,7 +16,7 @@
   register: result
   ignore_errors: true
 - name: verify test fail if missing name
-  assert:
+  ansible.builtin.assert:
     that:
       - result is failed
       - 'result.msg == "missing required arguments: name"'
@@ -27,7 +27,7 @@
   register: result
   ignore_errors: true
 - name: verify fail if missing params for state=present
-  assert:
+  ansible.builtin.assert:
     that:
       - result is failed
       - 'result.msg == "state is present but all of the following are missing: script"'
@@ -39,7 +39,7 @@
   register: result
   check_mode: true
 - name: verify test create startup script in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
 
@@ -49,7 +49,7 @@
     script: "{{ vultr_startup_script }}"
   register: result
 - name: verify test create startup script
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_startup_script.name == vultr_startup_script_name
@@ -61,7 +61,7 @@
     script: "{{ vultr_startup_script }}"
   register: result
 - name: verify test create startup script idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
       - result.vultr_startup_script.name == vultr_startup_script_name
@@ -74,7 +74,7 @@
   register: result
   check_mode: true
 - name: verify test update startup script in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_startup_script.name == vultr_startup_script_name
@@ -86,7 +86,7 @@
     script: "{{ vultr_startup_script2 }}"
   register: result
 - name: verify test update startup script
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_startup_script.name == vultr_startup_script_name
@@ -98,7 +98,7 @@
     script: "{{ vultr_startup_script2 }}"
   register: result
 - name: verify test update startup script idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
       - result.vultr_startup_script.name == vultr_startup_script_name
@@ -111,7 +111,7 @@
   register: result
   check_mode: true
 - name: verify test absent startup script in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_startup_script.name == vultr_startup_script_name
@@ -123,7 +123,7 @@
     state: absent
   register: result
 - name: verify test absent startup script
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_startup_script.name == vultr_startup_script_name
@@ -135,6 +135,6 @@
     state: absent
   register: result
 - name: verify test absent startup script idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed

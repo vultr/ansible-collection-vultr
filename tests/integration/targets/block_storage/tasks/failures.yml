@@ -4,7 +4,7 @@
   register: result
   ignore_errors: true
 - name: verify test fail if missing label
-  assert:
+  ansible.builtin.assert:
     that:
       - result is failed
       - 'result.msg == "missing required arguments: label"'
@@ -15,7 +15,7 @@
   register: result
   ignore_errors: true
 - name: verify fail if missing params for state=present
-  assert:
+  ansible.builtin.assert:
     that:
       - result is failed
       - 'result.msg == "state is present but all of the following are missing: size_gb, region"'

@@ -8,7 +8,7 @@
   register: result
 
 - name: verify test get vultr os infos in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result.vultr_os_info|selectattr('name','equalto', 'CentOS 7 x64') | list | count == 1
 
@@ -17,6 +17,6 @@
   register: result
 
 - name: verify test get vultr os infos
-  assert:
+  ansible.builtin.assert:
     that:
       - result.vultr_os_info|selectattr('name','equalto', 'CentOS 7 x64') | list | count == 1

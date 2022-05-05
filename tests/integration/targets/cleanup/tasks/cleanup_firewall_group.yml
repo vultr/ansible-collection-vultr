@@ -1,25 +1,28 @@
 ---
-- name: List firewall groups
-  uri:
-    url: "{{ vultr_api_url }}/firewalls"
-    headers:
-      Authorization: Bearer {{ vultr_api_key }}
-    status_code: 200
-  register: res
-  no_log: true
+- name: cleanup
+  when: vultr_api_key
+  block:
+    - name: List firewall groups
+      ansible.builtin.uri:
+        url: "{{ vultr_api_url }}/firewalls"
+        headers:
+          Authorization: Bearer {{ vultr_api_key }}
+        status_code: 200
+      register: res
+      no_log: true
 
-- name: Found resources
-  debug:
-    var: res.json
+    - name: Found resources
+      ansible.builtin.debug:
+        var: res.json
 
-- name: Remove all firewall groups created by this test run
-  uri:
-    url: "{{ vultr_api_url }}/firewalls/{{ item.id }}"
-    method: "DELETE"
-    headers:
-      Authorization: Bearer {{ vultr_api_key }}
-    status_code: 204
-  when: vultr_resource_prefix in item.description
-  with_items: "{{ res.json.firewall_groups }}"
-  loop_control:
-    label: "{{ item.description }}"
+    - name: Remove all firewall groups created by this test run
+      ansible.builtin.uri:
+        url: "{{ vultr_api_url }}/firewalls/{{ item.id }}"
+        method: "DELETE"
+        headers:
+          Authorization: Bearer {{ vultr_api_key }}
+        status_code: 204
+      when: vultr_resource_prefix in item.description
+      with_items: "{{ res.json.firewall_groups }}"
+      loop_control:
+        label: "{{ item.description }}"

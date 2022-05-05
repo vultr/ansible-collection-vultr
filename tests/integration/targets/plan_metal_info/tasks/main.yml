@@ -9,7 +9,7 @@
   register: result
 
 - name: verify test gather vultr plan bare metal info in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result.vultr_plan_metal_info|selectattr('id','equalto','vbm-4c-32gb') | list | count == 1
 
@@ -18,6 +18,6 @@
   register: result
 
 - name: verify test gather vultr plan bare metal info
-  assert:
+  ansible.builtin.assert:
     that:
       - result.vultr_plan_metal_info|selectattr('id','equalto','vbm-4c-32gb') | list | count == 1

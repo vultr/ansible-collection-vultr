@@ -10,18 +10,18 @@
   register: result
   ignore_errors: true
 - name: verify test fail if missing group
-  assert:
+  ansible.builtin.assert:
     that:
       - result is failed
       - 'result.msg == "missing required arguments: group"'
 
-- include_tasks: rule_present.yml
+- ansible.builtin.include_tasks: rule_present.yml
   with_items: "{{ vultr_firewall_rules }}"
   loop_control:
     loop_var: rule
     label: "{{ rule.notes }}"
 
-- include_tasks: rule_absent.yml
+- ansible.builtin.include_tasks: rule_absent.yml
   with_items: "{{ vultr_firewall_rules }}"
   loop_control:
     loop_var: rule

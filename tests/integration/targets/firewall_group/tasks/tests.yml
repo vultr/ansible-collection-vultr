@@ -7,7 +7,7 @@
     state: absent
   register: result
 - name: verify setup
-  assert:
+  ansible.builtin.assert:
     that:
       - result is success
 
@@ -16,7 +16,7 @@
   register: result
   ignore_errors: true
 - name: verify test fail if missing description
-  assert:
+  ansible.builtin.assert:
     that:
       - result is failed
       - 'result.msg == "missing required arguments: description"'
@@ -27,7 +27,7 @@
   register: result
   check_mode: true
 - name: verify test create firewall group in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
 
@@ -36,7 +36,7 @@
     name: "{{ vultr_firewall_group_name }}"
   register: result
 - name: verify test create firewall group
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_firewall_group.description == vultr_firewall_group_name
@@ -47,7 +47,7 @@
 
   register: result
 - name: verify test create firewall group idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
       - result.vultr_firewall_group.description == vultr_firewall_group_name
@@ -59,7 +59,7 @@
   register: result
   check_mode: true
 - name: verify test absent firewall group in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_firewall_group.description == vultr_firewall_group_name
@@ -70,7 +70,7 @@
     state: absent
   register: result
 - name: verify test absent firewall group
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_firewall_group.description == vultr_firewall_group_name
@@ -81,6 +81,6 @@
     state: absent
   register: result
 - name: verify test absent firewall group idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed

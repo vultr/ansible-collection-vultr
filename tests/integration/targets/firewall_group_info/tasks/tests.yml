@@ -15,7 +15,7 @@
   register: result
 
 - name: verify test gather vultr firewall group info in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result.vultr_firewall_group_info|selectattr('description','equalto','{{ firewall_group_name }}') | list | count == 1
 
@@ -24,7 +24,7 @@
   register: result
 
 - name: verify test gather vultr firewall group info
-  assert:
+  ansible.builtin.assert:
     that:
       - result.vultr_firewall_group_info|selectattr('description','equalto','{{ firewall_group_name }}') | list | count == 1
 

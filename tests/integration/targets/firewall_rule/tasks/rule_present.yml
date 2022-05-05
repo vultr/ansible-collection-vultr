@@ -1,6 +1,6 @@
 ---
 - name: rule info
-  debug:
+  ansible.builtin.debug:
     var: rule
 
 - name: test create firewall rule in check mode
@@ -15,7 +15,7 @@
   register: result
   check_mode: true
 - name: verify test create firewall rule in check mode
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
 
@@ -30,7 +30,7 @@
     notes: "{{ rule.notes }}"
   register: result
 - name: verify test create firewall rule
-  assert:
+  ansible.builtin.assert:
     that:
       - result is changed
       - result.vultr_firewall_rule.action == "accept"
@@ -51,7 +51,7 @@
     notes: "{{ rule.notes }}"
   register: result
 - name: verify test create firewall rule idempotence
-  assert:
+  ansible.builtin.assert:
     that:
       - result is not changed
       - result.vultr_firewall_rule.action == "accept"
