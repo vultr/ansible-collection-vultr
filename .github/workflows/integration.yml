@@ -16,7 +16,7 @@ on:
 
 jobs:
   integration-test:
-    name: Integration test using Python ${{ matrix.python }}
+    name: Integration test Ansible ${{ matrix.ansible }} Py${{ matrix.python }}
     if: ${{ github.event.label.name == 'automation' || github.ref_name == 'main' }}
     runs-on: ubuntu-latest
     defaults:
@@ -36,7 +36,6 @@ jobs:
         python:
           - 2.7 # required by Ansible see https://github.com/ansible-collections/overview/blob/main/collection_requirements.rst#python-compatibility
           - 3.6 # required by Ansible see https://github.com/ansible-collections/overview/blob/main/collection_requirements.rst#python-compatibility
-          - 3.8
         exclude:
           - ansible: stable-2.12
             python: 2.7
