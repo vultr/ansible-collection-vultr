@@ -44,7 +44,21 @@
       - result is not changed
       - result.vultr_block_storage.label == vultr_block_storage_name
       - result.vultr_block_storage.region == vultr_block_storage_region
-      - result.vultr_block_storage.size_gb == 10
+      - result.vultr_block_storage.size_gb == vultr_block_storage_size
+
+- name: test shrink block storage ignored
+  vultr.cloud.block_storage:
+    label: "{{ vultr_block_storage_name }}"
+    size_gb: "{{ vultr_block_storage_size - 1 }}"
+    region: "{{ vultr_block_storage_region }}"
+  register: result
+- name: verify test shrink block storage ignored
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+      - result.vultr_block_storage.label == vultr_block_storage_name
+      - result.vultr_block_storage.region == vultr_block_storage_region
+      - result.vultr_block_storage.size_gb == vultr_block_storage_size
 
 # volumes size can only be modified every 60s
 - name: wait about 60s before resizing volume
