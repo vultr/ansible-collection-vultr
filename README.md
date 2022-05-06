@@ -2,9 +2,13 @@
 
 # Ansible Collection for Vultr Cloud
 
-This repository contains the `vultr.cloud` Ansible Collection . The collection will be part of the Ansible package and provides a series of Ansible modules and plugins for interacting with the [Vultr](https://www.vultr.com) Cloud.
+This repository contains the `vultr.cloud` Ansible Collection . The collection will be part of the Ansible package and provides a series of Ansible modules and plugins for interacting with the [Vultr](https://www.vultr.com) Cloud. You can find the documentation for this collection on the [Ansible docs site](https://docs.ansible.com/ansible/latest/collections/vultr/cloud/).
 
-You can find the documentation for this collection on the [Ansible docs site](https://docs.ansible.com/ansible/latest/collections/vultr/cloud/).
+---
+**Note**
+`vultr.cloud` is the successor of exisitng `ngine_io.vultr` collection ([Ansible docs site](https://docs.ansible.com/ansible/latest/collections/ngine_io/vultr/)), which uses the deprected Vultr v1 API.
+
+---
 
 ## Ansible version compatibility
 
