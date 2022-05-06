@@ -79,7 +79,7 @@ jobs:
           echo "$VULTR_CONFIG_FILE" > tests/integration/cloud-config-vultr.ini
 
       - name: Ensure no other integration test is currently running
-        uses: softprops/turnstyle@v0.1.5
+        uses: softprops/turnstyle@v1
         timeout-minutes: 60
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
