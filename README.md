@@ -5,20 +5,21 @@
 This repository contains the `vultr.cloud` Ansible Collection . The collection will be part of the Ansible package and provides a series of Ansible modules and plugins for interacting with the [Vultr](https://www.vultr.com) Cloud. You can find the documentation for this collection on the [Ansible docs site](https://docs.ansible.com/ansible/latest/collections/vultr/cloud/).
 
 ---
-**Note**
+**NOTE**
+
 `vultr.cloud` is the successor of exisitng `ngine_io.vultr` collection ([Ansible docs site](https://docs.ansible.com/ansible/latest/collections/ngine_io/vultr/)), which uses the deprected Vultr v1 API.
 
 ---
 
-## Ansible version compatibility
+## Ansible Version Compatibility
 
-Tested with all Ansible versions >= 2.9.
+Tested with Ansible versions >= 2.9.
 
-## Release notes
+## Release Notes
 
 Release notes are available in our [changelog](https://github.com/vultr/ansible-collection-vultr/blob/main/CHANGELOG.rst).
 
-## Using this collection
+## Using this Collection
 
 This collection will be shipped with the Ansible package >=6.0.0. If you have it installed, no more action is required.
 
@@ -61,34 +62,34 @@ There are many ways in which you can participate in the project, for example:
 
 See [Testing collections](https://docs.ansible.com/ansible/devel/dev_guide/developing_collections_testing.html) to learn how to test a collection.
 
-### Clone the source
+### Clone the Source
 
 ```
 git clone git@github.com:vultr/ansible-collection-vultr.git
 cd ansible-collection-vultr
 ```
 
-### Create a virtual environent
+### Create a Virtual Environent
 
 ```
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### Install ansible for ansible-test
+### Install Ansible
 
 ```bash
 pip install ansible
 ```
 
-### Setup your Vultr API key
+### Setup your Vultr API Key
 
 ```bash
 cp tests/integration/cloud-config-vultr.ini.origin tests/integration/cloud-config-vultr.ini
 edit tests/integration/cloud-config-vultr.ini
 ```
 
-### Runs tests in Docker
+### Runs Tests in Docker
 
 All vultr tests:
 
