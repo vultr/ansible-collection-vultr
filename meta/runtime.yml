@@ -11,8 +11,6 @@ action_groups:
     - firewall_group
     - firewall_group_info
     - firewall_rule
-    - network
-    - network_info
     - os_info
     - plan_info
     - plan_metal_info
@@ -23,3 +21,5 @@ action_groups:
     - startup_script_info
     - user
     - user_info
+    - vpc
+    - vpc_info
