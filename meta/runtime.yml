@@ -11,6 +11,7 @@ action_groups:
     - firewall_group
     - firewall_group_info
     - firewall_rule
+    - firewall_rule_info
     - os_info
     - plan_info
     - plan_metal_info

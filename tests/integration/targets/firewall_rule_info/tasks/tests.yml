@@ -1,0 +1,45 @@
+# Copyright (c) 2018, Yanis Guenane <yanis+ansible@guenane.org>
+# Copyright (c) 2021, René Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: setup the firewall group
+  vultr.cloud.firewall_group:
+    name: "{{ firewall_group_name }}"
+
+- name: test gather vultr firewall rule info - empty resources
+  vultr.cloud.firewall_rule_info:
+    group: "{{ firewall_group_name }}"
+
+- name: setup create firewall rule
+  vultr.cloud.firewall_rule:
+    group: "{{ firewall_group_name }}"
+    ip_type: v4
+    port: "80"
+    protocol: tcp
+    subnet: "0.0.0.0"
+    subnet_size: 0
+    notes: "{{ firewall_group_name }}"
+
+- name: test gather vultr firewall rule info in check mode
+  vultr.cloud.firewall_rule_info:
+    group: "{{ firewall_group_name }}"
+  check_mode: true
+  register: result
+- name: verify test gather vultr firewall rule info in check mode
+  ansible.builtin.assert:
+    that:
+      - result.vultr_firewall_rule_info|selectattr('notes','equalto','{{ firewall_group_name }}') | list | count == 1
+
+- name: test gather vultr firewall rule info
+  vultr.cloud.firewall_rule_info:
+    group: "{{ firewall_group_name }}"
+  register: result
+- name: verify test gather vultr firewall rule info
+  ansible.builtin.assert:
+    that:
+      - result.vultr_firewall_rule_info|selectattr('notes','equalto','{{ firewall_group_name }}') | list | count == 1
+
+- name: Delete the firewall group
+  vultr.cloud.firewall_group:
+    name: "{{ firewall_group_name }}"
+    state: absent
