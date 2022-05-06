@@ -53,7 +53,7 @@ jobs:
             python: 3.6
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: ansible_collections/vultr/cloud
 
