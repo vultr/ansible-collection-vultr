@@ -12,7 +12,7 @@ on:
       - "plugins/**"
       - "tests/**"
   schedule:
-    - cron: 56 3 * * * # Run weekly
+    - cron: 56 3 * * 2 # Run weekly
 
 jobs:
   integration-test:
