@@ -27,8 +27,6 @@ jobs:
       fail-fast: false
       matrix:
         ansible:
-          - stable-2.9
-          - stable-2.10
           - stable-2.11
           - stable-2.12
           - stable-2.13
@@ -36,6 +34,7 @@ jobs:
         python:
           - 2.7 # required by Ansible see https://github.com/ansible-collections/overview/blob/main/collection_requirements.rst#python-compatibility
           - 3.6 # required by Ansible see https://github.com/ansible-collections/overview/blob/main/collection_requirements.rst#python-compatibility
+          - 3.8
         exclude:
           - ansible: stable-2.12
             python: 2.7

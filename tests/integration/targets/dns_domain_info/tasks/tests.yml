@@ -9,7 +9,7 @@
 
 - name: test gather vultr dns domain info in check mode
   vultr.cloud.dns_domain_info:
-  check_mode: yes
+  check_mode: true
   register: result
 
 - name: verify test gather vultr dns domain info in check mode
@@ -25,9 +25,3 @@
   ansible.builtin.assert:
     that:
       - result.vultr_dns_domain_info|selectattr('domain','equalto','{{ dns_domain_name }}') | list | count == 1
-
-- name: Delete the record
-  vultr.cloud.dns_domain:
-    name: "{{ dns_domain_name }}"
-    server_ip: "{{ dns_domain_server_ip }}"
-    state: absent
