@@ -1,5 +1,5 @@
 ---
-requires_ansible: ">=2.9.10"
+requires_ansible: ">=2.11"
 action_groups:
   vultr:
     - account_info
