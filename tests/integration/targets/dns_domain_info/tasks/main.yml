@@ -2,6 +2,12 @@
 - block:
     - ansible.builtin.import_tasks: tests.yml
   always:
+    - name: cleanup the domain
+      vultr.cloud.dns_domain:
+        name: "{{ dns_domain_name }}"
+        state: absent
+      ignore_errors: true
+
     - ansible.builtin.import_role:
         name: cleanup
         tasks_from: cleanup_dns_domain

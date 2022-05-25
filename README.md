@@ -13,7 +13,7 @@ This repository contains the `vultr.cloud` Ansible Collection . The collection w
 
 ## Ansible Version Compatibility
 
-Tested with Ansible versions >= 2.9.
+Tested with Ansible Core versions >= 2.11.
 
 ## Release Notes
 

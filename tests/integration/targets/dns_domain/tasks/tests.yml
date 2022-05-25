@@ -5,11 +5,6 @@
   vultr.cloud.dns_domain:
     name: "{{ vultr_dns_domain_name }}"
     state: absent
-  register: result
-- name: verify setup
-  ansible.builtin.assert:
-    that:
-      - result is success
 
 - name: test fail if missing name
   vultr.cloud.dns_domain:
