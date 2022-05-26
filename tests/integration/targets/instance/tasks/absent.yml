@@ -1,0 +1,38 @@
+---
+- name: instance info
+  ansible.builtin.debug:
+    var: instance
+
+- name: test absent instance rule in check mode
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    region: "{{ instance.region }}"
+    state: absent
+  register: result
+  check_mode: true
+- name: verify test absent instance rule in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test absent instance rule
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    region: "{{ instance.region }}"
+    state: absent
+  register: result
+- name: verify test absent instance rule
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test absent instance rule idempotence
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    region: "{{ instance.region }}"
+    state: absent
+  register: result
+- name: verify test absent instance rule idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed

@@ -1,0 +1,23 @@
+---
+- name: test fail if missing arguments
+  vultr.cloud.instance:
+  register: result
+  ignore_errors: true
+- name: test fail if missing arguments
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - 'result.msg == "missing required arguments: label, region"'
+
+- name: test fail if missing arguments required one of
+  vultr.cloud.instance:
+    label: "my label"
+    plan: "a plan"
+    region: "a region"
+  register: result
+  ignore_errors: true
+- name: test fail if missing arguments required one of
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - '"one of the following required" in result.msg'

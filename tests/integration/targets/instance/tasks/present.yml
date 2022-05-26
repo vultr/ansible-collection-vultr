@@ -1,0 +1,84 @@
+---
+- name: instance info
+  ansible.builtin.debug:
+    var: instance
+
+- name: test create instance rule in check mode
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    firewall_group: "{{ vultr_instance_firewall_group }}"
+    plan: "{{ instance.plan }}"
+    region: "{{ instance.region }}"
+    os: "{{ instance.os }}"
+  register: result
+  check_mode: true
+- name: verify test create instance rule in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test create instance rule
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    firewall_group: "{{ vultr_instance_firewall_group }}"
+    plan: "{{ instance.plan }}"
+    region: "{{ instance.region }}"
+    os: "{{ instance.os }}"
+  register: result
+- name: verify test create instance rule
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test create instance rule idempotence
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    firewall_group: "{{ vultr_instance_firewall_group }}"
+    plan: "{{ instance.plan }}"
+    region: "{{ instance.region }}"
+    os: "{{ instance.os }}"
+  register: result
+- name: verify test create instance rule idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+
+- name: test update instance rule in check mode
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    firewall_group: "{{ vultr_instance_firewall_group }}"
+    plan: "{{ instance.plan_update }}"
+    region: "{{ instance.region }}"
+    os: "{{ instance.os }}"
+  register: result
+  check_mode: true
+- name: verify test update instance rule in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test update instance rule
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    firewall_group: "{{ vultr_instance_firewall_group }}"
+    plan: "{{ instance.plan_update }}"
+    region: "{{ instance.region }}"
+    os: "{{ instance.os }}"
+  register: result
+- name: verify test update instance rule
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test update instance rule idempotence
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    firewall_group: "{{ vultr_instance_firewall_group }}"
+    plan: "{{ instance.plan_update }}"
+    region: "{{ instance.region }}"
+    os: "{{ instance.os }}"
+  register: result
+- name: verify test update instance rule idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed

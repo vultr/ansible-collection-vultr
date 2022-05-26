@@ -1,0 +1,10 @@
+# Copyright (c) 2022, René Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+vultr_instance_firewall_group: "{{ vultr_resource_prefix }}_instance_fw_group"
+vultr_instances:
+  - label: "{{ vultr_resource_prefix }}_instance1"
+    plan: vc2-1c-1gb
+    plan_update: vc2-1c-2gb
+    region: ams
+    os: Debian 11 x64 (bullseye)

@@ -34,9 +34,7 @@ def vultr_argument_spec():
             fallback=(env_fallback, ["VULTR_API_TIMEOUT"]),
             default=60,
         ),
-        api_retries=dict(
-            type="int", fallback=(env_fallback, ["VULTR_API_RETRIES"]), default=5
-        ),
+        api_retries=dict(type="int", fallback=(env_fallback, ["VULTR_API_RETRIES"]), default=5),
         api_retry_max_delay=dict(
             type="int",
             fallback=(env_fallback, ["VULTR_API_RETRY_MAX_DELAY"]),
@@ -47,6 +45,14 @@ def vultr_argument_spec():
             default=True,
         ),
     )
+
+
+def backoff(retry, retry_max_delay=12):
+    randomness = random.randint(0, 1000) / 1000.0
+    delay = 2**retry + randomness
+    if delay > retry_max_delay:
+        delay = retry_max_delay + randomness
+    time.sleep(delay)
 
 
 class AnsibleVultr:
@@ -72,9 +78,7 @@ class AnsibleVultr:
         self.ressource_result_key_singular = ressource_result_key_singular
 
         # The API result data key e.g ssh_keys
-        self.ressource_result_key_plural = (
-            ressource_result_key_plural or "%ss" % ressource_result_key_singular
-        )
+        self.ressource_result_key_plural = ressource_result_key_plural or "%ss" % ressource_result_key_singular
 
         # The API resource path e.g /ssh-keys
         self.resource_path = resource_path
@@ -123,7 +127,6 @@ class AnsibleVultr:
 
     def api_query(self, path, method="GET", data=None):
         retry_max_delay = self.module.params["api_retry_max_delay"]
-        randomness = random.randint(0, 1000) / 1000.0
 
         info = dict()
         resp_body = None
@@ -139,30 +142,24 @@ class AnsibleVultr:
 
             resp_body = resp.read() if resp is not None else ""
 
-            # 429 Too Many Requests
+            # Check for 429 Too Many Requests
             if info["status"] != 429:
                 break
 
             # Vultr has a rate limiting requests per second, try to be polite
             # Use exponential backoff plus a little bit of randomness
-            delay = 2**retry + randomness
-            if delay > retry_max_delay:
-                delay = retry_max_delay + randomness
-            time.sleep(delay)
+            backoff(retry=retry, retry_max_delay=retry_max_delay)
 
         # Success with content
         if info["status"] in (200, 201, 202):
-            return self.module.from_json(
-                to_text(resp_body, errors="surrogate_or_strict")
-            )
+            return self.module.from_json(to_text(resp_body, errors="surrogate_or_strict"))
 
         # Success without content
         if info["status"] in (404, 204):
             return dict()
 
         self.module.fail_json(
-            msg='Failure while calling the Vultr API v2 with %s for "%s".'
-            % (method, path),
+            msg='Failure while calling the Vultr API v2 with %s for "%s".' % (method, path),
             fetch_url_info=info,
         )
 
@@ -182,10 +179,7 @@ class AnsibleVultr:
         for resource in self.query_list(path=path, result_key=result_key):
             if resource.get(key_name) == param_value:
                 if found:
-                    self.module.fail_json(
-                        msg="More than one record with name=%s found. "
-                        "Use multiple=yes if module supports it." % param_value
-                    )
+                    self.module.fail_json(msg="More than one record with name=%s found. " "Use multiple=yes if module supports it." % param_value)
                 found = resource
         if found:
             if get_details:
@@ -194,9 +188,7 @@ class AnsibleVultr:
                 return found
 
         elif fail_not_found:
-            self.module.fail_json(
-                msg="No Resource %s with %s found: %s" % (path, key_name, param_value)
-            )
+            self.module.fail_json(msg="No Resource %s with %s found: %s" % (path, key_name, param_value))
 
         return dict()
 
@@ -215,9 +207,7 @@ class AnsibleVultr:
         path = path or self.resource_path
         result_key = result_key or self.ressource_result_key_singular
 
-        resource = self.api_query(
-            path="%s%s" % (path, "/" + resource_id if resource_id else resource_id)
-        )
+        resource = self.api_query(path="%s%s" % (path, "/" + resource_id if resource_id else resource_id))
         if resource:
             return resource[result_key]
 
@@ -234,6 +224,18 @@ class AnsibleVultr:
 
         resources = self.api_query(path=path)
         return resources[result_key] if resources else []
+
+    def wait_for_state(self, resource, key, state):
+        for retry in range(0, 30):
+            resource = self.query_by_id(resource_id=resource[self.resource_key_id])
+            if key not in resource or resource[key] != state:
+                backoff(retry=retry)
+                continue
+            break
+        else:
+            self.module.fail_json(msg="Wait for %s to become %s timed out" % (key, state))
+
+        return resource
 
     def create_or_update(self):
         resource = self.query()

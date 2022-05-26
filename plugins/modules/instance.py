@@ -1,0 +1,342 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) 2022, René Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+from __future__ import absolute_import, division, print_function
+
+__metaclass__ = type
+
+
+DOCUMENTATION = """
+---
+module: instance
+short_description: Manages server instances on Vultr.
+description:
+  - Manage server instances on Vultr.
+version_added: "1.1.0"
+author:
+  - "René Moser (@resmo)"
+options:
+  label:
+    description:
+      - Name of the instance.
+    required: true
+    aliases: [ name ]
+    type: str
+  hostname:
+    description:
+      - The hostname to assign to this instance.
+    type: str
+  os:
+    description:
+      - The operating system name.
+      - Required if the instance does not yet exist and is not restoring from a snapshot.
+    type: str
+  snapshot:
+    description:
+      - The name of the snapshot to restore the instance from.
+    type: str
+  firewall_group:
+    description:
+      - The firewall group description to assign this instance to.
+    type: str
+  plan:
+    description:
+      - The plan name to use for the instance.
+      - Required if the instance does not yet exist.
+    type: str
+  force:
+    description:
+      - Force stop/start the instance if required to apply changes
+      - Otherwise a running instance will not be changed.
+    type: bool
+    default: false
+  activation_email:
+    description:
+      - Whether to send an activation email when the instance is ready or not.
+      - Only considered on creation.
+    type: bool
+    default: false
+  backups:
+    description:
+      - Whether to enable automatic backups or not.
+    type: bool
+  ddos_protection:
+    description:
+      - Whether to enable ddos_protection or not.
+    type: bool
+  enable_ipv6:
+    description:
+      - Whether to enable IPv6 or not.
+    type: bool
+  tags:
+    description:
+      - Tags for the instance.
+    type: list
+    elements: str
+  user_data:
+    description:
+      - User data to be passed to the instance.
+    type: str
+  startup_script:
+    description:
+      - Name or ID of the startup script to execute on boot.
+      - Only considered while creating the instance.
+    type: str
+  ssh_keys:
+    description:
+      - List of SSH key names passed to the instance on creation.
+    type: list
+    elements: str
+  vpcs:
+    description:
+      - List of VPC descriptions the instance to attach to.
+    type: list
+    elements: str
+  reserved_ipv4:
+    description:
+      - IP address of the floating IP to use as the main IP of this instance.
+      - Only considered on creation.
+    type: str
+  region:
+    description:
+      - Region the instance is deployed into.
+    type: str
+    required: true
+  state:
+    description:
+      - State of the instance.
+    default: present
+    choices: [ present, absent, started, stopped ]
+    type: str
+extends_documentation_fragment:
+  - vultr.cloud.vultr_v2
+"""
+
+EXAMPLES = """
+"""
+
+RETURN = """
+---
+vultr_api:
+  description: Response from Vultr API with a few additions/modification.
+  returned: success
+  type: dict
+  contains:
+    api_account:
+      description: Account used in the ini file to select the key.
+      returned: success
+      type: str
+      sample: default
+    api_timeout:
+      description: Timeout used for the API requests.
+      returned: success
+      type: int
+      sample: 60
+    api_retries:
+      description: Amount of max retries for the API requests.
+      returned: success
+      type: int
+      sample: 5
+    api_retry_max_delay:
+      description: Exponential backoff delay in seconds between retries up to this max delay value.
+      returned: success
+      type: int
+      sample: 12
+    api_endpoint:
+      description: Endpoint used for the API requests.
+      returned: success
+      type: str
+      sample: "https://api.vultr.com/v2"
+vultr_instance:
+  description: Response from Vultr API.
+  returned: success
+  type: dict
+  contains:
+    id:
+      description: ID of the instance.
+      returned: success
+      type: str
+      sample: cb676a46-66fd-4dfb-b839-443f2e6c0b60
+    date_created:
+      description: Date when the instance was created.
+      returned: success
+      type: str
+      sample: "2020-10-10T01:56:20+00:00"
+    label:
+      description: Label of the instance.
+      returned: success
+      type: str
+      sample: my instance
+    region:
+      description: Region the instance was deployed into.
+      returned: success
+      type: str
+      sample: ews
+    status:
+      description: Status about the deployment of the instance.
+      returned: success
+      type: str
+      sample: active
+"""
+
+from ansible.module_utils.basic import AnsibleModule
+
+from ..module_utils.vultr_v2 import AnsibleVultr, vultr_argument_spec
+
+
+class AnsibleVultrInstance(AnsibleVultr):
+    def get_firewall_group(self):
+        return self.query_filter_list_by_name(
+            key_name="description",
+            param_key="firewall_group",
+            path="/firewalls",
+            result_key="firewall_groups",
+            fail_not_found=True,
+        )
+
+    def get_startup_script(self):
+        return self.query_filter_list_by_name(
+            key_name="name",
+            param_key="startup_script",
+            path="/startup-scripts",
+            result_key="startup_scripts",
+            fail_not_found=True,
+        )
+
+    def get_os(self):
+        return self.query_filter_list_by_name(
+            key_name="name",
+            param_key="os",
+            path="/os",
+            result_key="os",
+            fail_not_found=True,
+        )
+
+    def get_app(self):
+        return self.query_filter_list_by_name(
+            key_name="deploy_name",
+            param_key="app",
+            path="/applications",
+            result_key="applications",
+            fail_not_found=True,
+        )
+
+    def configure(self):
+        if self.module.params["state"] != "absent":
+
+            param_keys = ("os", "image", "app")
+            if not any(self.module.params.get(x) is not None for x in param_keys):
+                self.module.fail_json(msg="missing required arguements, one of the following required: %s" % ", ".join(param_keys))
+
+            if self.module.params["startup_script"] is not None:
+                self.module.params["startup_script_id"] = self.get_startup_script()["id"]
+
+            if self.module.params["firewall_group"] is not None:
+                self.module.params["firewall_group_id"] = self.get_firewall_group()["id"]
+
+            if self.module.params["os"] is not None:
+                self.module.params["os_id"] = self.get_os()["id"]
+
+            if self.module.params["app"] is not None:
+                self.module.params["app_id"] = self.get_app()["id"]
+
+    def create_or_update(self):
+        resource = super(AnsibleVultrInstance, self).create_or_update()
+        if resource:
+            resource = self.wait_for_state(resource=resource, key="status", state="active")
+            resource = self.wait_for_state(resource=resource, key="power_status", state="running")
+        return resource
+
+    def create(self):
+        return super(AnsibleVultrInstance, self).create()
+
+    def update(self, resource):
+        force = self.module.params.get("force")
+        return super(AnsibleVultrInstance, self).update(resource=resource)
+
+
+def main():
+    argument_spec = vultr_argument_spec()
+    argument_spec.update(
+        dict(
+            label=dict(type="str", required=True, aliases=["name"]),
+            hostname=dict(type="str"),
+            app=dict(type="str"),
+            os=dict(type="str"),
+            plan=dict(type="str"),
+            activation_email=dict(type="bool", default=False),
+            enable_vpc=dict(type="bool"),
+            ddos_protection=dict(type="bool"),
+            backups=dict(type="bool"),
+            enable_ipv6=dict(type="bool"),
+            tags=dict(type="list", elements="str"),
+            reserved_ipv4=dict(type="str"),
+            firewall_group=dict(type="str"),
+            startup_script=dict(type="str"),
+            user_data=dict(type="str"),
+            ssh_keys=dict(type="list", elements="str", no_log=False),
+            vpcs=dict(type="list", elements="str"),
+            region=dict(type="str", required=True),
+            state=dict(
+                choices=[
+                    "present",
+                    "absent",
+                    "started",
+                    "stopped",
+                ],
+                default="present",
+            ),
+        )  # type: ignore
+    )
+
+    module = AnsibleModule(
+        argument_spec=argument_spec,
+        required_if=(("state", "present", ("plan",)),),
+        mutually_exclusive=(("os", "app", "image"),),
+        supports_check_mode=True,
+    )
+
+    vultr = AnsibleVultrInstance(
+        module=module,
+        namespace="vultr_instance",
+        resource_path="/instances",
+        ressource_result_key_singular="instance",
+        resource_create_param_keys=[
+            "label",
+            "plan",
+            "app_id",
+            "os_id",
+            "iso_id",
+            "script_id",
+            "region",
+            "snapshot",
+            "enable_ipv6",
+            "enable_vpc",
+            "reserved_ipv4",
+            "user_data",
+            "tags",
+            "activation_email",
+            "ddos_protection",
+            "ssh_keys",
+        ],
+        resource_update_param_keys=[
+            "plan",
+            "user_data",
+            "tags",
+        ],
+        resource_key_name="label",
+    )
+
+    state = module.params.get("state")  # type: ignore
+    if state == "absent":
+        vultr.absent()
+    else:
+        # TODO: implement stopped, started
+        vultr.present()
+
+
+if __name__ == "__main__":
+    main()
