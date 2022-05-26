@@ -1,68 +1,83 @@
-ancestor: {}
+ancestor: null
 releases:
+  1.0.0:
+    modules:
+    - description: Manages firewall rules on Vultr.
+      name: firewall_rule
+      namespace: ''
+    - description: Gather information about the Vultr firewall rules available.
+      name: firewall_rule_info
+      namespace: ''
+    - description: Manages VPCs on Vultr.
+      name: vpc
+      namespace: ''
+    - description: Gather information about the Vultr vpcs available.
+      name: vpc_info
+      namespace: ''
+    release_date: '2022-05-26'
   1.0.0-rc.1:
     modules:
-      - description: Get information about the Vultr account.
-        name: account_info
-        namespace: ""
-      - description: Manages block storage volumes on Vultr.
-        name: block_storage
-        namespace: ""
-      - description: Get information about the Vultr block storage available.
-        name: block_storage_info
-        namespace: ""
-      - description: Manages DNS domains on Vultr.
-        name: dns_domain
-        namespace: ""
-      - description: Gather information about the Vultr DNS domains available.
-        name: dns_domain_info
-        namespace: ""
-      - description: Manages DNS records on Vultr.
-        name: dns_record
-        namespace: ""
-      - description: Manages firewall groups on Vultr.
-        name: firewall_group
-        namespace: ""
-      - description: Gather information about the Vultr firewall groups available.
-        name: firewall_group_info
-        namespace: ""
-      - description: Manages networks on Vultr.
-        name: network
-        namespace: ""
-      - description: Gather information about the Vultr networks available.
-        name: network_info
-        namespace: ""
-      - description: Get information about the Vultr OSes available.
-        name: os_info
-        namespace: ""
-      - description: Gather information about the Vultr plans available.
-        name: plan_info
-        namespace: ""
-      - description: Gather information about the Vultr bare metal plans available.
-        name: plan_metal_info
-        namespace: ""
-      - description: Gather information about the Vultr regions available.
-        name: region_info
-        namespace: ""
-      - description: Manages reserved IPs on Vultr.
-        name: reserved_ip
-        namespace: ""
-      - description: Manages ssh keys on Vultr.
-        name: ssh_key
-        namespace: ""
-      - description: Get information about the Vultr SSH keys available.
-        name: ssh_key_info
-        namespace: ""
-      - description: Manages startup scripts on Vultr.
-        name: startup_script
-        namespace: ""
-      - description: Gather information about the Vultr startup scripts available.
-        name: startup_script_info
-        namespace: ""
-      - description: Manages users on Vultr.
-        name: user
-        namespace: ""
-      - description: Get information about the Vultr user available.
-        name: user_info
-        namespace: ""
-    release_date: "2022-04-22"
+    - description: Get information about the Vultr account.
+      name: account_info
+      namespace: ''
+    - description: Manages block storage volumes on Vultr.
+      name: block_storage
+      namespace: ''
+    - description: Get information about the Vultr block storage available.
+      name: block_storage_info
+      namespace: ''
+    - description: Manages DNS domains on Vultr.
+      name: dns_domain
+      namespace: ''
+    - description: Gather information about the Vultr DNS domains available.
+      name: dns_domain_info
+      namespace: ''
+    - description: Manages DNS records on Vultr.
+      name: dns_record
+      namespace: ''
+    - description: Manages firewall groups on Vultr.
+      name: firewall_group
+      namespace: ''
+    - description: Gather information about the Vultr firewall groups available.
+      name: firewall_group_info
+      namespace: ''
+    - description: Manages networks on Vultr.
+      name: network
+      namespace: ''
+    - description: Gather information about the Vultr networks available.
+      name: network_info
+      namespace: ''
+    - description: Get information about the Vultr OSes available.
+      name: os_info
+      namespace: ''
+    - description: Gather information about the Vultr plans available.
+      name: plan_info
+      namespace: ''
+    - description: Gather information about the Vultr bare metal plans available.
+      name: plan_metal_info
+      namespace: ''
+    - description: Gather information about the Vultr regions available.
+      name: region_info
+      namespace: ''
+    - description: Manages reserved IPs on Vultr.
+      name: reserved_ip
+      namespace: ''
+    - description: Manages ssh keys on Vultr.
+      name: ssh_key
+      namespace: ''
+    - description: Get information about the Vultr SSH keys available.
+      name: ssh_key_info
+      namespace: ''
+    - description: Manages startup scripts on Vultr.
+      name: startup_script
+      namespace: ''
+    - description: Gather information about the Vultr startup scripts available.
+      name: startup_script_info
+      namespace: ''
+    - description: Manages users on Vultr.
+      name: user
+      namespace: ''
+    - description: Get information about the Vultr user available.
+      name: user_info
+      namespace: ''
+    release_date: '2022-04-22'

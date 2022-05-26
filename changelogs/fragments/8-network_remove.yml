@@ -1,2 +1,0 @@
-major_changes:
-  - network and network_info modules has been replaced by vpc and vpc_info.

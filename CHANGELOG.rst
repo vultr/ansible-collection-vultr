@@ -5,13 +5,8 @@ Vultr Collection Release Notes
 .. contents:: Topics
 
 
-v1.0.0-rc.1
-===========
-
-Release Summary
----------------
-
-Initial release candidate and first release published on Ansible Galaxy.
+v1.0.0
+======
 
 New Modules
 -----------
@@ -24,6 +19,8 @@ New Modules
 - dns_record - Manages DNS records on Vultr.
 - firewall_group - Manages firewall groups on Vultr.
 - firewall_group_info - Gather information about the Vultr firewall groups available.
+- firewall_rule - Manages firewall rules on Vultr.
+- firewall_rule_info - Gather information about the Vultr firewall rules available.
 - network - Manages networks on Vultr.
 - network_info - Gather information about the Vultr networks available.
 - os_info - Get information about the Vultr OSes available.
@@ -37,3 +34,5 @@ New Modules
 - startup_script_info - Gather information about the Vultr startup scripts available.
 - user - Manages users on Vultr.
 - user_info - Get information about the Vultr user available.
+- vpc - Manages VPCs on Vultr.
+- vpc_info - Gather information about the Vultr vpcs available.
