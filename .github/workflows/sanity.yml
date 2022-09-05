@@ -8,6 +8,8 @@ on:
   schedule:
     - cron: "5 12 * * *"
   pull_request:
+  workflow_call:
+  workflow_dispatch:
 
 jobs:
   sanity:

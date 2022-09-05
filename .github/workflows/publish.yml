@@ -12,6 +12,8 @@ jobs:
       run:
         working-directory: ansible_collections/vultr/cloud
     steps:
+      - uses: ./.github/workflows/sanity.yml
+
       - uses: actions/checkout@v3
         with:
           path: ansible_collections/vultr/cloud
