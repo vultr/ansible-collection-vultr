@@ -14,7 +14,7 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 module: ssh_key_info
-short_description: Get information about the Vultr SSH keys available.
+short_description: Get information about the Vultr SSH keys
 description:
   - Get infos about SSH keys available.
 version_added: "1.0.0"
@@ -41,7 +41,7 @@ RETURN = """
 vultr_api:
   description: Response from Vultr API with a few additions/modification.
   returned: success
-  type: complex
+  type: dict
   contains:
     api_timeout:
       description: Timeout used for the API requests.
@@ -66,7 +66,7 @@ vultr_api:
 vultr_ssh_key_info:
   description: Response from Vultr API as list.
   returned: success
-  type: complex
+  type: list
   contains:
     id:
       description: ID of the ssh key.

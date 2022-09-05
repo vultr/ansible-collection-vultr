@@ -12,9 +12,9 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 module: dns_domain_info
-short_description: Gather information about the Vultr DNS domains available.
+short_description: Gather information about the Vultr DNS domains
 description:
-  - Gather information about DNS domains available in Vultr.
+  - Gather information about DNS domains available.
 version_added: "1.0.0"
 author:
   - "Yanis Guenane (@Spredzy)"
@@ -38,7 +38,7 @@ RETURN = """
 vultr_api:
   description: Response from Vultr API with a few additions/modification.
   returned: success
-  type: complex
+  type: dict
   contains:
     api_timeout:
       description: Timeout used for the API requests.
@@ -63,7 +63,7 @@ vultr_api:
 vultr_dns_domain_info:
   description: Response from Vultr API as list.
   returned: success
-  type: complex
+  type: list
   contains:
     domain:
       description: Name of the DNS Domain.

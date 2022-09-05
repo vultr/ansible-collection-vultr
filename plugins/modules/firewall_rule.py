@@ -12,7 +12,7 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 module: firewall_rule
-short_description: Manages firewall rules on Vultr.
+short_description: Manages firewall rules on Vultr
 description:
   - Create and remove firewall rules.
 version_added: "1.0.0"
@@ -105,7 +105,7 @@ RETURN = """
 vultr_api:
   description: Response from Vultr API with a few additions/modification.
   returned: success
-  type: complex
+  type: dict
   contains:
     api_timeout:
       description: Timeout used for the API requests.
@@ -130,7 +130,7 @@ vultr_api:
 vultr_firewall_rule:
   description: Response from Vultr API.
   returned: success
-  type: complex
+  type: dict
   contains:
     id:
       description: ID of the firewall rule.
@@ -287,7 +287,7 @@ def main():
         ],
     )
 
-    if module.params.get("state") == "absent":
+    if module.params.get("state") == "absent":  # type: ignore
         vultr.absent()
     else:
         vultr.present()

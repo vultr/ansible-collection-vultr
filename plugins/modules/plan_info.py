@@ -13,7 +13,7 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 module: plan_info
-short_description: Gather information about the Vultr plans available.
+short_description: Gather information about the Vultr plans
 description:
   - Gather information about plans available to boot servers.
 version_added: "1.0.0"
@@ -39,7 +39,7 @@ RETURN = """
 vultr_api:
   description: Response from Vultr API with a few additions/modification.
   returned: success
-  type: complex
+  type: dict
   contains:
     api_timeout:
       description: Timeout used for the API requests.
@@ -64,23 +64,53 @@ vultr_api:
 vultr_plan_info:
   description: Response from Vultr API as list.
   returned: success
-  type: complex
+  type: list
   contains:
-    plan:
-      description: List of the plans available.
+    id:
+      description: ID of the plan.
+      returned: success
+      type: str
+      sample: vhf-8c-32gb
+    vcpu_count:
+      description: Amount of CPUs.
+      returned: success
+      type: int
+      sample: 8
+    ram:
+      description: Amount of RAM in MB.
+      returned: success
+      type: int
+      sample: 32768
+    disk:
+      description: Disk size in GB.
+      returned: success
+      type: int
+      sample: 512
+    disk_count:
+      description: Amount of disks.
+      returned: success
+      type: int
+      sample: 1
+    bandwidth:
+      description: Bandwidth in MB.
+      returned: success
+      type: int
+      sample: 6144
+    monthly_cost:
+      description: Monthly cost in $.
+      returned: success
+      type: int
+      sample: 192
+    type:
+      description: Type of plan.
+      returned: success
+      type: str
+      sample: vhf
+    locations:
+      description: List of locations the plan is available in.
       returned: success
       type: list
-      sample: [{
-        "bandwidth": 1024,
-        "disk": 25,
-        "disk_count": 1,
-        "id": "vc2-1c-1gb",
-        "locations": ["ewr", "ord", "dfw", "sea", "lax", "atl", "ams", "lhr", "fra", "sjc", "syd", "yto", "cdg", "nrt", "icn", "mia", "sgp", "sto", "mex"],
-        "monthly_cost": 5,
-        "ram": 1024,
-        "type": "vc2",
-        "vcpu_count": 1
-        }]
+      sample: ["ewr"]
 """
 
 from ansible.module_utils.basic import AnsibleModule

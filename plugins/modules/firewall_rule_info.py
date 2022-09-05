@@ -11,9 +11,9 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 module: firewall_rule_info
-short_description: Gather information about the Vultr firewall rules available.
+short_description: Gather information about the Vultr firewall rules
 description:
-  - Gather information about firewall rules available in Vultr.
+  - Gather information about firewall rules available.
 version_added: "1.0.0"
 author: "René Moser (@resmo)"
 options:
@@ -42,7 +42,7 @@ RETURN = """
 vultr_api:
   description: Response from Vultr API with a few additions/modification.
   returned: success
-  type: complex
+  type: dict
   contains:
     api_timeout:
       description: Timeout used for the API requests.
@@ -67,7 +67,7 @@ vultr_api:
 vultr_firewall_rule_info:
   description: Response from Vultr API as list.
   returned: success
-  type: complex
+  type: list
   contains:
     id:
       description: ID of the firewall rule.

@@ -12,7 +12,7 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 module: account_info
-short_description: Get information about the Vultr account.
+short_description: Get information about the Vultr account
 description:
   - Get infos about account balance, charges and payments.
 version_added: "1.0.0"
@@ -36,7 +36,7 @@ RETURN = """
 vultr_api:
   description: Response from Vultr API with a few additions/modification.
   returned: success
-  type: complex
+  type: dict
   contains:
     api_account:
       description: Account used in the ini file to select the key.
@@ -66,7 +66,7 @@ vultr_api:
 vultr_account_info:
   description: Response from Vultr API.
   returned: success
-  type: complex
+  type: dict
   contains:
     balance:
       description: Your account balance.

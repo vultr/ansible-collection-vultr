@@ -12,10 +12,10 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 module: block_storage_info
-short_description: Get information about the Vultr block storage available.
+short_description: Get information about the Vultr block storage
 version_added: "1.0.0"
 description:
-  - Get infos about block storages in Vultr.
+  - Get infos about block storages available.
 author:
   - "René Moser (@resmo)"
   - "Yanis Guenane (@Spredzy)"
@@ -38,7 +38,7 @@ RETURN = """
 vultr_api:
   description: Response from Vultr API with a few additions/modification.
   returned: success
-  type: complex
+  type: dict
   contains:
     api_timeout:
       description: Timeout used for the API requests.
@@ -63,7 +63,7 @@ vultr_api:
 vultr_block_storage_info:
   description: Response from Vultr API as list.
   returned: success
-  type: complex
+  type: list
   contains:
     attached_to_instance:
       description: The ID of the server instance the volume is attached to.

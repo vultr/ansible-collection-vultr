@@ -11,9 +11,9 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 module: vpc_info
-short_description: Gather information about the Vultr vpcs available.
+short_description: Gather information about the Vultr VPCs
 description:
-  - Gather information about vpcs available in Vultr.
+  - Gather information about VPCs available.
 version_added: "1.0.0"
 author:
   - "René Moser (@resmo)"
@@ -36,7 +36,7 @@ RETURN = """
 vultr_api:
   description: Response from Vultr API with a few additions/modification.
   returned: success
-  type: complex
+  type: dict
   contains:
     api_timeout:
       description: Timeout used for the API requests.
@@ -61,7 +61,7 @@ vultr_api:
 vultr_vpc_info:
   description: Response from Vultr API as list.
   returned: success
-  type: complex
+  type: list
   contains:
     id:
       description: ID of the VPC.

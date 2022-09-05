@@ -12,7 +12,7 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 module: reserved_ip
-short_description: Manages reserved IPs on Vultr.
+short_description: Manages reserved IPs on Vultr
 description:
   - Create, attach, detach and remove reserved IPs.
 version_added: "1.0.0"
@@ -84,7 +84,7 @@ RETURN = """
 vultr_api:
   description: Response from Vultr API with a few additions/modification.
   returned: success
-  type: complex
+  type: dict
   contains:
     api_timeout:
       description: Timeout used for the API requests.
@@ -109,7 +109,7 @@ vultr_api:
 vultr_reserved_ip:
   description: Response from Vultr API.
   returned: success
-  type: complex
+  type: dict
   contains:
     id:
       description: ID of the reserved IP.
@@ -180,14 +180,10 @@ class AnsibleVultrReservedIp(AnsibleVultr):
             # Filter instances by label
             resources = self.api_query(path="/instances?label=%s" % label) or dict()
             if not resources or not resources["instances"]:
-                self.module.fail_json(
-                    msg="No instance with name found: %s" % instance_name
-                )
+                self.module.fail_json(msg="No instance with name found: %s" % instance_name)
 
             if len(resources["instances"]) > 1:
-                self.module.fail_json(
-                    msg="More then one instance with name found: %s" % instance_name
-                )
+                self.module.fail_json(msg="More then one instance with name found: %s" % instance_name)
 
             return resources["instances"][0]["id"]
 
@@ -234,8 +230,7 @@ class AnsibleVultrReservedIp(AnsibleVultr):
             self.result["changed"] = True
             if not self.module.check_mode:
                 self.api_query(
-                    path="%s/%s/%s"
-                    % (self.resource_path, resource[self.resource_key_id], "detach"),
+                    path="%s/%s/%s" % (self.resource_path, resource[self.resource_key_id], "detach"),
                     method="POST",
                     data=dict(instance_id=self.instance_id),
                 )
@@ -247,8 +242,7 @@ class AnsibleVultrReservedIp(AnsibleVultr):
             self.result["changed"] = True
             if not self.module.check_mode:
                 self.api_query(
-                    path="%s/%s/%s"
-                    % (self.resource_path, resource[self.resource_key_id], "attach"),
+                    path="%s/%s/%s" % (self.resource_path, resource[self.resource_key_id], "attach"),
                     method="POST",
                     data=dict(instance_id=self.instance_id),
                 )
@@ -286,7 +280,7 @@ def main():
         resource_key_name="label",
     )
 
-    if module.params.get("state") == "absent":
+    if module.params.get("state") == "absent":  # type: ignore
         vultr.absent()
     else:
         vultr.present()

@@ -13,9 +13,9 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 module: startup_script_info
-short_description: Gather information about the Vultr startup scripts available.
+short_description: Gather information about the Vultr startup scripts
 description:
-  - Gather information about vultr_startup_scripts available.
+  - Gather information about startup scripts available.
 version_added: "1.0.0"
 author:
   - "Yanis Guenane (@Spredzy)"
@@ -39,7 +39,7 @@ RETURN = """
 vultr_api:
   description: Response from Vultr API with a few additions/modification.
   returned: success
-  type: complex
+  type: dict
   contains:
     api_timeout:
       description: Timeout used for the API requests.
@@ -64,7 +64,7 @@ vultr_api:
 vultr_startup_script_info:
   description: Response from Vultr API.
   returned: success
-  type: complex
+  type: list
   contains:
     id:
       description: ID of the startup script.
@@ -76,11 +76,6 @@ vultr_startup_script_info:
       returned: success
       type: str
       sample: my startup script
-    script:
-      description: The source code of the startup script.
-      returned: success
-      type: str
-      sample: "#!/bin/bash\necho Hello World > /root/hello"
     type:
       description: The type of the startup script.
       returned: success

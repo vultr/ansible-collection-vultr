@@ -13,9 +13,9 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 module: os_info
-short_description: Get information about the Vultr OSes available.
+short_description: Get information about the Vultr operation systems
 description:
-  - Get infos about OSes available to boot servers.
+  - Get infos about operating systems available to boot servers.
 version_added: "1.0.0"
 author:
   - "Yanis Guenane (@Spredzy)"
@@ -39,7 +39,7 @@ RETURN = """
 vultr_api:
   description: Response from Vultr API with a few additions/modification.
   returned: success
-  type: complex
+  type: dict
   contains:
     api_timeout:
       description: Timeout used for the API requests.
@@ -64,7 +64,7 @@ vultr_api:
 vultr_os_info:
   description: Response from Vultr API as list.
   returned: available
-  type: complex
+  type: list
   contains:
     arch:
       description: OS Architecture.

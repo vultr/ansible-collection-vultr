@@ -12,7 +12,7 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 module: dns_record
-short_description: Manages DNS records on Vultr.
+short_description: Manages DNS records on Vultr
 description:
   - Create, update and remove DNS records.
 version_added: "1.0.0"
@@ -107,9 +107,9 @@ EXAMPLES = """
     priority: "{{ item.priority }}"
     multiple: true
   with_items:
-  - { data: mx1.example.com, priority: 10 }
-  - { data: mx2.example.com, priority: 10 }
-  - { data: mx3.example.com, priority: 20 }
+    - { data: mx1.example.com, priority: 10 }
+    - { data: mx2.example.com, priority: 10 }
+    - { data: mx3.example.com, priority: 20 }
 
 - name: Ensure a record is absent
   vultr.cloud.dns_record:
@@ -131,7 +131,7 @@ RETURN = """
 vultr_api:
   description: Response from Vultr API with a few additions/modification.
   returned: success
-  type: complex
+  type: dict
   contains:
     api_timeout:
       description: Timeout used for the API requests.
@@ -156,7 +156,7 @@ vultr_api:
 dns_record:
   description: Response from Vultr API.
   returned: success
-  type: complex
+  type: dict
   contains:
     id:
       description: The ID of the DNS record.
@@ -214,8 +214,7 @@ class AnsibleVultrDnsRecord(AnsibleVultr):
                     if result:
                         self.module.fail_json(
                             msg="More than one record with record_type=%s and name=%s params. "
-                            "Use multiple=yes for more than one record."
-                            % (record_type, name)
+                            "Use multiple=yes for more than one record." % (record_type, name)
                         )
                     else:
                         result = resource
@@ -232,9 +231,7 @@ def main():
             name=dict(type="str", default=""),
             state=dict(type="str", choices=["present", "absent"], default="present"),
             ttl=dict(type="int", default=300),
-            type=dict(
-                type="str", choices=RECORD_TYPES, default="A", aliases=["record_type"]
-            ),
+            type=dict(type="str", choices=RECORD_TYPES, default="A", aliases=["record_type"]),
             multiple=dict(type="bool", default=False),
             priority=dict(type="int", default=0),
             data=dict(type="str"),
@@ -253,14 +250,14 @@ def main():
     vultr = AnsibleVultrDnsRecord(
         module=module,
         namespace="vultr_dns_record",
-        resource_path="/domains/%s/records" % module.params.get("domain"),
+        resource_path="/domains/%s/records" % module.params.get("domain"),  # type: ignore
         ressource_result_key_singular="record",
         resource_create_param_keys=["name", "ttl", "data", "priority", "type"],
         resource_update_param_keys=["name", "ttl", "data", "priority"],
         resource_key_name="name",
-    )
+    )  # type: ignore
 
-    if module.params.get("state") == "absent":
+    if module.params.get("state") == "absent":  # type: ignore
         vultr.absent()
     else:
         vultr.present()

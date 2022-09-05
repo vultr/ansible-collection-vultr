@@ -14,7 +14,7 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 module: plan_metal_info
-short_description: Gather information about the Vultr bare metal plans available.
+short_description: Gather information about the Vultr bare metal plans
 description:
   - Gather information about plans available to boot servers.
 version_added: "1.0.0"
@@ -41,7 +41,7 @@ RETURN = """
 vultr_api:
   description: Response from Vultr API with a few additions/modification.
   returned: success
-  type: complex
+  type: dict
   contains:
     api_timeout:
       description: Timeout used for the API requests.
@@ -64,29 +64,65 @@ vultr_api:
       type: str
       sample: "https://api.vultr.com/v2"
 vultr_plan_info:
-  description: Response from Vultr API.
+  description: Response from Vultr API as list.
   returned: success
-  type: complex
+  type: list
   contains:
-    plan:
-      description: List of the plans available.
+    id:
+      description: ID of the plan.
+      returned: success
+      type: str
+      sample: vbm-4c-32gb
+    cpu_count:
+      description: Amount of CPUs.
+      returned: success
+      type: int
+      sample: 4
+    cpu_threads:
+      description: Amount of CPU threads.
+      returned: success
+      type: int
+      sample: 8
+    cpu_model:
+      description: CPU model.
+      returned: success
+      type: str
+      sample: E3-1270v6
+    ram:
+      description: Amount of RAM in MB.
+      returned: success
+      type: int
+      sample: 32768
+    disk:
+      description: Disk size in GB.
+      returned: success
+      type: int
+      sample: 240
+    disk_count:
+      description: Amount of disks.
+      returned: success
+      type: int
+      sample: 2
+    bandwidth:
+      description: Bandwidth in MB.
+      returned: success
+      type: int
+      sample: 5120
+    monthly_cost:
+      description: Monthly cost in $.
+      returned: success
+      type: int
+      sample: 300
+    type:
+      description: Type of plan.
+      returned: success
+      type: str
+      sample: SSD
+    locations:
+      description: List of locations the plan is available in.
       returned: success
       type: list
-      sample: [{
-          "id": "vbm-4c-32gb",
-          "cpu_count": 4,
-          "cpu_threads": 8,
-          "cpu_model": "E3-1270v6",
-          "ram": 32768,
-          "disk": 240,
-          "disk_count": 2,
-          "bandwidth": 5120,
-          "monthly_cost": 300,
-          "type": "SSD",
-          "locations": [
-            "ewr"
-          ]
-      }]
+      sample: ["ewr"]
 """
 
 from ansible.module_utils.basic import AnsibleModule

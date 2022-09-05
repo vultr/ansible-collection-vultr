@@ -12,7 +12,7 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 module: startup_script
-short_description: Manages startup scripts on Vultr.
+short_description: Manages startup scripts on Vultr
 description:
   - Create, update and remove startup scripts.
 version_added: "1.0.0"
@@ -68,7 +68,7 @@ RETURN = """
 vultr_api:
   description: Response from Vultr API with a few additions/modification.
   returned: success
-  type: complex
+  type: dict
   contains:
     api_timeout:
       description: Timeout used for the API requests.
@@ -93,7 +93,7 @@ vultr_api:
 vultr_startup_script:
   description: Response from Vultr API.
   returned: success
-  type: complex
+  type: dict
   contains:
     id:
       description: ID of the startup script.
@@ -149,9 +149,7 @@ class AnsibleVultrStartupScript(AnsibleVultr):
 
     def configure(self):
         if self.module.params["script"]:
-            self.module.params["script"] = base64.b64encode(
-                self.module.params["script"].encode()
-            )
+            self.module.params["script"] = base64.b64encode(self.module.params["script"].encode())
 
     def transform_result(self, resource):
         if resource:
@@ -196,7 +194,7 @@ def main():
         resource_key_name="name",
     )
 
-    if module.params.get("state") == "absent":
+    if module.params.get("state") == "absent":  # type: ignore
         vultr.absent()
     else:
         vultr.present()

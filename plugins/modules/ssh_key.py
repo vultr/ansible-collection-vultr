@@ -56,7 +56,7 @@ RETURN = """
 vultr_api:
   description: Response from Vultr API with a few additions/modification.
   returned: success
-  type: complex
+  type: dict
   contains:
     api_timeout:
       description: Timeout used for the API requests.
@@ -81,7 +81,7 @@ vultr_api:
 vultr_ssh_key:
   description: Response from Vultr API.
   returned: success
-  type: complex
+  type: dict
   contains:
     id:
       description: ID of the ssh key.
@@ -138,7 +138,7 @@ def main():
         resource_key_name="name",
     )
 
-    if module.params.get("state") == "absent":
+    if module.params.get("state") == "absent":  # type: ignore
         vultr.absent()
     else:
         vultr.present()

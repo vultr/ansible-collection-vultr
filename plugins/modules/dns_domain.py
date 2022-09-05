@@ -12,7 +12,7 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 module: dns_domain
-short_description: Manages DNS domains on Vultr.
+short_description: Manages DNS domains on Vultr
 description:
   - Create and remove DNS domains.
 version_added: "1.0.0"
@@ -65,7 +65,7 @@ RETURN = """
 vultr_api:
   description: Response from Vultr API with a few additions/modification.
   returned: success
-  type: complex
+  type: dict
   contains:
     api_timeout:
       description: Timeout used for the API requests.
@@ -90,7 +90,7 @@ vultr_api:
 vultr_dns_domain:
   description: Response from Vultr API.
   returned: success
-  type: complex
+  type: dict
   contains:
     name:
       description: Name of the DNS Domain.
@@ -120,9 +120,7 @@ def main():
         dict(
             domain=dict(type="str", required=True, aliases=["name"]),
             ip=dict(type="str", aliases=["server_ip"]),
-            dns_sec=dict(
-                type="str", choices=["enabled", "disabled"], default="disabled"
-            ),
+            dns_sec=dict(type="str", choices=["enabled", "disabled"], default="disabled"),
             state=dict(type="str", choices=["present", "absent"], default="present"),
         )  # type: ignore
     )
@@ -147,7 +145,7 @@ def main():
         resource_update_method="PUT",
     )
 
-    if module.params.get("state") == "absent":
+    if module.params.get("state") == "absent":  # type: ignore
         vultr.absent()
     else:
         vultr.present()

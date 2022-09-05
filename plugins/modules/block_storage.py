@@ -12,9 +12,9 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 module: block_storage
-short_description: Manages block storage volumes on Vultr.
+short_description: Manages block storage volumes on Vultr
 description:
-  - Manage block storage volumes on Vultr.
+  - Manage block storage volumes.
 version_added: "1.0.0"
 author:
   - "René Moser (@resmo)"
@@ -30,7 +30,7 @@ options:
     description:
       - Size of the block storage volume in GB.
       - Required if I(state) is present.
-      - If it's larger than the volume's current size, the volume will be resized.
+      - If it is larger than the volume's current size, the volume will be resized.
     aliases: [ size ]
     type: int
   region:
@@ -89,7 +89,7 @@ RETURN = """
 vultr_api:
   description: Response from Vultr API with a few additions/modification.
   returned: success
-  type: complex
+  type: dict
   contains:
     api_account:
       description: Account used in the ini file to select the key.
@@ -119,7 +119,7 @@ vultr_api:
 vultr_block_storage:
   description: Response from Vultr API.
   returned: success
-  type: complex
+  type: dict
   contains:
     attached_to_instance:
       description: The ID of the server instance the volume is attached to.
@@ -179,10 +179,7 @@ class AnsibleVultrBlockStorage(AnsibleVultr):
         desired_size = self.module.params["size_gb"]
         if desired_size < current_size:
             self.module.params["size_gb"] = current_size
-            self.module.warn(
-                "Shrinking is not supported: current size %s, desired size %s"
-                % (current_size, desired_size)
-            )
+            self.module.warn("Shrinking is not supported: current size %s, desired size %s" % (current_size, desired_size))
         return super(AnsibleVultrBlockStorage, self).update(resource=resource)
 
     def present(self):
@@ -198,9 +195,7 @@ class AnsibleVultrBlockStorage(AnsibleVultr):
             self.result["changed"] = True
 
             mode = "detach" if instance_to_attach == "" else "attach"
-            self.result["diff"]["after"].update(
-                {"attached_to_instance": instance_to_attach}
-            )
+            self.result["diff"]["after"].update({"attached_to_instance": instance_to_attach})
 
             data = {
                 "instance_id": instance_to_attach if instance_to_attach else None,
@@ -209,8 +204,7 @@ class AnsibleVultrBlockStorage(AnsibleVultr):
 
             if not self.module.check_mode:
                 self.api_query(
-                    path="%s/%s/%s"
-                    % (self.resource_path, resource[self.resource_key_id], mode),
+                    path="%s/%s/%s" % (self.resource_path, resource[self.resource_key_id], mode),
                     method="POST",
                     data=data,
                 )
@@ -250,9 +244,7 @@ def main():
         resource_key_name="label",
     )
 
-    state = module.params.get("state")
-
-    if state == "absent":
+    if module.params.get("state") == "absent":  # type: ignore
         vultr.absent()
     else:
         vultr.present()

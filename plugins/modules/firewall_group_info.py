@@ -12,9 +12,9 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 module: firewall_group_info
-short_description: Gather information about the Vultr firewall groups available.
+short_description: Gather information about the Vultr firewall groups
 description:
-  - Gather information about firewall groups available in Vultr.
+  - Gather information about firewall groups available.
 version_added: "1.0.0"
 author:
   - "Yanis Guenane (@Spredzy)"
@@ -38,7 +38,7 @@ RETURN = """
 vultr_api:
   description: Response from Vultr API with a few additions/modification.
   returned: success
-  type: complex
+  type: dict
   contains:
     api_timeout:
       description: Timeout used for the API requests.
@@ -63,7 +63,7 @@ vultr_api:
 vultr_firewall_group_info:
   description: Response from Vultr API as list.
   returned: success
-  type: complex
+  type: list
   contains:
     id:
       description: ID of the firewall group.

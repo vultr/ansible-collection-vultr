@@ -13,7 +13,7 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 module: region_info
-short_description: Gather information about the Vultr regions available.
+short_description: Gather information about the Vultr regions
 description:
   - Gather information about regions available to boot servers.
 version_added: "1.0.0"
@@ -39,7 +39,7 @@ RETURN = """
 vultr_api:
   description: Response from Vultr API with a few additions/modification.
   returned: success
-  type: complex
+  type: dict
   contains:
     api_timeout:
       description: Timeout used for the API requests.
