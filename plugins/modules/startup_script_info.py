@@ -93,19 +93,9 @@ vultr_startup_script_info:
       sample: "2020-10-10T01:56:20+00:00"
 """
 
-import base64
-
 from ansible.module_utils.basic import AnsibleModule
 
 from ..module_utils.vultr_v2 import AnsibleVultr, vultr_argument_spec
-
-
-class AnsibleVultrStartupScriptInfo(AnsibleVultr):
-    def get_result(self, resource):
-        if resource:
-            resource["script"] = base64.b64decode(resource["script"]).decode()
-        self.result[self.namespace] = resource
-        self.module.exit_json(**self.result)
 
 
 def main():
