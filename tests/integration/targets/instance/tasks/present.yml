@@ -9,7 +9,9 @@
     firewall_group: "{{ vultr_instance_firewall_group }}"
     plan: "{{ instance.plan }}"
     region: "{{ instance.region }}"
-    os: "{{ instance.os }}"
+    os: "{{ instance.os | default(omit) }}"
+    app: "{{ instance.app | default(omit) }}"
+    image: "{{ instance.image | default(omit) }}"
   register: result
   check_mode: true
 - name: verify test create instance rule in check mode
@@ -23,7 +25,9 @@
     firewall_group: "{{ vultr_instance_firewall_group }}"
     plan: "{{ instance.plan }}"
     region: "{{ instance.region }}"
-    os: "{{ instance.os }}"
+    os: "{{ instance.os | default(omit) }}"
+    app: "{{ instance.app | default(omit) }}"
+    image: "{{ instance.image | default(omit) }}"
   register: result
 - name: verify test create instance rule
   ansible.builtin.assert:
@@ -36,7 +40,9 @@
     firewall_group: "{{ vultr_instance_firewall_group }}"
     plan: "{{ instance.plan }}"
     region: "{{ instance.region }}"
-    os: "{{ instance.os }}"
+    os: "{{ instance.os | default(omit) }}"
+    app: "{{ instance.app | default(omit) }}"
+    image: "{{ instance.image | default(omit) }}"
   register: result
 - name: verify test create instance rule idempotence
   ansible.builtin.assert:
@@ -49,7 +55,9 @@
     firewall_group: "{{ vultr_instance_firewall_group }}"
     plan: "{{ instance.plan_update }}"
     region: "{{ instance.region }}"
-    os: "{{ instance.os }}"
+    os: "{{ instance.os | default(omit) }}"
+    app: "{{ instance.app | default(omit) }}"
+    image: "{{ instance.image | default(omit) }}"
   register: result
   check_mode: true
 - name: verify test update instance rule in check mode
@@ -63,7 +71,9 @@
     firewall_group: "{{ vultr_instance_firewall_group }}"
     plan: "{{ instance.plan_update }}"
     region: "{{ instance.region }}"
-    os: "{{ instance.os }}"
+    os: "{{ instance.os | default(omit) }}"
+    app: "{{ instance.app | default(omit) }}"
+    image: "{{ instance.image | default(omit) }}"
   register: result
 - name: verify test update instance rule
   ansible.builtin.assert:
@@ -76,7 +86,9 @@
     firewall_group: "{{ vultr_instance_firewall_group }}"
     plan: "{{ instance.plan_update }}"
     region: "{{ instance.region }}"
-    os: "{{ instance.os }}"
+    os: "{{ instance.os | default(omit) }}"
+    app: "{{ instance.app | default(omit) }}"
+    image: "{{ instance.image | default(omit) }}"
   register: result
 - name: verify test update instance rule idempotence
   ansible.builtin.assert:

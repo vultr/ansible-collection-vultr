@@ -3,8 +3,20 @@
 ---
 vultr_instance_firewall_group: "{{ vultr_resource_prefix }}_instance_fw_group"
 vultr_instances:
-  - label: "{{ vultr_resource_prefix }}_instance1"
+  - label: "{{ vultr_resource_prefix }}_os1"
     plan: vc2-1c-1gb
     plan_update: vc2-1c-2gb
     region: ams
     os: Debian 11 x64 (bullseye)
+
+  - label: "{{ vultr_resource_prefix }}_app1"
+    plan: vc2-1c-1gb
+    plan_update: vc2-1c-2gb
+    region: ams
+    app: Docker on Ubuntu 20.04 x64
+
+  - label: "{{ vultr_resource_prefix }}_img1"
+    plan: vc2-1c-1gb
+    plan_update: vc2-1c-2gb
+    region: ams
+    image: Gitea on Ubuntu 20.04

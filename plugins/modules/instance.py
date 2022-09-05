@@ -125,11 +125,6 @@ vultr_api:
   returned: success
   type: dict
   contains:
-    api_account:
-      description: Account used in the ini file to select the key.
-      returned: success
-      type: str
-      sample: default
     api_timeout:
       description: Timeout used for the API requests.
       returned: success
@@ -160,6 +155,91 @@ vultr_instance:
       returned: success
       type: str
       sample: cb676a46-66fd-4dfb-b839-443f2e6c0b60
+    v6_main_ip:
+      description: IPv6 of the instance.
+      returned: success
+      type: str
+      sample: ""
+    v6_network:
+      description: IPv6 network of the instance.
+      returned: success
+      type: str
+      sample: ""
+    v6_network_size:
+      description: IPv6 network size of the instance.
+      returned: success
+      type: int
+      sample: 0
+    main_ip:
+      description: IPv4 of the instance.
+      returned: success
+      type: str
+      sample: 95.179.189.95
+    netmask_v4:
+      description: Netmask IPv4 of the instance.
+      returned: success
+      type: str
+      sample: 255.255.254.0
+    hostname:
+      description: Hostname of the instance.
+      returned: success
+      type: str
+      sample: vultr.guest
+    internal_ip:
+      description: Internal IP of the instance.
+      returned: success
+      type: str
+      sample: ""
+    gateway_v4:
+      description: Gateway IPv4.
+      returned: success
+      type: str
+      sample: 95.179.188.1
+    kvm:
+      description: KVM of the instance.
+      returned: success
+      type: str
+      sample: "https://my.vultr.com/subs/vps/novnc/api.php?data=..."
+    disk:
+      description: Disk size of the instance.
+      returned: success
+      type: int
+      sample: 25
+    allowed_bandwidth:
+      description: Allowed bandwidth of the instance.
+      returned: success
+      type: int
+      sample: 1000
+    vcpu_count:
+      description: vCPUs of the instance.
+      returned: success
+      type: int
+      sample: 1
+    firewall_group_id:
+      description: Firewall group ID of the instance.
+      returned: success
+      type: str
+      sample: ""
+    plan:
+      description: Plan of the instance.
+      returned: success
+      type: str
+      sample: vc2-1c-1gb
+    image_id:
+      description: Image ID of the instance.
+      returned: success
+      type: str
+      sample: ""
+    os_id:
+      description: OS ID of the instance.
+      returned: success
+      type: int
+      sample: 186
+    app_id:
+      description: App ID of the instance.
+      returned: success
+      type: int
+      sample: 37
     date_created:
       description: Date when the instance was created.
       returned: success
@@ -180,6 +260,36 @@ vultr_instance:
       returned: success
       type: str
       sample: active
+    server_status:
+      description: Server status of the instance.
+      returned: success
+      type: str
+      sample: installingbooting
+    power_status:
+      description: Power status of the instance.
+      returned: success
+      type: str
+      sample: running
+    ram:
+      description: RAM in MB of the instance.
+      returned: success
+      type: int
+      sample: 1024
+    os:
+      description: OS of the instance.
+      returned: success
+      type: str
+      sample: Application
+    tags:
+      description: Tags of the instance.
+      returned: success
+      type: list
+      sample: [ my-tag ]
+    features:
+      description: Features of the instance.
+      returned: success
+      type: list
+      sample: []
 """
 
 from ansible.module_utils.basic import AnsibleModule
@@ -222,6 +332,17 @@ class AnsibleVultrInstance(AnsibleVultr):
             path="/applications",
             result_key="applications",
             fail_not_found=True,
+            query_params={"type": "one-click"},
+        )
+
+    def get_image(self):
+        return self.query_filter_list_by_name(
+            key_name="deploy_name",
+            param_key="image",
+            path="/applications",
+            result_key="applications",
+            fail_not_found=True,
+            query_params={"type": "marketplace"},
         )
 
     def configure(self):
@@ -242,6 +363,9 @@ class AnsibleVultrInstance(AnsibleVultr):
 
             if self.module.params["app"] is not None:
                 self.module.params["app_id"] = self.get_app()["id"]
+
+            if self.module.params["image"] is not None:
+                self.module.params["image_id"] = self.get_image()["image_id"]
 
     def create_or_update(self):
         resource = super(AnsibleVultrInstance, self).create_or_update()
@@ -265,6 +389,7 @@ def main():
             label=dict(type="str", required=True, aliases=["name"]),
             hostname=dict(type="str"),
             app=dict(type="str"),
+            image=dict(type="str"),
             os=dict(type="str"),
             plan=dict(type="str"),
             activation_email=dict(type="bool", default=False),
@@ -310,6 +435,7 @@ def main():
             "app_id",
             "os_id",
             "iso_id",
+            "image_id",
             "script_id",
             "region",
             "snapshot",

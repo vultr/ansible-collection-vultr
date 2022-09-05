@@ -8,6 +8,7 @@ __metaclass__ = type
 
 import random
 import time
+import urllib
 
 from ansible.module_utils._text import to_native, to_text
 from ansible.module_utils.basic import env_fallback
@@ -126,6 +127,16 @@ class AnsibleVultr:
         pass
 
     def api_query(self, path, method="GET", data=None):
+
+        if method == "GET" and data:
+            data_encoded = data.copy()
+            try:
+                data = urllib.urlencode(data_encoded)
+            except AttributeError:
+                data = urllib.parse.urlencode(data_encoded)
+        else:
+            data = self.module.jsonify(data)
+
         retry_max_delay = self.module.params["api_retry_max_delay"]
 
         info = dict()
@@ -135,7 +146,7 @@ class AnsibleVultr:
                 self.module,
                 self.module.params["api_endpoint"] + path,
                 method=method,
-                data=self.module.jsonify(data),
+                data=data,
                 headers=self.headers,
                 timeout=self.module.params["api_timeout"],
             )
@@ -170,13 +181,14 @@ class AnsibleVultr:
         result_key,
         param_key=None,
         key_id=None,
+        query_params=None,
         get_details=False,
         fail_not_found=False,
     ):
         param_value = self.module.params.get(param_key or key_name)
 
         found = dict()
-        for resource in self.query_list(path=path, result_key=result_key):
+        for resource in self.query_list(path=path, result_key=result_key, query_params=query_params):
             if resource.get(key_name) == param_value:
                 if found:
                     self.module.fail_json(msg="More than one record with name=%s found. " "Use multiple=yes if module supports it." % param_value)
@@ -217,21 +229,21 @@ class AnsibleVultr:
         # Returns a single dict representing the resource
         return self.query_filter_list()
 
-    def query_list(self, path=None, result_key=None):
+    def query_list(self, path=None, result_key=None, query_params=None):
         # Defaults
         path = path or self.resource_path
         result_key = result_key or self.ressource_result_key_plural
 
-        resources = self.api_query(path=path)
+        resources = self.api_query(path=path, data=query_params)
         return resources[result_key] if resources else []
 
     def wait_for_state(self, resource, key, state):
         for retry in range(0, 30):
             resource = self.query_by_id(resource_id=resource[self.resource_key_id])
-            if key not in resource or resource[key] != state:
-                backoff(retry=retry)
-                continue
-            break
+            if key not in resource or resource[key] == state or not resource[key]:
+                break
+
+            backoff(retry=retry)
         else:
             self.module.fail_json(msg="Wait for %s to become %s timed out" % (key, state))
 
