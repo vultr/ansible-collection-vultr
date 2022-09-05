@@ -81,3 +81,10 @@ releases:
       name: user_info
       namespace: ''
     release_date: '2022-04-22'
+  1.0.1:
+    changes:
+      minor_changes:
+      - Improved documentation and removed unused code.
+    fragments:
+    - summary.yaml
+    release_date: '2022-09-05'
