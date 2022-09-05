@@ -32,11 +32,17 @@ options:
   os:
     description:
       - The operating system name.
-      - Required if the instance does not yet exist and is not restoring from a snapshot.
+      - Mutually exclusive with I(image) and I(app).
     type: str
-  snapshot:
+  app:
     description:
-      - The name of the snapshot to restore the instance from.
+      - The app deploy name of Vultr OneClick apps.
+      - Mutually exclusive with I(image) and I(os).
+    type: str
+  image:
+    description:
+      - The image deploy name of Vultr Marketplace apps.
+      - Mutually exclusive with I(os) and I(app).
     type: str
   firewall_group:
     description:
@@ -70,6 +76,10 @@ options:
   enable_ipv6:
     description:
       - Whether to enable IPv6 or not.
+    type: bool
+  enable_vpc:
+    description:
+      - Whether to enable VPC or not.
     type: bool
   tags:
     description:
@@ -393,6 +403,7 @@ def main():
             os=dict(type="str"),
             plan=dict(type="str"),
             activation_email=dict(type="bool", default=False),
+            force=dict(type="bool", default=False),
             enable_vpc=dict(type="bool"),
             ddos_protection=dict(type="bool"),
             backups=dict(type="bool"),
@@ -438,7 +449,6 @@ def main():
             "image_id",
             "script_id",
             "region",
-            "snapshot",
             "enable_ipv6",
             "enable_vpc",
             "reserved_ipv4",
