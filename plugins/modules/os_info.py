@@ -82,7 +82,7 @@ vultr_os_info:
       type: str
       sample: OpenBSD 6 x64
     windows:
-      description: OS is a MS Windows
+      description: OS is a MS Windows.
       returned: success
       type: bool
 """

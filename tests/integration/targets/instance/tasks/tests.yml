@@ -21,6 +21,11 @@
   loop_control:
     loop_var: instance
 
+- ansible.builtin.include_tasks: stop-start.yml
+  with_items: "{{ vultr_instances }}"
+  loop_control:
+    loop_var: instance
+
 - ansible.builtin.include_tasks: absent.yml
   with_items: "{{ vultr_instances }}"
   loop_control:

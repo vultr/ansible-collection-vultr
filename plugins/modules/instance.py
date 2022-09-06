@@ -366,7 +366,26 @@ class AnsibleVultrInstance(AnsibleVultr):
         resource = super(AnsibleVultrInstance, self).create_or_update()
         if resource:
             resource = self.wait_for_state(resource=resource, key="status", state="active")
-            resource = self.wait_for_state(resource=resource, key="power_status", state="running")
+            resource = self.wait_for_state(resource=resource, key="server_status", state="locked", cmp="!=")
+
+            # TODO: refactor
+            state = self.module.params["state"]
+            if state == "started" and resource["power_status"] != "running":
+                self.result["changed"] = True
+                if not self.module.check_mode:
+                    self.api_query(
+                        path="%s/%s/%s" % (self.resource_path, resource[self.resource_key_id], "start"),
+                        method="POST",
+                    )
+                    resource = self.wait_for_state(resource=resource, key="power_status", state="running")
+            elif state == "stopped" and resource["power_status"] != "stopped":
+                self.result["changed"] = True
+                if not self.module.check_mode:
+                    self.api_query(
+                        path="%s/%s/%s" % (self.resource_path, resource[self.resource_key_id], "halt"),
+                        method="POST",
+                    )
+                    resource = self.wait_for_state(resource=resource, key="power_status", state="stopped")
         return resource
 
     def create(self):
@@ -466,7 +485,6 @@ def main():
     if state == "absent":
         vultr.absent()
     else:
-        # TODO: implement stopped, started
         vultr.present()
 
 

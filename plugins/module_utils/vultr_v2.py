@@ -237,12 +237,15 @@ class AnsibleVultr:
         resources = self.api_query(path=path, data=query_params)
         return resources[result_key] if resources else []
 
-    def wait_for_state(self, resource, key, state):
+    def wait_for_state(self, resource, key, state, cmp="="):
         for retry in range(0, 30):
             resource = self.query_by_id(resource_id=resource[self.resource_key_id])
-            if key not in resource or resource[key] == state or not resource[key]:
-                break
-
+            if cmp == "=":
+                if key not in resource or resource[key] == state or not resource[key]:
+                    break
+            else:
+                if key not in resource or resource[key] != state or not resource[key]:
+                    break
             backoff(retry=retry)
         else:
             self.module.fail_json(msg="Wait for %s to become %s timed out" % (key, state))

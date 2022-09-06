@@ -3,7 +3,7 @@
   ansible.builtin.debug:
     var: instance
 
-- name: test create instance rule in check mode
+- name: test create instance in check mode
   vultr.cloud.instance:
     label: "{{ instance.label }}"
     firewall_group: "{{ vultr_instance_firewall_group }}"
@@ -18,12 +18,12 @@
     image: "{{ instance.image | default(omit) }}"
   register: result
   check_mode: true
-- name: verify test create instance rule in check mode
+- name: verify test create instance in check mode
   ansible.builtin.assert:
     that:
       - result is changed
 
-- name: test create instance rule
+- name: test create instance
   vultr.cloud.instance:
     label: "{{ instance.label }}"
     firewall_group: "{{ vultr_instance_firewall_group }}"
@@ -37,12 +37,12 @@
     app: "{{ instance.app | default(omit) }}"
     image: "{{ instance.image | default(omit) }}"
   register: result
-- name: verify test create instance rule
+- name: verify test create instance
   ansible.builtin.assert:
     that:
       - result is changed
 
-- name: test create instance rule idempotence
+- name: test create instance idempotence
   vultr.cloud.instance:
     label: "{{ instance.label }}"
     firewall_group: "{{ vultr_instance_firewall_group }}"
@@ -56,12 +56,12 @@
     app: "{{ instance.app | default(omit) }}"
     image: "{{ instance.image | default(omit) }}"
   register: result
-- name: verify test create instance rule idempotence
+- name: verify test create instance idempotence
   ansible.builtin.assert:
     that:
       - result is not changed
 
-- name: test update instance rule in check mode
+- name: test update instance in check mode
   vultr.cloud.instance:
     label: "{{ instance.label }}"
     firewall_group: "{{ vultr_instance_firewall_group }}"
@@ -76,12 +76,12 @@
     image: "{{ instance.image | default(omit) }}"
   register: result
   check_mode: true
-- name: verify test update instance rule in check mode
+- name: verify test update instance in check mode
   ansible.builtin.assert:
     that:
       - result is changed
 
-- name: test update instance rule
+- name: test update instance
   vultr.cloud.instance:
     label: "{{ instance.label }}"
     firewall_group: "{{ vultr_instance_firewall_group }}"
@@ -95,12 +95,12 @@
     app: "{{ instance.app | default(omit) }}"
     image: "{{ instance.image | default(omit) }}"
   register: result
-- name: verify test update instance rule
+- name: verify test update instance
   ansible.builtin.assert:
     that:
       - result is changed
 
-- name: test update instance rule idempotence
+- name: test update instance idempotence
   vultr.cloud.instance:
     label: "{{ instance.label }}"
     firewall_group: "{{ vultr_instance_firewall_group }}"
@@ -114,7 +114,7 @@
     app: "{{ instance.app | default(omit) }}"
     image: "{{ instance.image | default(omit) }}"
   register: result
-- name: verify test update instance rule idempotence
+- name: verify test update instance idempotence
   ansible.builtin.assert:
     that:
       - result is not changed
