@@ -6,6 +6,14 @@ vultr_instances:
   - label: "{{ vultr_resource_prefix }}_os1"
     plan: vc2-1c-1gb
     plan_update: vc2-1c-2gb
+    ddos_protection: true
+    ddos_protection_update: false
+    tags:
+      - one
+      - two
+    tags_update:
+      - three
+      - four
     region: ams
     os: Debian 11 x64 (bullseye)
 

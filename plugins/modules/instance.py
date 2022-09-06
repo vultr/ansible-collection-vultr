@@ -53,12 +53,6 @@ options:
       - The plan name to use for the instance.
       - Required if the instance does not yet exist.
     type: str
-  force:
-    description:
-      - Force stop/start the instance if required to apply changes
-      - Otherwise a running instance will not be changed.
-    type: bool
-    default: false
   activation_email:
     description:
       - Whether to send an activation email when the instance is ready or not.
@@ -77,10 +71,6 @@ options:
     description:
       - Whether to enable IPv6 or not.
     type: bool
-  enable_vpc:
-    description:
-      - Whether to enable VPC or not.
-    type: bool
   tags:
     description:
       - Tags for the instance.
@@ -98,11 +88,6 @@ options:
   ssh_keys:
     description:
       - List of SSH key names passed to the instance on creation.
-    type: list
-    elements: str
-  vpcs:
-    description:
-      - List of VPC descriptions the instance to attach to.
     type: list
     elements: str
   reserved_ipv4:
@@ -299,7 +284,7 @@ vultr_instance:
       description: Features of the instance.
       returned: success
       type: list
-      sample: []
+      sample: [ ddos_protection, ipv6, auto_backups ]
 """
 
 from ansible.module_utils.basic import AnsibleModule
@@ -387,8 +372,21 @@ class AnsibleVultrInstance(AnsibleVultr):
     def create(self):
         return super(AnsibleVultrInstance, self).create()
 
+    def _update_feature(self, param_key, resource, feature=None):
+        features = resource.get("features", list())
+
+        if feature is not None:
+            feature = param_key
+
+        feature_enabled = self.module.params[param_key]
+        if feature_enabled is not None:
+            if feature_enabled != feature in features:
+                self.resource_update_param_keys.append(feature)
+
     def update(self, resource):
-        force = self.module.params.get("force")
+        self._update_feature(param_key="backups", resource=resource, feature="auto_backup")
+        self._update_feature(param_key="ddos_protection", resource=resource)
+        self._update_feature(param_key="enable_ipv6", resource=resource, feature="ipv6")
         return super(AnsibleVultrInstance, self).update(resource=resource)
 
 
@@ -403,8 +401,6 @@ def main():
             os=dict(type="str"),
             plan=dict(type="str"),
             activation_email=dict(type="bool", default=False),
-            force=dict(type="bool", default=False),
-            enable_vpc=dict(type="bool"),
             ddos_protection=dict(type="bool"),
             backups=dict(type="bool"),
             enable_ipv6=dict(type="bool"),
@@ -414,7 +410,6 @@ def main():
             startup_script=dict(type="str"),
             user_data=dict(type="str"),
             ssh_keys=dict(type="list", elements="str", no_log=False),
-            vpcs=dict(type="list", elements="str"),
             region=dict(type="str", required=True),
             state=dict(
                 choices=[
@@ -450,18 +445,19 @@ def main():
             "script_id",
             "region",
             "enable_ipv6",
-            "enable_vpc",
             "reserved_ipv4",
+            "firewall_group_id",
             "user_data",
             "tags",
             "activation_email",
             "ddos_protection",
             "ssh_keys",
+            "backups",
         ],
         resource_update_param_keys=[
             "plan",
-            "user_data",
             "tags",
+            "firewall_group_id",
         ],
         resource_key_name="label",
     )
