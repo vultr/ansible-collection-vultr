@@ -41,6 +41,8 @@
   ansible.builtin.assert:
     that:
       - result is changed
+      - result.vultr_instance.plan == instance.plan
+      - result.vultr_instance.region == instance.region
 
 - name: test create instance idempotence
   vultr.cloud.instance:
@@ -60,6 +62,8 @@
   ansible.builtin.assert:
     that:
       - result is not changed
+      - result.vultr_instance.plan == instance.plan
+      - result.vultr_instance.region == instance.region
 
 - name: test update instance in check mode
   vultr.cloud.instance:
@@ -80,6 +84,8 @@
   ansible.builtin.assert:
     that:
       - result is changed
+      - result.vultr_instance.plan == instance.plan
+      - result.vultr_instance.region == instance.region
 
 - name: test update instance
   vultr.cloud.instance:
@@ -99,6 +105,8 @@
   ansible.builtin.assert:
     that:
       - result is changed
+      - result.vultr_instance.plan == instance.plan_update
+      - result.vultr_instance.region == instance.region
 
 - name: test update instance idempotence
   vultr.cloud.instance:
@@ -118,3 +126,5 @@
   ansible.builtin.assert:
     that:
       - result is not changed
+      - result.vultr_instance.plan == instance.plan_update
+      - result.vultr_instance.region == instance.region

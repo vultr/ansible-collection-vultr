@@ -104,7 +104,7 @@ options:
     description:
       - State of the instance.
     default: present
-    choices: [ present, absent, started, stopped ]
+    choices: [ present, absent, started, stopped, restarted ]
     type: str
 extends_documentation_fragment:
   - vultr.cloud.vultr_v2
@@ -342,11 +342,6 @@ class AnsibleVultrInstance(AnsibleVultr):
 
     def configure(self):
         if self.module.params["state"] != "absent":
-
-            param_keys = ("os", "image", "app")
-            if not any(self.module.params.get(x) is not None for x in param_keys):
-                self.module.fail_json(msg="missing required arguements, one of the following required: %s" % ", ".join(param_keys))
-
             if self.module.params["startup_script"] is not None:
                 self.module.params["startup_script_id"] = self.get_startup_script()["id"]
 
@@ -362,36 +357,18 @@ class AnsibleVultrInstance(AnsibleVultr):
             if self.module.params["image"] is not None:
                 self.module.params["image_id"] = self.get_image()["image_id"]
 
-    def create_or_update(self):
-        resource = super(AnsibleVultrInstance, self).create_or_update()
-        if resource:
-            resource = self.wait_for_state(resource=resource, key="status", state="active")
-            resource = self.wait_for_state(resource=resource, key="server_status", state="locked", cmp="!=")
-
-            # TODO: refactor
-            state = self.module.params["state"]
-            if state == "started" and resource["power_status"] != "running":
-                self.result["changed"] = True
-                if not self.module.check_mode:
-                    self.api_query(
-                        path="%s/%s/%s" % (self.resource_path, resource[self.resource_key_id], "start"),
-                        method="POST",
-                    )
-                    resource = self.wait_for_state(resource=resource, key="power_status", state="running")
-            elif state == "stopped" and resource["power_status"] != "stopped":
-                self.result["changed"] = True
-                if not self.module.check_mode:
-                    self.api_query(
-                        path="%s/%s/%s" % (self.resource_path, resource[self.resource_key_id], "halt"),
-                        method="POST",
-                    )
-                    resource = self.wait_for_state(resource=resource, key="power_status", state="stopped")
+    def handle_power_status(self, resource, state, action, power_status, force=False):
+        if state == self.module.params["state"] and (resource["power_status"] != power_status or force):
+            self.result["changed"] = True
+            if not self.module.check_mode:
+                self.api_query(
+                    path="%s/%s/%s" % (self.resource_path, resource[self.resource_key_id], action),
+                    method="POST",
+                )
+                resource = self.wait_for_state(resource=resource, key="power_status", state=power_status)
         return resource
 
-    def create(self):
-        return super(AnsibleVultrInstance, self).create()
-
-    def _update_feature(self, param_key, resource, feature=None):
+    def update_feature(self, param_key, resource, feature=None):
         features = resource.get("features", list())
 
         if feature is not None:
@@ -402,11 +379,28 @@ class AnsibleVultrInstance(AnsibleVultr):
             if feature_enabled != feature in features:
                 self.resource_update_param_keys.append(feature)
 
+    def create(self):
+        param_keys = ("os", "image", "app")
+        if not any(self.module.params.get(x) is not None for x in param_keys):
+            self.module.fail_json(msg="missing required arguements, one of the following required: %s" % ", ".join(param_keys))
+        return super(AnsibleVultrInstance, self).create()
+
     def update(self, resource):
-        self._update_feature(param_key="backups", resource=resource, feature="auto_backup")
-        self._update_feature(param_key="ddos_protection", resource=resource)
-        self._update_feature(param_key="enable_ipv6", resource=resource, feature="ipv6")
+        self.update_feature(param_key="backups", resource=resource, feature="auto_backup")
+        self.update_feature(param_key="ddos_protection", resource=resource)
+        self.update_feature(param_key="enable_ipv6", resource=resource, feature="ipv6")
         return super(AnsibleVultrInstance, self).update(resource=resource)
+
+    def create_or_update(self):
+        resource = super(AnsibleVultrInstance, self).create_or_update()
+        if resource:
+            resource = self.wait_for_state(resource=resource, key="status", state="active")
+            resource = self.wait_for_state(resource=resource, key="server_status", state="locked", cmp="!=")
+            # Hanlde power status
+            resource = self.handle_power_status(resource=resource, state="stopped", action="halt", power_status="stopped")
+            resource = self.handle_power_status(resource=resource, state="started", action="start", power_status="running")
+            resource = self.handle_power_status(resource=resource, state="restarted", action="reboot", power_status="running", force=True)
+        return resource
 
 
 def main():
@@ -436,6 +430,7 @@ def main():
                     "absent",
                     "started",
                     "stopped",
+                    "restarted",
                 ],
                 default="present",
             ),
