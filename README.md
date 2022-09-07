@@ -7,7 +7,7 @@ This repository contains the `vultr.cloud` Ansible Collection . The collection w
 ---
 **NOTE**
 
-`vultr.cloud` is the successor of exisitng `ngine_io.vultr` collection ([Ansible docs site](https://docs.ansible.com/ansible/latest/collections/ngine_io/vultr/)), which uses the deprected Vultr v1 API.
+`vultr.cloud` is the successor of exisitng `ngine_io.vultr` collection ([Ansible docs site](https://docs.ansible.com/ansible/latest/collections/ngine_io/vultr/)), which uses the deprecated Vultr v1 API.
 
 ---
 
