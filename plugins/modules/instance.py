@@ -287,6 +287,8 @@ vultr_instance:
       sample: [ ddos_protection, ipv6, auto_backups ]
 """
 
+import base64
+
 from ansible.module_utils.basic import AnsibleModule
 
 from ..module_utils.vultr_v2 import AnsibleVultr, vultr_argument_spec
@@ -356,6 +358,9 @@ class AnsibleVultrInstance(AnsibleVultr):
 
             if self.module.params["image"] is not None:
                 self.module.params["image_id"] = self.get_image()["image_id"]
+
+            if self.module.params["user_data"] is not None:
+                self.module.params["user_data"] = base64.b64encode(self.module.params["user_data"].encode())
 
     def handle_power_status(self, resource, state, action, power_status, force=False):
         if state == self.module.params["state"] and (resource["power_status"] != power_status or force):
@@ -451,6 +456,7 @@ def main():
         ressource_result_key_singular="instance",
         resource_create_param_keys=[
             "label",
+            "hostname",
             "plan",
             "app_id",
             "os_id",
