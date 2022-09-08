@@ -53,13 +53,13 @@ options:
     description:
       - Whether the volume should be attached/detached without restarting the instance.
     type: bool
-    default: true
+    default: false
 extends_documentation_fragment:
   - vultr.cloud.vultr_v2
-
 """
 
 EXAMPLES = """
+---
 - name: Ensure a block storage volume is present
   vultr.cloud.block_storage:
     name: myvolume
@@ -194,7 +194,7 @@ class AnsibleVultrBlockStorage(AnsibleVultr):
         if instance_attached != instance_to_attach:
             self.result["changed"] = True
 
-            mode = "detach" if instance_to_attach == "" else "attach"
+            mode = "detach" if not instance_to_attach else "attach"
             self.result["diff"]["after"].update({"attached_to_instance": instance_to_attach})
 
             data = {
@@ -222,7 +222,7 @@ def main():
             region=dict(type="str"),
             state=dict(type="str", choices=["present", "absent"], default="present"),
             attached_to_instance=dict(type="str"),
-            live=dict(type="bool", default=True),
+            live=dict(type="bool", default=False),
         )  # type: ignore
     )
 
