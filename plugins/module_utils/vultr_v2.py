@@ -282,26 +282,32 @@ class AnsibleVultr:
             )
         return resource.get(self.ressource_result_key_singular) if resource else dict()
 
-    def is_diff(self, data, resource):
-        for key, value in data.items():
-            if value is None:
-                continue
-            elif isinstance(value, list):
-                for v in value:
-                    if v not in resource[key]:
-                        return True
-            elif resource[key] != value:
-                return True
+    def is_diff(self, param, resource):
+        value = self.module.params.get(param)
+        if value is None:
+            return False
+
+        if param not in resource:
+            self.module.fail_json(msg="Can not diff, key %s not found in resource" % param)
+
+        if isinstance(value, list):
+            for v in value:
+                if v not in resource[param]:
+                    return True
+        elif resource[param] != value:
+            return True
+
         return False
 
     def update(self, resource):
         data = dict()
+
         for param in self.resource_update_param_keys:
-            data[param] = self.module.params.get(param)
+            if self.is_diff(param, resource):
+                self.result["changed"] = True
+                data[param] = self.module.params.get(param)
 
-        if self.is_diff(data, resource):
-            self.result["changed"] = True
-
+        if self.result["changed"]:
             self.result["diff"]["before"] = dict(**resource)
             self.result["diff"]["after"] = dict(**resource)
             self.result["diff"]["after"].update(data)

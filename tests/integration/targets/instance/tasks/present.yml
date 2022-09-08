@@ -6,6 +6,8 @@
 - name: test create instance in check mode
   vultr.cloud.instance:
     label: "{{ instance.label }}"
+    hostname: "{{ instance.hostname | default(omit) }}"
+    user_data: "{{ instance.user_data | default(omit) }}"
     firewall_group: "{{ vultr_instance_firewall_group }}"
     plan: "{{ instance.plan }}"
     ddos_protection: "{{ instance.ddos_protection | default(omit) }}"
@@ -26,6 +28,8 @@
 - name: test create instance
   vultr.cloud.instance:
     label: "{{ instance.label }}"
+    hostname: "{{ instance.hostname | default(omit) }}"
+    user_data: "{{ instance.user_data | default(omit) }}"
     firewall_group: "{{ vultr_instance_firewall_group }}"
     plan: "{{ instance.plan }}"
     ddos_protection: "{{ instance.ddos_protection | default(omit) }}"
@@ -47,6 +51,8 @@
 - name: test create instance idempotence
   vultr.cloud.instance:
     label: "{{ instance.label }}"
+    hostname: "{{ instance.hostname | default(omit) }}"
+    user_data: "{{ instance.user_data | default(omit) }}"
     firewall_group: "{{ vultr_instance_firewall_group }}"
     plan: "{{ instance.plan }}"
     ddos_protection: "{{ instance.ddos_protection | default(omit) }}"
@@ -68,6 +74,8 @@
 - name: test update instance in check mode
   vultr.cloud.instance:
     label: "{{ instance.label }}"
+    hostname: "{{ instance.hostname | default(omit) }}"
+    user_data: "{{ instance.user_data_update | default(omit) }}"
     firewall_group: "{{ vultr_instance_firewall_group }}"
     plan: "{{ instance.plan_update }}"
     ddos_protection: "{{ instance.ddos_protection_update | default(omit) }}"
@@ -90,6 +98,8 @@
 - name: test update instance
   vultr.cloud.instance:
     label: "{{ instance.label }}"
+    hostname: "{{ instance.hostname | default(omit) }}"
+    user_data: "{{ instance.user_data_update | default(omit) }}"
     firewall_group: "{{ vultr_instance_firewall_group }}"
     plan: "{{ instance.plan_update }}"
     ddos_protection: "{{ instance.ddos_protection_update | default(omit) }}"
@@ -111,6 +121,8 @@
 - name: test update instance idempotence
   vultr.cloud.instance:
     label: "{{ instance.label }}"
+    hostname: "{{ instance.hostname | default(omit) }}"
+    user_data: "{{ instance.user_data_update | default(omit) }}"
     firewall_group: "{{ vultr_instance_firewall_group }}"
     plan: "{{ instance.plan_update }}"
     ddos_protection: "{{ instance.ddos_protection_update | default(omit) }}"

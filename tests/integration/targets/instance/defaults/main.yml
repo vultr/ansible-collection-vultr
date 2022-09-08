@@ -4,6 +4,16 @@
 vultr_instance_firewall_group: "{{ vultr_resource_prefix }}_instance_fw_group"
 vultr_instances:
   - label: "{{ vultr_resource_prefix }}_os1"
+    hostname: myhostname
+    user_data: |
+      #cloud-config
+      packages:
+        - htop
+    user_data_update: |
+      #cloud-config
+      packages:
+        - htop
+        - vim
     plan: vc2-1c-1gb
     plan_update: vc2-1c-2gb
     ddos_protection: true

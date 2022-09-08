@@ -285,6 +285,11 @@ vultr_instance:
       returned: success
       type: list
       sample: [ ddos_protection, ipv6, auto_backups ]
+    user_data:
+      description: Base64 encoded user data (cloud init) of the instance.
+      returned: success
+      type: str
+      sample: I2Nsb3VkLWNvbmZpZwpwYWNrYWdlczoKICAtIGh0b3AK
 """
 
 import base64
@@ -342,6 +347,14 @@ class AnsibleVultrInstance(AnsibleVultr):
             query_params={"type": "marketplace"},
         )
 
+    def get_user_data(self, resource):
+        res = self.api_query(
+            path="%s/%s/%s" % (self.resource_path, resource[self.resource_key_id], "user-data"),
+        )
+        if res:
+            return str(res.get("user_data", dict()).get("data"))
+        return ""
+
     def configure(self):
         if self.module.params["state"] != "absent":
             if self.module.params["startup_script"] is not None:
@@ -394,6 +407,8 @@ class AnsibleVultrInstance(AnsibleVultr):
         self.update_feature(param_key="backups", resource=resource, feature="auto_backup")
         self.update_feature(param_key="ddos_protection", resource=resource)
         self.update_feature(param_key="enable_ipv6", resource=resource, feature="ipv6")
+        user_data = self.get_user_data(resource=resource)
+        resource["user_data"] = user_data.encode()
         return super(AnsibleVultrInstance, self).update(resource=resource)
 
     def create_or_update(self):
@@ -405,6 +420,11 @@ class AnsibleVultrInstance(AnsibleVultr):
             resource = self.handle_power_status(resource=resource, state="stopped", action="halt", power_status="stopped")
             resource = self.handle_power_status(resource=resource, state="started", action="start", power_status="running")
             resource = self.handle_power_status(resource=resource, state="restarted", action="reboot", power_status="running", force=True)
+        return resource
+
+    def transform_result(self, resource):
+        if resource:
+            resource["user_data"] = self.get_user_data(resource=resource)
         return resource
 
 
@@ -478,6 +498,7 @@ def main():
             "plan",
             "tags",
             "firewall_group_id",
+            "user_data",
         ],
         resource_key_name="label",
     )
