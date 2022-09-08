@@ -8,6 +8,7 @@ __metaclass__ = type
 
 import random
 import time
+import urllib
 
 from ansible.module_utils._text import to_native, to_text
 from ansible.module_utils.basic import env_fallback
@@ -34,9 +35,7 @@ def vultr_argument_spec():
             fallback=(env_fallback, ["VULTR_API_TIMEOUT"]),
             default=60,
         ),
-        api_retries=dict(
-            type="int", fallback=(env_fallback, ["VULTR_API_RETRIES"]), default=5
-        ),
+        api_retries=dict(type="int", fallback=(env_fallback, ["VULTR_API_RETRIES"]), default=5),
         api_retry_max_delay=dict(
             type="int",
             fallback=(env_fallback, ["VULTR_API_RETRY_MAX_DELAY"]),
@@ -47,6 +46,14 @@ def vultr_argument_spec():
             default=True,
         ),
     )
+
+
+def backoff(retry, retry_max_delay=12):
+    randomness = random.randint(0, 1000) / 1000.0
+    delay = 2**retry + randomness
+    if delay > retry_max_delay:
+        delay = retry_max_delay + randomness
+    time.sleep(delay)
 
 
 class AnsibleVultr:
@@ -72,9 +79,7 @@ class AnsibleVultr:
         self.ressource_result_key_singular = ressource_result_key_singular
 
         # The API result data key e.g ssh_keys
-        self.ressource_result_key_plural = (
-            ressource_result_key_plural or "%ss" % ressource_result_key_singular
-        )
+        self.ressource_result_key_plural = ressource_result_key_plural or "%ss" % ressource_result_key_singular
 
         # The API resource path e.g /ssh-keys
         self.resource_path = resource_path
@@ -122,8 +127,17 @@ class AnsibleVultr:
         pass
 
     def api_query(self, path, method="GET", data=None):
+
+        if method == "GET" and data:
+            data_encoded = data.copy()
+            try:
+                data = urllib.urlencode(data_encoded)
+            except AttributeError:
+                data = urllib.parse.urlencode(data_encoded)
+        else:
+            data = self.module.jsonify(data)
+
         retry_max_delay = self.module.params["api_retry_max_delay"]
-        randomness = random.randint(0, 1000) / 1000.0
 
         info = dict()
         resp_body = None
@@ -132,37 +146,31 @@ class AnsibleVultr:
                 self.module,
                 self.module.params["api_endpoint"] + path,
                 method=method,
-                data=self.module.jsonify(data),
+                data=data,
                 headers=self.headers,
                 timeout=self.module.params["api_timeout"],
             )
 
             resp_body = resp.read() if resp is not None else ""
 
-            # 429 Too Many Requests
+            # Check for 429 Too Many Requests
             if info["status"] != 429:
                 break
 
             # Vultr has a rate limiting requests per second, try to be polite
             # Use exponential backoff plus a little bit of randomness
-            delay = 2**retry + randomness
-            if delay > retry_max_delay:
-                delay = retry_max_delay + randomness
-            time.sleep(delay)
+            backoff(retry=retry, retry_max_delay=retry_max_delay)
 
         # Success with content
         if info["status"] in (200, 201, 202):
-            return self.module.from_json(
-                to_text(resp_body, errors="surrogate_or_strict")
-            )
+            return self.module.from_json(to_text(resp_body, errors="surrogate_or_strict"))
 
         # Success without content
         if info["status"] in (404, 204):
             return dict()
 
         self.module.fail_json(
-            msg='Failure while calling the Vultr API v2 with %s for "%s".'
-            % (method, path),
+            msg='Failure while calling the Vultr API v2 with %s for "%s".' % (method, path),
             fetch_url_info=info,
         )
 
@@ -173,19 +181,17 @@ class AnsibleVultr:
         result_key,
         param_key=None,
         key_id=None,
+        query_params=None,
         get_details=False,
         fail_not_found=False,
     ):
         param_value = self.module.params.get(param_key or key_name)
 
         found = dict()
-        for resource in self.query_list(path=path, result_key=result_key):
+        for resource in self.query_list(path=path, result_key=result_key, query_params=query_params):
             if resource.get(key_name) == param_value:
                 if found:
-                    self.module.fail_json(
-                        msg="More than one record with name=%s found. "
-                        "Use multiple=yes if module supports it." % param_value
-                    )
+                    self.module.fail_json(msg="More than one record with name=%s found. " "Use multiple=yes if module supports it." % param_value)
                 found = resource
         if found:
             if get_details:
@@ -194,9 +200,7 @@ class AnsibleVultr:
                 return found
 
         elif fail_not_found:
-            self.module.fail_json(
-                msg="No Resource %s with %s found: %s" % (path, key_name, param_value)
-            )
+            self.module.fail_json(msg="No Resource %s with %s found: %s" % (path, key_name, param_value))
 
         return dict()
 
@@ -215,9 +219,7 @@ class AnsibleVultr:
         path = path or self.resource_path
         result_key = result_key or self.ressource_result_key_singular
 
-        resource = self.api_query(
-            path="%s%s" % (path, "/" + resource_id if resource_id else resource_id)
-        )
+        resource = self.api_query(path="%s%s" % (path, "/" + resource_id if resource_id else resource_id))
         if resource:
             return resource[result_key]
 
@@ -227,13 +229,28 @@ class AnsibleVultr:
         # Returns a single dict representing the resource
         return self.query_filter_list()
 
-    def query_list(self, path=None, result_key=None):
+    def query_list(self, path=None, result_key=None, query_params=None):
         # Defaults
         path = path or self.resource_path
         result_key = result_key or self.ressource_result_key_plural
 
-        resources = self.api_query(path=path)
+        resources = self.api_query(path=path, data=query_params)
         return resources[result_key] if resources else []
+
+    def wait_for_state(self, resource, key, state, cmp="="):
+        for retry in range(0, 30):
+            resource = self.query_by_id(resource_id=resource[self.resource_key_id])
+            if cmp == "=":
+                if key not in resource or resource[key] == state or not resource[key]:
+                    break
+            else:
+                if key not in resource or resource[key] != state or not resource[key]:
+                    break
+            backoff(retry=retry)
+        else:
+            self.module.fail_json(msg="Wait for %s to become %s timed out" % (key, state))
+
+        return resource
 
     def create_or_update(self):
         resource = self.query()
@@ -265,26 +282,32 @@ class AnsibleVultr:
             )
         return resource.get(self.ressource_result_key_singular) if resource else dict()
 
-    def is_diff(self, data, resource):
-        for key, value in data.items():
-            if value is None:
-                continue
-            elif isinstance(value, list):
-                for v in value:
-                    if v not in resource[key]:
-                        return True
-            elif resource[key] != value:
-                return True
+    def is_diff(self, param, resource):
+        value = self.module.params.get(param)
+        if value is None:
+            return False
+
+        if param not in resource:
+            self.module.fail_json(msg="Can not diff, key %s not found in resource" % param)
+
+        if isinstance(value, list):
+            for v in value:
+                if v not in resource[param]:
+                    return True
+        elif resource[param] != value:
+            return True
+
         return False
 
     def update(self, resource):
         data = dict()
+
         for param in self.resource_update_param_keys:
-            data[param] = self.module.params.get(param)
+            if self.is_diff(param, resource):
+                self.result["changed"] = True
+                data[param] = self.module.params.get(param)
 
-        if self.is_diff(data, resource):
-            self.result["changed"] = True
-
+        if self.result["changed"]:
             self.result["diff"]["before"] = dict(**resource)
             self.result["diff"]["after"] = dict(**resource)
             self.result["diff"]["after"].update(data)

@@ -1,0 +1,47 @@
+# Copyright (c) 2022, René Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: setup
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    region: "{{ instance.region }}"
+    state: absent
+  with_items: "{{ vultr_instances }}"
+  loop_control:
+    loop_var: instance
+
+- ansible.builtin.import_tasks: failures.yml
+
+- name: setup firewall group
+  vultr.cloud.firewall_group:
+    name: "{{ vultr_instance_firewall_group }}"
+
+- name: setup ssh key
+  vultr.cloud.ssh_key:
+    name: "{{ vultr_instance_ssh_key_name }}"
+    ssh_key: "{{ vultr_instance_ssh_key }}"
+
+- ansible.builtin.include_tasks: present.yml
+  with_items: "{{ vultr_instances }}"
+  loop_control:
+    loop_var: instance
+
+- ansible.builtin.include_tasks: stop-start.yml
+  with_items: "{{ vultr_instances }}"
+  loop_control:
+    loop_var: instance
+
+- ansible.builtin.include_tasks: absent.yml
+  with_items: "{{ vultr_instances }}"
+  loop_control:
+    loop_var: instance
+
+- name: cleanup firewall group
+  vultr.cloud.firewall_group:
+    name: "{{ vultr_instance_firewall_group }}"
+    state: absent
+
+- name: cleanup ssh key
+  vultr.cloud.ssh_key:
+    name: "{{ vultr_instance_ssh_key_name }}"
+    state: absent

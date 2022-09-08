@@ -1,0 +1,39 @@
+---
+- name: test fail if missing arguments
+  vultr.cloud.instance:
+  register: result
+  ignore_errors: true
+- name: verify test fail if missing arguments
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - 'result.msg == "missing required arguments: label, region"'
+
+- name: test fail if missing arguments required one of
+  vultr.cloud.instance:
+    label: my label
+    plan: a plan
+    region: a region
+  register: result
+  ignore_errors: true
+- name: verify test fail if missing arguments required one of
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - '"one of the following required" in result.msg'
+
+- name: test fail if ssh key not found
+  vultr.cloud.instance:
+    label: my label
+    plan: a plan
+    region: a region
+    os: Debian 11 x64 (bullseye)
+    ssh_keys:
+      - does-not-exist
+  register: result
+  ignore_errors: true
+- name: verify test fail if ssh key not found
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - '"SSH key names not found: does-not-exist" in result.msg'

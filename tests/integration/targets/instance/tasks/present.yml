@@ -1,0 +1,148 @@
+---
+- name: instance info
+  ansible.builtin.debug:
+    var: instance
+
+- name: test create instance in check mode
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    hostname: "{{ instance.hostname | default(omit) }}"
+    user_data: "{{ instance.user_data | default(omit) }}"
+    firewall_group: "{{ vultr_instance_firewall_group }}"
+    ssh_keys: "{{ instance.ssh_keys | default(omit) }}"
+    plan: "{{ instance.plan }}"
+    ddos_protection: "{{ instance.ddos_protection | default(omit) }}"
+    backups: "{{ instance.backups | default(omit) }}"
+    enable_ipv6: "{{ instance.enable_ipv6 | default(omit) }}"
+    tags: "{{ instance.tags | default(omit) }}"
+    region: "{{ instance.region }}"
+    os: "{{ instance.os | default(omit) }}"
+    app: "{{ instance.app | default(omit) }}"
+    image: "{{ instance.image | default(omit) }}"
+  register: result
+  check_mode: true
+- name: verify test create instance in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test create instance
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    hostname: "{{ instance.hostname | default(omit) }}"
+    user_data: "{{ instance.user_data | default(omit) }}"
+    firewall_group: "{{ vultr_instance_firewall_group }}"
+    ssh_keys: "{{ instance.ssh_keys | default(omit) }}"
+    plan: "{{ instance.plan }}"
+    ddos_protection: "{{ instance.ddos_protection | default(omit) }}"
+    backups: "{{ instance.backups | default(omit) }}"
+    enable_ipv6: "{{ instance.enable_ipv6 | default(omit) }}"
+    tags: "{{ instance.tags | default(omit) }}"
+    region: "{{ instance.region }}"
+    os: "{{ instance.os | default(omit) }}"
+    app: "{{ instance.app | default(omit) }}"
+    image: "{{ instance.image | default(omit) }}"
+  register: result
+- name: verify test create instance
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_instance.plan == instance.plan
+      - result.vultr_instance.region == instance.region
+
+- name: test create instance idempotence
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    hostname: "{{ instance.hostname | default(omit) }}"
+    user_data: "{{ instance.user_data | default(omit) }}"
+    firewall_group: "{{ vultr_instance_firewall_group }}"
+    ssh_keys: "{{ instance.ssh_keys | default(omit) }}"
+    plan: "{{ instance.plan }}"
+    ddos_protection: "{{ instance.ddos_protection | default(omit) }}"
+    backups: "{{ instance.backups | default(omit) }}"
+    enable_ipv6: "{{ instance.enable_ipv6 | default(omit) }}"
+    tags: "{{ instance.tags | default(omit) }}"
+    region: "{{ instance.region }}"
+    os: "{{ instance.os | default(omit) }}"
+    app: "{{ instance.app | default(omit) }}"
+    image: "{{ instance.image | default(omit) }}"
+  register: result
+- name: verify test create instance idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+      - result.vultr_instance.plan == instance.plan
+      - result.vultr_instance.region == instance.region
+
+- name: test update instance in check mode
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    hostname: "{{ instance.hostname | default(omit) }}"
+    user_data: "{{ instance.user_data_update | default(omit) }}"
+    firewall_group: "{{ vultr_instance_firewall_group }}"
+    ssh_keys: "{{ instance.ssh_keys | default(omit) }}"
+    plan: "{{ instance.plan_update }}"
+    ddos_protection: "{{ instance.ddos_protection_update | default(omit) }}"
+    backups: "{{ instance.backups_update | default(omit) }}"
+    enable_ipv6: "{{ instance.enable_ipv6_update | default(omit) }}"
+    tags: "{{ instance.tags_update | default(omit) }}"
+    region: "{{ instance.region }}"
+    os: "{{ instance.os | default(omit) }}"
+    app: "{{ instance.app | default(omit) }}"
+    image: "{{ instance.image | default(omit) }}"
+  register: result
+  check_mode: true
+- name: verify test update instance in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_instance.plan == instance.plan
+      - result.vultr_instance.region == instance.region
+
+- name: test update instance
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    hostname: "{{ instance.hostname | default(omit) }}"
+    user_data: "{{ instance.user_data_update | default(omit) }}"
+    firewall_group: "{{ vultr_instance_firewall_group }}"
+    ssh_keys: "{{ instance.ssh_keys | default(omit) }}"
+    plan: "{{ instance.plan_update }}"
+    ddos_protection: "{{ instance.ddos_protection_update | default(omit) }}"
+    backups: "{{ instance.backups_update | default(omit) }}"
+    enable_ipv6: "{{ instance.enable_ipv6_update | default(omit) }}"
+    tags: "{{ instance.tags_update | default(omit) }}"
+    region: "{{ instance.region }}"
+    os: "{{ instance.os | default(omit) }}"
+    app: "{{ instance.app | default(omit) }}"
+    image: "{{ instance.image | default(omit) }}"
+  register: result
+- name: verify test update instance
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_instance.plan == instance.plan_update
+      - result.vultr_instance.region == instance.region
+
+- name: test update instance idempotence
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    hostname: "{{ instance.hostname | default(omit) }}"
+    user_data: "{{ instance.user_data_update | default(omit) }}"
+    firewall_group: "{{ vultr_instance_firewall_group }}"
+    ssh_keys: "{{ instance.ssh_keys | default(omit) }}"
+    plan: "{{ instance.plan_update }}"
+    ddos_protection: "{{ instance.ddos_protection_update | default(omit) }}"
+    backups: "{{ instance.backups_update | default(omit) }}"
+    enable_ipv6: "{{ instance.enable_ipv6_update | default(omit) }}"
+    tags: "{{ instance.tags_update | default(omit) }}"
+    region: "{{ instance.region }}"
+    os: "{{ instance.os | default(omit) }}"
+    app: "{{ instance.app | default(omit) }}"
+    image: "{{ instance.image | default(omit) }}"
+  register: result
+- name: verify test update instance idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+      - result.vultr_instance.plan == instance.plan_update
+      - result.vultr_instance.region == instance.region

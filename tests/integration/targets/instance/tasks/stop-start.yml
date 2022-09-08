@@ -1,0 +1,78 @@
+---
+- name: instance info
+  ansible.builtin.debug:
+    var: instance
+
+- name: test stop instance in check mode
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    region: "{{ instance.region }}"
+    state: stopped
+  register: result
+  check_mode: true
+- name: verify test stop instance in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_instance.power_status == "running"
+
+- name: test stop instance
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    region: "{{ instance.region }}"
+    state: stopped
+  register: result
+- name: verify test stop instance
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_instance.power_status == "stopped"
+
+- name: test stop instance idempotence
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    region: "{{ instance.region }}"
+    state: stopped
+  register: result
+- name: verify test stop instance idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+      - result.vultr_instance.power_status == "stopped"
+
+- name: test start instance in check mode
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    region: "{{ instance.region }}"
+    state: started
+  register: result
+  check_mode: true
+- name: verify test start instance in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_instance.power_status == "stopped"
+
+- name: test start instance
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    region: "{{ instance.region }}"
+    state: started
+  register: result
+- name: verify test start instance
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_instance.power_status == "running"
+
+- name: test start instance idempotence
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    region: "{{ instance.region }}"
+    state: started
+  register: result
+- name: verify test start instance idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+      - result.vultr_instance.power_status == "running"
