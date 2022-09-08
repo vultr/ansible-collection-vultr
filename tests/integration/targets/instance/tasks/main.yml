@@ -8,3 +8,6 @@
     - ansible.builtin.import_role:
         name: cleanup
         tasks_from: cleanup_firewall_group
+    - ansible.builtin.import_role:
+        name: cleanup
+        tasks_from: cleanup_ssh_key

@@ -125,6 +125,8 @@ EXAMPLES = """
     ddos_protection: true
     backups: true
     enable_ipv6: true
+    ssh_keys:
+      - my ssh key
     tags:
       - web
       - project-genesis
@@ -349,6 +351,21 @@ from ..module_utils.vultr_v2 import AnsibleVultr, vultr_argument_spec
 
 
 class AnsibleVultrInstance(AnsibleVultr):
+    def get_ssh_key_ids(self):
+        ssh_key_names = list(self.module.params["ssh_keys"])
+        ssh_keys = self.query_list(path="/ssh-keys", result_key="ssh_keys")
+
+        ssh_key_ids = []
+        for ssh_key in ssh_keys:
+            if ssh_key["name"] in ssh_key_names:
+                ssh_key_ids.append(ssh_key["id"])
+                ssh_key_names.remove(ssh_key["name"])
+
+        if ssh_key_names:
+            self.module.fail_json(msg="SSH key names not found: %s" % ", ".join(ssh_key_names))
+
+        return ssh_key_ids
+
     def get_firewall_group(self):
         return self.query_filter_list_by_name(
             key_name="description",
@@ -423,6 +440,10 @@ class AnsibleVultrInstance(AnsibleVultr):
 
             if self.module.params["user_data"] is not None:
                 self.module.params["user_data"] = base64.b64encode(self.module.params["user_data"].encode())
+
+            if self.module.params["ssh_keys"] is not None:
+                # sshkey_id ist a list of ids
+                self.module.params["sshkey_id"] = self.get_ssh_key_ids()
 
     def handle_power_status(self, resource, state, action, power_status, force=False):
         if state == self.module.params["state"] and (resource["power_status"] != power_status or force):

@@ -16,6 +16,11 @@
   vultr.cloud.firewall_group:
     name: "{{ vultr_instance_firewall_group }}"
 
+- name: setup ssh key
+  vultr.cloud.ssh_key:
+    name: "{{ vultr_instance_ssh_key_name }}"
+    ssh_key: "{{ vultr_instance_ssh_key }}"
+
 - ansible.builtin.include_tasks: present.yml
   with_items: "{{ vultr_instances }}"
   loop_control:
@@ -34,4 +39,9 @@
 - name: cleanup firewall group
   vultr.cloud.firewall_group:
     name: "{{ vultr_instance_firewall_group }}"
+    state: absent
+
+- name: cleanup ssh key
+  vultr.cloud.ssh_key:
+    name: "{{ vultr_instance_ssh_key_name }}"
     state: absent
