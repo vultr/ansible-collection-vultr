@@ -111,6 +111,55 @@ extends_documentation_fragment:
 """
 
 EXAMPLES = """
+---
+- name: Create an instance using OS
+  vultr.cloud.instance:
+    label: my web server
+    hostname: my-hostname
+    user_data: |
+      #cloud-config
+      packages:
+        - nginx
+    firewall_group: my firewall group
+    plan: vc2-1c-2gb
+    ddos_protection: true
+    backups: true
+    enable_ipv6: true
+    tags:
+      - web
+      - project-genesis
+    region: ams
+    os: Debian 11 x64 (bullseye)
+
+- name: Deploy an instance of a marketplace app
+  vultr.cloud.instance:
+    label: git-server
+    hostname: git
+    firewall_group: my firewall group
+    plan: vc2-1c-2gb
+    ddos_protection: true
+    backups: true
+    enable_ipv6: true
+    region: ams
+    image: Gitea on Ubuntu 20.04
+
+- name: Stop an existing instance
+  vultr.cloud.instance:
+    label: my web server
+    region: ams
+    state: stopped
+
+- name: Start an existing instance
+  vultr.cloud.instance:
+    label: my web server
+    region: ams
+    state: started
+
+- name: Delete an instance
+  vultr.cloud.instance:
+    label: my web server
+    region: ams
+    state: absent
 """
 
 RETURN = """
