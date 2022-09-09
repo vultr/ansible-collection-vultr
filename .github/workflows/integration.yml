@@ -28,7 +28,6 @@ jobs:
       matrix:
         ansible:
           - stable-2.11
-          - stable-2.12
           - stable-2.13
         python:
           - 2.7 # required by Ansible see https://github.com/ansible-collections/overview/blob/main/collection_requirements.rst#python-compatibility
@@ -37,11 +36,6 @@ jobs:
         exclude:
           - ansible: stable-2.11
             python: 3.8
-
-          - ansible: stable-2.12
-            python: 2.7
-          - ansible: stable-2.12
-            python: 3.6
 
           - ansible: stable-2.13
             python: 2.7

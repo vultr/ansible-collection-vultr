@@ -1,0 +1,2 @@
+minor_change:
+  - block_storage - the default value for argument ``live`` while attaching a volume changed to a more sensible default ``false``.
