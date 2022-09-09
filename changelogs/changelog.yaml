@@ -88,3 +88,15 @@ releases:
     fragments:
     - summary.yaml
     release_date: '2022-09-05'
+  1.1.0:
+    changes:
+      minor_changes:
+      - block_storage - the default value for parameter ``live`` while attaching a
+        volume changed to a more sensible default ``false``.
+    fragments:
+    - block_storage-live.yml
+    modules:
+    - description: Manages server instances on Vultr.
+      name: instance
+      namespace: ''
+    release_date: '2022-09-09'
