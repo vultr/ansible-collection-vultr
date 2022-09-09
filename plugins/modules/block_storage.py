@@ -47,7 +47,6 @@ options:
   attached_to_instance:
     description:
       - The ID of the server instance the volume is attached to.
-      - Required if I(state) is attached.
     type: str
   live:
     description:

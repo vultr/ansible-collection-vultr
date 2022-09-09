@@ -12,10 +12,12 @@ action_groups:
     - firewall_group_info
     - firewall_rule
     - firewall_rule_info
+    - instance
     - os_info
     - plan_info
     - plan_metal_info
     - region_info
+    - reserved_ip
     - ssh_key
     - ssh_key_info
     - startup_script

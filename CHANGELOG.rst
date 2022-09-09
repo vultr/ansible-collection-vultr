@@ -5,6 +5,19 @@ Vultr Collection Release Notes
 .. contents:: Topics
 
 
+v1.1.0
+======
+
+Minor Changes
+-------------
+
+- block_storage - the default value for parameter ``live`` while attaching a volume changed to a more sensible default ``false``.
+
+New Modules
+-----------
+
+- instance - Manages server instances on Vultr.
+
 v1.0.1
 ======
 
