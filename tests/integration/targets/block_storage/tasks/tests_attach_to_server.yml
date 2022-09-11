@@ -25,6 +25,7 @@
   vultr.cloud.block_storage:
     label: "{{ vultr_block_storage_name }}"
     size_gb: "{{ vultr_block_storage_size }}"
+    block_type: "{{ vultr_block_storage_block_type }}"
     region: "{{ vultr_block_storage_region }}"
     attached_to_instance: ""
   register: result
@@ -41,6 +42,7 @@
   vultr.cloud.block_storage:
     label: "{{ vultr_block_storage_name }}"
     size_gb: "{{ vultr_block_storage_size }}"
+    block_type: "{{ vultr_block_storage_block_type }}"
     region: "{{ vultr_block_storage_region }}"
     attached_to_instance: "{{ result_server_setup.vultr_instance.id }}"
   register: result
@@ -55,6 +57,7 @@
   vultr.cloud.block_storage:
     label: "{{ vultr_block_storage_name }}"
     size_gb: "{{ vultr_block_storage_size }}"
+    block_type: "{{ vultr_block_storage_block_type }}"
     region: "{{ vultr_block_storage_region }}"
     attached_to_instance: "{{ result_server_setup.vultr_instance.id }}"
   register: result
@@ -71,6 +74,7 @@
   vultr.cloud.block_storage:
     label: "{{ vultr_block_storage_name }}"
     size_gb: "{{ vultr_block_storage_size }}"
+    block_type: "{{ vultr_block_storage_block_type }}"
     region: "{{ vultr_block_storage_region }}"
     attached_to_instance: "{{ result_server_setup.vultr_instance.id }}"
   register: result
@@ -89,6 +93,7 @@
   vultr.cloud.block_storage:
     label: "{{ vultr_block_storage_name }}"
     size_gb: "{{ vultr_block_storage_size_2 }}"
+    block_type: "{{ vultr_block_storage_block_type }}"
     region: "{{ vultr_block_storage_region }}"
     attached_to_instance: "{{ result_server_setup.vultr_instance.id }}"
   register: result
@@ -106,6 +111,7 @@
   vultr.cloud.block_storage:
     label: "{{ vultr_block_storage_name }}"
     size_gb: "{{ vultr_block_storage_size_2 }}"
+    block_type: "{{ vultr_block_storage_block_type }}"
     region: "{{ vultr_block_storage_region }}"
     attached_to_instance: ""
   register: result
@@ -120,6 +126,7 @@
   vultr.cloud.block_storage:
     label: "{{ vultr_block_storage_name }}"
     size_gb: "{{ vultr_block_storage_size_2 }}"
+    block_type: "{{ vultr_block_storage_block_type }}"
     region: "{{ vultr_block_storage_region }}"
     attached_to_instance: ""
   register: result
@@ -133,6 +140,7 @@
   vultr.cloud.block_storage:
     label: "{{ vultr_block_storage_name }}"
     size_gb: "{{ vultr_block_storage_size_2 }}"
+    block_type: "{{ vultr_block_storage_block_type }}"
     region: "{{ vultr_block_storage_region }}"
     attached_to_instance: ""
   register: result

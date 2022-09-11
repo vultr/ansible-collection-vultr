@@ -6,6 +6,8 @@ vultr_block_storage_size_3: 14
 
 vultr_block_storage_region: ewr
 
+vultr_block_storage_block_type: high_perf
+
 vultr_instance_name: "{{ vultr_resource_prefix }}_vm_for_attachment"
 vultr_instance_ssh_keys:
   - name: "{{ vultr_resource_prefix }}_key1"
