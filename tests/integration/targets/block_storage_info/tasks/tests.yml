@@ -9,6 +9,7 @@
     label: "{{ vultr_block_storage_name }}"
     size_gb: "{{ vultr_block_storage_size }}"
     region: "{{ vultr_block_storage_region }}"
+    block_type: "{{ vultr_block_storage_block_type }}"
 
 - name: test gather vultr block storage volume info in check mode
   vultr.cloud.block_storage_info:
