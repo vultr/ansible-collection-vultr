@@ -227,7 +227,7 @@ def main():
         dict(
             label=dict(type="str", required=True, aliases=["name"]),
             size_gb=dict(type="int", aliases=["size"]),
-            block_type=dict(type="str", choices=["high_perf", "storage_opt"], default="high_perf"),
+            block_type=dict(type="str"),
             region=dict(type="str"),
             state=dict(type="str", choices=["present", "absent"], default="present"),
             attached_to_instance=dict(type="str"),
@@ -239,7 +239,7 @@ def main():
         argument_spec=argument_spec,
         supports_check_mode=True,
         required_if=[
-            ["state", "present", ["size_gb", "region", "block_type"]],
+            ["state", "present", ["size_gb", "region"]],
         ],
     )
 
