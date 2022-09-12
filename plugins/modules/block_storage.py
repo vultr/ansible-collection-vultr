@@ -227,8 +227,8 @@ def main():
         dict(
             label=dict(type="str", required=True, aliases=["name"]),
             size_gb=dict(type="int", aliases=["size"]),
-            region=dict(type="str"),
             block_type=dict(type="str", choices=["high_perf", "storage_opt"], default="high_perf"),
+            region=dict(type="str"),
             state=dict(type="str", choices=["present", "absent"], default="present"),
             attached_to_instance=dict(type="str"),
             live=dict(type="bool", default=False),
