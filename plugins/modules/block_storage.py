@@ -164,6 +164,11 @@ vultr_block_storage:
       returned: success
       type: int
       sample: 50
+    block_type:
+      description: HDD or NVMe (storage_opt or high_perf)
+      returned: success
+      type: str
+      sample: high_perf
     status:
       description: Status about the deployment of the volume.
       returned: success
