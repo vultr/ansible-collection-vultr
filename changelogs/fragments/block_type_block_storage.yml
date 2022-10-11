@@ -1,0 +1,2 @@
+minor_changes:
+  - block_storage - Added the parameter ``block_type`` to configure block types, default value is ``high_perf``.

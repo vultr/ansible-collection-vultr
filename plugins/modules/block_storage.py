@@ -35,10 +35,11 @@ options:
     type: int
   block_type:
     description:
-      - An optional parameter, that determines on the type of block storage volume that will be created. Soon to become a required parameter.
+      - The type of block storage volume that will be created.
     default: high_perf
     choices: [ high_perf, storage_opt ]
     type: str
+    version_added: "1.2.0"
   region:
     description:
       - Region the block storage volume is deployed into.
@@ -232,7 +233,7 @@ def main():
         dict(
             label=dict(type="str", required=True, aliases=["name"]),
             size_gb=dict(type="int", aliases=["size"]),
-            block_type=dict(type="str"),
+            block_type=dict(type="str", choices=["high_perf", "storage_opt"], default="high_perf"),
             region=dict(type="str"),
             state=dict(type="str", choices=["present", "absent"], default="present"),
             attached_to_instance=dict(type="str"),
@@ -256,6 +257,8 @@ def main():
         resource_create_param_keys=["label", "size_gb", "region", "block_type"],
         resource_update_param_keys=["size_gb"],
         resource_key_name="label",
+        # Query details information about block type
+        resource_get_details=True,
     )
 
     if module.params.get("state") == "absent":  # type: ignore

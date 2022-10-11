@@ -33,6 +33,7 @@
       - result.vultr_block_storage.label == vultr_block_storage_name
       - result.vultr_block_storage.region == vultr_block_storage_region
       - result.vultr_block_storage.size_gb == 10
+      - result.vultr_block_storage.block_type == vultr_block_storage_block_type
 
 - name: test create block storage volume idempotence
   vultr.cloud.block_storage:
@@ -48,6 +49,7 @@
       - result.vultr_block_storage.label == vultr_block_storage_name
       - result.vultr_block_storage.region == vultr_block_storage_region
       - result.vultr_block_storage.size_gb == vultr_block_storage_size
+      - result.vultr_block_storage.block_type == vultr_block_storage_block_type
 
 - name: test shrink block storage ignored
   vultr.cloud.block_storage:
@@ -63,6 +65,7 @@
       - result.vultr_block_storage.label == vultr_block_storage_name
       - result.vultr_block_storage.region == vultr_block_storage_region
       - result.vultr_block_storage.size_gb == vultr_block_storage_size
+      - result.vultr_block_storage.block_type == vultr_block_storage_block_type
 
 # volumes size can only be modified every 60s
 - name: wait about 60s before resizing volume
@@ -137,6 +140,7 @@
     that:
       - result is changed
       - result.vultr_block_storage.label == vultr_block_storage_name
+      - result.vultr_block_storage.block_type == vultr_block_storage_block_type
 
 - name: test destroy block storage volume
   vultr.cloud.block_storage:
@@ -148,6 +152,7 @@
     that:
       - result is changed
       - result.vultr_block_storage.label == vultr_block_storage_name
+      - result.vultr_block_storage.block_type == vultr_block_storage_block_type
 
 - name: test destroy block storage volume idempotence
   vultr.cloud.block_storage:
