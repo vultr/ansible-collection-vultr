@@ -56,7 +56,6 @@ options:
   priority:
     description:
       - Priority of the record.
-    default: 0
     type: int
   multiple:
     description:
@@ -233,7 +232,7 @@ def main():
             ttl=dict(type="int", default=300),
             type=dict(type="str", choices=RECORD_TYPES, default="A", aliases=["record_type"]),
             multiple=dict(type="bool", default=False),
-            priority=dict(type="int", default=0),
+            priority=dict(type="int"),
             data=dict(type="str"),
         )  # type: ignore
     )

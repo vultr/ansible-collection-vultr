@@ -19,7 +19,7 @@
       - result.vultr_dns_record.name == "{{ item.name | default("") }}"
       - result.vultr_dns_record.type == "{{ item.record_type | default('A') }}"
       - result.vultr_dns_record.ttl == {{ item.update_ttl | default(300) }}
-      - result.vultr_dns_record.priority == {{ item.update_priority | default(item.priority | default(0)) }}
+      - result.vultr_dns_record.priority == {{ item.update_priority | default(item.priority | default(-1)) }}
 
 - name: test remove second dns record in check mode
   vultr.cloud.dns_record:
@@ -40,7 +40,7 @@
       - result.vultr_dns_record.name == "{{ item.name | default("") }}"
       - result.vultr_dns_record.type == "{{ item.record_type | default('A') }}"
       - result.vultr_dns_record.ttl == {{ item.ttl | default(300) }}
-      - result.vultr_dns_record.priority == {{ item.priority | default(0) }}
+      - result.vultr_dns_record.priority == {{ item.priority | default(-1) }}
   when: item.multiple is defined and item.multiple == true
 
 - name: test remove a dns record
@@ -60,7 +60,7 @@
       - result.vultr_dns_record.name == "{{ item.name | default("") }}"
       - result.vultr_dns_record.type == "{{ item.record_type | default('A') }}"
       - result.vultr_dns_record.ttl == {{ item.update_ttl | default(300) }}
-      - result.vultr_dns_record.priority == {{ item.update_priority | default(item.priority | default(0)) }}
+      - result.vultr_dns_record.priority == {{ item.update_priority | default(item.priority | default(-1)) }}
 
 - name: test remove second dns record
   vultr.cloud.dns_record:
@@ -80,7 +80,7 @@
       - result.vultr_dns_record.name == "{{ item.name | default("") }}"
       - result.vultr_dns_record.type == "{{ item.record_type | default('A') }}"
       - result.vultr_dns_record.ttl == {{ item.ttl | default(300) }}
-      - result.vultr_dns_record.priority == {{ item.priority | default(0) }}
+      - result.vultr_dns_record.priority == {{ item.priority | default(-1) }}
   when: item.multiple is defined and item.multiple == true
 
 - name: test remove a dns record idempotence
