@@ -33,6 +33,13 @@ options:
       - If it is larger than the volume's current size, the volume will be resized.
     aliases: [ size ]
     type: int
+  block_type:
+    description:
+      - The type of block storage volume that will be created.
+    default: high_perf
+    choices: [ high_perf, storage_opt ]
+    type: str
+    version_added: "1.2.0"
   region:
     description:
       - Region the block storage volume is deployed into.
@@ -63,6 +70,7 @@ EXAMPLES = """
   vultr.cloud.block_storage:
     name: myvolume
     size_gb: 10
+    block_type: storage_opt
     region: ams
 
 - name: Ensure a block storage volume is absent
@@ -75,12 +83,14 @@ EXAMPLES = """
     name: myvolume
     attached_to_instance: cb676a46-66fd-4dfb-b839-443f2e6c0b60
     size_gb: 50
+    block_type: high_perf
 
 - name: Ensure a block storage volume exists but is not attached to any server instance
   vultr.cloud.block_storage:
     name: myvolume
     attached_to_instance: ""
     size_gb: 50
+    block_type: high_perf
 """
 
 RETURN = """
@@ -155,6 +165,11 @@ vultr_block_storage:
       returned: success
       type: int
       sample: 50
+    block_type:
+      description: HDD or NVMe (storage_opt or high_perf)
+      returned: success
+      type: str
+      sample: high_perf
     status:
       description: Status about the deployment of the volume.
       returned: success
@@ -218,6 +233,7 @@ def main():
         dict(
             label=dict(type="str", required=True, aliases=["name"]),
             size_gb=dict(type="int", aliases=["size"]),
+            block_type=dict(type="str", choices=["high_perf", "storage_opt"], default="high_perf"),
             region=dict(type="str"),
             state=dict(type="str", choices=["present", "absent"], default="present"),
             attached_to_instance=dict(type="str"),
@@ -238,9 +254,11 @@ def main():
         namespace="vultr_block_storage",
         resource_path="/blocks",
         ressource_result_key_singular="block",
-        resource_create_param_keys=["label", "size_gb", "region"],
+        resource_create_param_keys=["label", "size_gb", "region", "block_type"],
         resource_update_param_keys=["size_gb"],
         resource_key_name="label",
+        # Query details information about block type
+        resource_get_details=True,
     )
 
     if module.params.get("state") == "absent":  # type: ignore
