@@ -2,7 +2,8 @@
 - block:
     - ansible.builtin.import_tasks: failures.yml
     - ansible.builtin.import_tasks: tests.yml
-    - ansible.builtin.import_tasks: tests_attach_to_server.yml
+    # TODO: make test more reliable
+    # - ansible.builtin.import_tasks: tests_attach_to_server.yml
   always:
     - ansible.builtin.import_role:
         name: cleanup
