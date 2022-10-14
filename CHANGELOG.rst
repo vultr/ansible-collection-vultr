@@ -5,6 +5,15 @@ Vultr Collection Release Notes
 .. contents:: Topics
 
 
+v1.2.0
+======
+
+Minor Changes
+-------------
+
+- block_storage - Added the parameter ``block_type`` to configure block types, default value is ``high_perf``.
+- dns_record - Removed the default value ``0`` for the optional parameter ``priority``.
+
 v1.1.0
 ======
 

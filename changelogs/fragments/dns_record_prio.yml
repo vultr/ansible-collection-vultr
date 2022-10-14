@@ -1,2 +1,0 @@
-minor_changes:
-  - dns_record - Removed the default value ``0`` for the optional parameter ``priority``.
