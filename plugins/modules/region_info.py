@@ -31,7 +31,7 @@ EXAMPLES = """
 
 - name: Print the gathered information
   ansible.builtin.debug:
-    var: result.region_info
+    var: result.vultr_region_info
 """
 
 RETURN = """
