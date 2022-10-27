@@ -126,6 +126,12 @@ class AnsibleVultr:
     def configure(self):
         pass
 
+    def transform_resource(self, resource):
+        """
+        Transforms (optional) the resource dict queried from the API
+        """
+        return resource
+
     def api_query(self, path, method="GET", data=None):
 
         if method == "GET" and data:
@@ -197,7 +203,7 @@ class AnsibleVultr:
             if get_details:
                 return self.query_by_id(resource_id=found[key_id])
             else:
-                return found
+                return self.transform_resource(found)
 
         elif fail_not_found:
             self.module.fail_json(msg="No Resource %s with %s found: %s" % (path, key_name, param_value))
@@ -221,7 +227,7 @@ class AnsibleVultr:
 
         resource = self.api_query(path="%s%s" % (path, "/" + resource_id if resource_id else resource_id))
         if resource:
-            return resource[result_key]
+            return self.transform_resource(resource[result_key])
 
         return dict()
 

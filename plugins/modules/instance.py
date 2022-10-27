@@ -341,6 +341,24 @@ vultr_instance:
       returned: success
       type: str
       sample: I2Nsb3VkLWNvbmZpZwpwYWNrYWdlczoKICAtIGh0b3AK
+    backups:
+      description: Whether backups are enabled or disabled
+      returned: success
+      type: str
+      sample: enabled
+      version_added: "1.3.0"
+    ddos_protection:
+      description: Whether DDOS protections is enabled or not
+      returned: success
+      type: bool
+      sample: true
+      version_added: "1.3.0"
+    enable_ipv6:
+      description: Whether IPv6 is enabled or not
+      returned: success
+      type: bool
+      sample: true
+      version_added: "1.3.0"
 """
 
 import base64
@@ -421,6 +439,17 @@ class AnsibleVultrInstance(AnsibleVultr):
             return str(res.get("user_data", dict()).get("data"))
         return ""
 
+    def transform_resource(self, resource):
+        if not resource:
+            return resource
+
+        features = resource.get("features", list())
+        resource["backups"] = "enabled" if "auto_backups" in features else "disabled"
+        resource["enable_ipv6"] = "ipv6" in features
+        resource["ddos_protection"] = "ddos_protection" in features
+
+        return resource
+
     def configure(self):
         if self.module.params["state"] != "absent":
             if self.module.params["startup_script"] is not None:
@@ -445,6 +474,9 @@ class AnsibleVultrInstance(AnsibleVultr):
                 # sshkey_id ist a list of ids
                 self.module.params["sshkey_id"] = self.get_ssh_key_ids()
 
+            if self.module.params["backups"] is not None:
+                self.module.params["backups"] = "enabled" if self.module.params["backups"] else "disabled"
+
     def handle_power_status(self, resource, state, action, power_status, force=False):
         if state == self.module.params["state"] and (resource["power_status"] != power_status or force):
             self.result["changed"] = True
@@ -456,17 +488,6 @@ class AnsibleVultrInstance(AnsibleVultr):
                 resource = self.wait_for_state(resource=resource, key="power_status", state=power_status)
         return resource
 
-    def update_feature(self, param_key, resource, feature=None):
-        features = resource.get("features", list())
-
-        if feature is not None:
-            feature = param_key
-
-        feature_enabled = self.module.params[param_key]
-        if feature_enabled is not None:
-            if feature_enabled != feature in features:
-                self.resource_update_param_keys.append(feature)
-
     def create(self):
         param_keys = ("os", "image", "app")
         if not any(self.module.params.get(x) is not None for x in param_keys):
@@ -474,9 +495,6 @@ class AnsibleVultrInstance(AnsibleVultr):
         return super(AnsibleVultrInstance, self).create()
 
     def update(self, resource):
-        self.update_feature(param_key="backups", resource=resource, feature="auto_backup")
-        self.update_feature(param_key="ddos_protection", resource=resource)
-        self.update_feature(param_key="enable_ipv6", resource=resource, feature="ipv6")
         user_data = self.get_user_data(resource=resource)
         resource["user_data"] = user_data.encode()
         return super(AnsibleVultrInstance, self).update(resource=resource)
@@ -568,6 +586,9 @@ def main():
             "plan",
             "tags",
             "firewall_group_id",
+            "enable_ipv6",
+            "ddos_protection",
+            "backups",
             "user_data",
         ],
         resource_key_name="label",
