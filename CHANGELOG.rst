@@ -5,6 +5,14 @@ Vultr Collection Release Notes
 .. contents:: Topics
 
 
+v1.3.0
+======
+
+Bugfixes
+--------
+
+- instance - Fixed the handling for activating/deactivating backups.
+
 v1.2.0
 ======
 
