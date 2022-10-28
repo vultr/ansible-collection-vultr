@@ -342,19 +342,19 @@ vultr_instance:
       type: str
       sample: I2Nsb3VkLWNvbmZpZwpwYWNrYWdlczoKICAtIGh0b3AK
     backups:
-      description: Whether backups are enabled or disabled
+      description: Whether backups are enabled or disabled.
       returned: success
       type: str
       sample: enabled
       version_added: "1.3.0"
     ddos_protection:
-      description: Whether DDOS protections is enabled or not
+      description: Whether DDOS protections is enabled or not.
       returned: success
       type: bool
       sample: true
       version_added: "1.3.0"
     enable_ipv6:
-      description: Whether IPv6 is enabled or not
+      description: Whether IPv6 is enabled or not.
       returned: success
       type: bool
       sample: true
