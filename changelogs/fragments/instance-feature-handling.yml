@@ -1,0 +1,2 @@
+bugfixes:
+  - instance - Fixed the handling for activating/deactivating backups.

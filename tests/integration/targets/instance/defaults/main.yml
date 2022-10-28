@@ -19,8 +19,6 @@ vultr_instances:
         - vim
     plan: vc2-1c-1gb
     plan_update: vc2-1c-2gb
-    ddos_protection: true
-    ddos_protection_update: false
     ssh_keys:
       - "{{ vultr_instance_ssh_key_name }}"
     tags:
@@ -31,15 +29,34 @@ vultr_instances:
       - four
     region: ams
     os: Debian 11 x64 (bullseye)
+    backups: true
+    backups_update: false
+    ddos_protection: true
+    ddos_protection_update: false
+    enable_ipv6: false
+    enable_ipv6_update: true
 
   - label: "{{ vultr_resource_prefix }}_app1"
     plan: vc2-1c-1gb
     plan_update: vc2-1c-2gb
     region: ams
     app: Docker on Ubuntu 20.04 x64
+    backups: false
+    backups_update: false
+    ddos_protection: false
+    ddos_protection_update: false
+    enable_ipv6: false
+    enable_ipv6_update: false
 
   - label: "{{ vultr_resource_prefix }}_img1"
     plan: vc2-1c-1gb
     plan_update: vc2-1c-2gb
     region: ams
     image: Gitea on Ubuntu 20.04
+    backups: false
+    backups_update: true
+    ddos_protection: false
+    ddos_protection_update: true
+    enable_ipv6: true
+    # API does not disable IPv6 once enabled.
+    enable_ipv6_update: true
