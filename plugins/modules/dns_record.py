@@ -22,6 +22,7 @@ options:
     description:
       - The record name.
     type: str
+    default: ""
   domain:
     description:
       - The domain the record is related to.
