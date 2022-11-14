@@ -579,7 +579,7 @@ def main():
             "tags",
             "activation_email",
             "ddos_protection",
-            "ssh_keys",
+            "sshkey_id",
             "backups",
         ],
         resource_update_param_keys=[
