@@ -117,3 +117,11 @@ releases:
     fragments:
     - instance-feature-handling.yml
     release_date: '2022-10-28'
+  1.3.1:
+    changes:
+      bugfixes:
+      - instance - Fixed an issue with ssh keys being ignored when deploying an new
+        instance.
+    fragments:
+    - instance-ssh-key.yml
+    release_date: '2022-11-14'

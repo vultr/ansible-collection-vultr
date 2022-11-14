@@ -1,2 +1,0 @@
-bugfixes:
-  - instance - Fixed an issue with ssh keys being ignored when deploying an new instance.

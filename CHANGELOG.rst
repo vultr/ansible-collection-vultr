@@ -5,6 +5,14 @@ Vultr Collection Release Notes
 .. contents:: Topics
 
 
+v1.3.1
+======
+
+Bugfixes
+--------
+
+- instance - Fixed an issue with ssh keys being ignored when deploying an new instance.
+
 v1.3.0
 ======
 
