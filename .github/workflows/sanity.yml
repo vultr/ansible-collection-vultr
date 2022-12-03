@@ -14,16 +14,16 @@ on:
 jobs:
   sanity:
     name: Sanity (${{ matrix.ansible }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     defaults:
       run:
         working-directory: ansible_collections/vultr/cloud
     strategy:
       matrix:
         ansible:
-          - stable-2.11
           - stable-2.12
           - stable-2.13
+          - stable-2.14
           - devel
     steps:
       - name: Check out code
