@@ -18,7 +18,7 @@ jobs:
   integration-test:
     name: Integration test Ansible ${{ matrix.ansible }} Py${{ matrix.python }}
     if: ${{ github.event.label.name == 'automation' || github.ref_name == 'main' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     defaults:
       run:
         working-directory: ansible_collections/vultr/cloud
@@ -27,20 +27,9 @@ jobs:
       fail-fast: false
       matrix:
         ansible:
-          - stable-2.11
-          - stable-2.13
+          - stable-2.14
         python:
-          - 2.7 # required by Ansible see https://github.com/ansible-collections/overview/blob/main/collection_requirements.rst#python-compatibility
-          - 3.6 # required by Ansible see https://github.com/ansible-collections/overview/blob/main/collection_requirements.rst#python-compatibility
-          - 3.8
-        exclude:
-          - ansible: stable-2.11
-            python: 3.8
-
-          - ansible: stable-2.13
-            python: 2.7
-          - ansible: stable-2.13
-            python: 3.6
+          - "3.10"
     steps:
       - name: Check out code
         uses: actions/checkout@v3
