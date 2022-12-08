@@ -1,0 +1,116 @@
+{
+  "instances": [
+    {
+      "id": "2db0bb8c-9d83-4e62-86ef-b3d999960d72",
+      "os": "Windows 2016 Standard",
+      "ram": 2048,
+      "disk": 50,
+      "main_ip": "100.68.102.43",
+      "vcpu_count": 1,
+      "region": "fra",
+      "plan": "vhp-1c-2gb-amd",
+      "date_created": "2022-12-05T12:50:30+00:00",
+      "status": "active",
+      "allowed_bandwidth": 3000,
+      "netmask_v4": "255.255.254.0",
+      "gateway_v4": "45.77.142.1",
+      "power_status": "running",
+      "server_status": "installingbooting",
+      "v6_network": "",
+      "v6_main_ip": "",
+      "v6_network_size": 0,
+      "label": "windows-guest",
+      "internal_ip": "",
+      "kvm": "https:\/\/my.vultr.com\/subs\/vps\/novnc\/api.php?data=random-data",
+      "hostname": "windows-guest",
+      "tag": "",
+      "tags": [
+        "os:windows2016"
+      ],
+      "os_id": 240,
+      "app_id": 0,
+      "image_id": "",
+      "firewall_group_id": "",
+      "features": []
+    },
+    {
+      "id": "e0aabdd7-7d68-448a-a0ce-a7712b09fcc1",
+      "os": "Arch Linux x64",
+      "ram": 6144,
+      "disk": 70,
+      "main_ip": "100.68.102.44",
+      "vcpu_count": 1,
+      "region": "sjc",
+      "plan": "vcg-a100-1c-6g-4vram",
+      "date_created": "2022-12-05T12:52:06+00:00",
+      "status": "active",
+      "allowed_bandwidth": 1000,
+      "netmask_v4": "255.255.254.0",
+      "gateway_v4": "140.82.50.1",
+      "power_status": "running",
+      "server_status": "installingbooting",
+      "v6_network": "2001:19f0:face:1df3::",
+      "v6_main_ip": "2001:19f0:face:1df3:5400:04ff:beef:cafe",
+      "v6_network_size": 64,
+      "label": "mldev-guest",
+      "internal_ip": "",
+      "kvm": "https:\/\/my.vultr.com\/subs\/vps\/novnc\/api.php?data=random-data",
+      "hostname": "mldev-guest",
+      "tag": "",
+      "tags": [],
+      "os_id": 535,
+      "app_id": 0,
+      "image_id": "mldev",
+      "firewall_group_id": "",
+      "features": [
+        "auto_backups",
+        "ipv6"
+      ]
+    },
+    {
+      "id": "90676f7b-5a34-49a8-b770-b0abed017577",
+      "os": "Application",
+      "ram": 2048,
+      "disk": 64,
+      "main_ip": "100.68.102.45",
+      "vcpu_count": 1,
+      "region": "ord",
+      "plan": "vhf-1c-2gb",
+      "date_created": "2022-12-05T12:54:37+00:00",
+      "status": "active",
+      "allowed_bandwidth": 2000,
+      "netmask_v4": "255.255.254.0",
+      "gateway_v4": "149.28.114.1",
+      "power_status": "running",
+      "server_status": "installingbooting",
+      "v6_network": "2001:19f0:face:16ec::",
+      "v6_main_ip": "2001:19f0:face:16ec:5400:04ff:beef:cafe",
+      "v6_network_size": 64,
+      "label": "wordpress-guest",
+      "internal_ip": "10.2.96.3",
+      "kvm": "https:\/\/my.vultr.com\/subs\/vps\/novnc\/api.php?data=random-data",
+      "hostname": "wordpress-guest",
+      "tag": "",
+      "tags": [
+        "vpc",
+        "vpc:d0db548b-5d50-4c94-9cdb-b083d46925f8",
+        "application"
+      ],
+      "os_id": 186,
+      "app_id": 2,
+      "image_id": "",
+      "firewall_group_id": "",
+      "features": [
+        "auto_backups",
+        "ipv6"
+      ]
+    }
+  ],
+  "meta": {
+    "total": 8,
+    "links": {
+      "next": "",
+      "prev": "page1"
+    }
+  }
+}

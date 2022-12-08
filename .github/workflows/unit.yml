@@ -1,5 +1,5 @@
 ---
-name: Collection integration
+name: Unit tests
 
 on:
   pull_request:
@@ -8,39 +8,28 @@ on:
     branches:
       - main
     paths:
-      - ".github/workflows/integration.yml"
-      - "plugins/**"
-      - "tests/integration/**"
-  schedule:
-    - cron: 56 3 * * 2 # Run weekly
+      - '.github/workflows/unit.yml'
+      - 'plugins/**'
+      - 'tests/unit/**'
 
 jobs:
-  integration-test:
-    name: Integration test Ansible ${{ matrix.ansible }} Py${{ matrix.python }}
+  unit-test:
+    name: Unit test Ansible ${{ matrix.ansible }} Py${{ matrix.python }}
     if: ${{ github.event.label.name == 'automation' || github.ref_name == 'main' }}
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ansible_collections/vultr/cloud
     strategy:
-      max-parallel: 1
       fail-fast: false
       matrix:
         ansible:
           - stable-2.11
           - stable-2.13
         python:
-          - 2.7 # required by Ansible see https://github.com/ansible-collections/overview/blob/main/collection_requirements.rst#python-compatibility
-          - 3.6 # required by Ansible see https://github.com/ansible-collections/overview/blob/main/collection_requirements.rst#python-compatibility
+          - 2.7
+          - 3.6
           - 3.8
-        exclude:
-          - ansible: stable-2.11
-            python: 3.8
-
-          - ansible: stable-2.13
-            python: 2.7
-          - ansible: stable-2.13
-            python: 3.6
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -62,24 +51,10 @@ jobs:
           ansible-galaxy collection build .
           ansible-galaxy collection install *.gz
 
-      - name: Add config file
-        env:
-          VULTR_CONFIG_FILE: ${{ secrets.VULTR_CONFIG_FILE }}
-        run: |
-          echo "$VULTR_CONFIG_FILE" > tests/integration/cloud-config-vultr.ini
-
-      - name: Ensure no other integration test is currently running
-        uses: softprops/turnstyle@v1
-        timeout-minutes: 60
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          same-branch-only: false
-
       - name: Run the tests
         run: >-
           ansible-test
-          integration
+          units
           --docker
           -v
           --color
@@ -87,7 +62,6 @@ jobs:
           --diff
           --python ${{ matrix.python }}
           --coverage
-          cloud/vultr/
 
       - name: Generate coverage report
         run: >-

@@ -35,7 +35,11 @@ def vultr_argument_spec():
             fallback=(env_fallback, ["VULTR_API_TIMEOUT"]),
             default=60,
         ),
-        api_retries=dict(type="int", fallback=(env_fallback, ["VULTR_API_RETRIES"]), default=5),
+        api_retries=dict(
+            type="int",
+            fallback=(env_fallback, ["VULTR_API_RETRIES"]),
+            default=5
+        ),
         api_retry_max_delay=dict(
             type="int",
             fallback=(env_fallback, ["VULTR_API_RETRY_MAX_DELAY"]),
