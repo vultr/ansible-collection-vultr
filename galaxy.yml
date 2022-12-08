@@ -2,6 +2,7 @@
 authors:
   - "René Moser (@resmo)"
   - "Yanis Guenane (@Spredzy)"
+  - "jasites (@jasites)"
 dependencies: {}
 description: "Ansible Collection for Vultr Cloud"
 documentation: "https://docs.ansible.com/ansible/latest/collections/vultr/cloud/"
@@ -15,4 +16,4 @@ repository: "https://github.com/vultr/ansible-collection-vultr"
 tags:
   - cloud
   - vultr
-version: 1.3.1
+version: 1.4.0

@@ -1,3 +1,4 @@
 cloud-config-vultr.ini
 output
 resources
+vultr-cloud-*.tar.gz
