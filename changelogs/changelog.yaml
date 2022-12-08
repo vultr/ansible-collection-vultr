@@ -125,3 +125,10 @@ releases:
     fragments:
     - instance-ssh-key.yml
     release_date: '2022-11-14'
+  1.4.0:
+    plugins:
+      inventory:
+      - description: Retrieves list of instances via Vultr v2 API
+        name: vultr
+        namespace: null
+    release_date: '2022-12-08'

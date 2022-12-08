@@ -5,6 +5,17 @@ Vultr Collection Release Notes
 .. contents:: Topics
 
 
+v1.4.0
+======
+
+New Plugins
+-----------
+
+Inventory
+~~~~~~~~~
+
+- vultr - Retrieves list of instances via Vultr v2 API
+
 v1.3.1
 ======
 
