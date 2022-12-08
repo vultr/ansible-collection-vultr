@@ -3,7 +3,6 @@ name: Unit tests
 
 on:
   pull_request:
-    types: [labeled]
   push:
     branches:
       - main
@@ -11,6 +10,8 @@ on:
       - '.github/workflows/unit.yml'
       - 'plugins/**'
       - 'tests/unit/**'
+  workflow_call:
+  workflow_dispatch:
 
 jobs:
   unit-test:
