@@ -56,8 +56,6 @@ jobs:
           --docker
           -v
           --color
-          --continue-on-error
-          --diff
           --python ${{ matrix.python }}
           --coverage
 
