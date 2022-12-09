@@ -20,7 +20,7 @@ short_description: Retrieves list of instances via Vultr v2 API
 description:
   - Vultr inventory plugin.
   - Retrieves list of instances via Vultr v2 API.
-  - Configuration of this plugin is done in '(vultr|vultr_hosts|vultr_instances).(yaml|yml)'
+  - Configuration of this plugin is done with files ending with '(vultr|vultr_hosts|vultr_instances).(yaml|yml)'
 version_added: '1.4.0'
 author:
   - jasites (@jasites)
@@ -49,7 +49,7 @@ options:
       - When receiving large numbers of instances, specify how many instances should be returned per call to API.
       - This does not determine how many results are returned; all instances are returned according to other filters.
       - Vultr API maximum is 500.
-      - Fallback environment variable C(VULTR_API_RESULTS_PER_PAGE)
+      - Fallback environment variable C(VULTR_API_RESULTS_PER_PAGE).
     type: int
     env:
       - name: VULTR_API_RESULTS_PER_PAGE
@@ -91,7 +91,7 @@ options:
     required: true
   variable_prefix:
     description:
-      - Prefix of generated variables (e.g. C(id) becomes C(vultr_id))
+      - Prefix of generated variables (e.g. C(id) becomes C(vultr_id)).
     type: str
     default: 'vultr_'
   validate_certs:
@@ -105,7 +105,7 @@ notes:
 
 EXAMPLES = """
 ---
-# vultr{,-{hosts,instances}}.y{,a}ml
+# File endings vultr{,-{hosts,instances}}.y{,a}ml
 # All configuration done via environment variables:
 plugin: vultr.cloud.vultr
 
@@ -255,7 +255,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             else:
                 self.display.vvv(
                     "Skipping due to inventory configuration file name mismatch. "
-                    "Valid filenames: "
+                    "Valid filename endings: "
                     "vultr.yaml, vultr.yml, vultr_hosts.yaml, vultr_hosts.yml, "
                     "vultr_instances.yaml, vultr_instances.yml"
                 )

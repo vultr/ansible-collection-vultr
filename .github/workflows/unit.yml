@@ -16,7 +16,6 @@ on:
 jobs:
   unit-test:
     name: Unit test Ansible ${{ matrix.ansible }} Py${{ matrix.python }}
-    if: ${{ github.event.label.name == 'automation' || github.ref_name == 'main' }}
     runs-on: ubuntu-20.04
     defaults:
       run:
