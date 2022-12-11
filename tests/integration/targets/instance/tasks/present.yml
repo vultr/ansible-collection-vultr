@@ -19,6 +19,7 @@
     os: "{{ instance.os | default(omit) }}"
     app: "{{ instance.app | default(omit) }}"
     image: "{{ instance.image | default(omit) }}"
+    vpcs: "{{ instance.vpcs | default(omit) }}"
   register: result
   check_mode: true
 - name: verify test create instance in check mode
@@ -42,6 +43,8 @@
     os: "{{ instance.os | default(omit) }}"
     app: "{{ instance.app | default(omit) }}"
     image: "{{ instance.image | default(omit) }}"
+    vpcs: "{{ instance.vpcs | default(omit) }}"
+
   register: result
 - name: verify test create instance
   ansible.builtin.assert:
@@ -69,6 +72,7 @@
     os: "{{ instance.os | default(omit) }}"
     app: "{{ instance.app | default(omit) }}"
     image: "{{ instance.image | default(omit) }}"
+    vpcs: "{{ instance.vpcs | default(omit) }}"
   register: result
 - name: verify test create instance idempotence
   ansible.builtin.assert:
@@ -96,6 +100,7 @@
     os: "{{ instance.os | default(omit) }}"
     app: "{{ instance.app | default(omit) }}"
     image: "{{ instance.image | default(omit) }}"
+    vpcs: "{{ instance.vpcs_update | default(omit) }}"
   register: result
   check_mode: true
 - name: verify test update instance in check mode
@@ -124,6 +129,7 @@
     os: "{{ instance.os | default(omit) }}"
     app: "{{ instance.app | default(omit) }}"
     image: "{{ instance.image | default(omit) }}"
+    vpcs: "{{ instance.vpcs_update | default(omit) }}"
   register: result
 - name: verify test update instance
   ansible.builtin.assert:
@@ -151,6 +157,7 @@
     os: "{{ instance.os | default(omit) }}"
     app: "{{ instance.app | default(omit) }}"
     image: "{{ instance.image | default(omit) }}"
+    vpcs: "{{ instance.vpcs_update | default(omit) }}"
   register: result
 - name: verify test update instance idempotence
   ansible.builtin.assert:

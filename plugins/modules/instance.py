@@ -100,6 +100,12 @@ options:
       - Region the instance is deployed into.
     type: str
     required: true
+  vpcs:
+    description:
+      - A list of VPCs identified by their description to be assigned to the instance.
+    type: list
+    elements: str
+    version_added: "1.5.0"
   state:
     description:
       - State of the instance.
@@ -127,6 +133,8 @@ EXAMPLES = """
     enable_ipv6: true
     ssh_keys:
       - my ssh key
+    vpcs:
+      - my vpc description
     tags:
       - web
       - project-genesis
@@ -359,6 +367,27 @@ vultr_instance:
       type: bool
       sample: true
       version_added: "1.3.0"
+    vpcs:
+      description: List of VPCs attached.
+      returned: success
+      type: list
+      version_added: "1.5.0"
+      contains:
+        id:
+          description: ID of the VPC.
+          returned: success
+          type: str
+          sample: 5536d2a4-66fd-4dfb-b839-7672fd5bc116
+        ip_address:
+          description: IP assigned from the VPC.
+          returned: success
+          type: str
+          sample: "192.168.23.3"
+        mac_address:
+          description: MAC address of the network interface.
+          returned: success
+          type: str
+          sample: "5a:01:04:3d:5e:72"
 """
 
 import base64
@@ -373,7 +402,7 @@ class AnsibleVultrInstance(AnsibleVultr):
         ssh_key_names = list(self.module.params["ssh_keys"])
         ssh_keys = self.query_list(path="/ssh-keys", result_key="ssh_keys")
 
-        ssh_key_ids = []
+        ssh_key_ids = list()
         for ssh_key in ssh_keys:
             if ssh_key["name"] in ssh_key_names:
                 ssh_key_ids.append(ssh_key["id"])
@@ -383,6 +412,25 @@ class AnsibleVultrInstance(AnsibleVultr):
             self.module.fail_json(msg="SSH key names not found: %s" % ", ".join(ssh_key_names))
 
         return ssh_key_ids
+
+    def get_vpc_ids(self):
+        vpc_names = list(self.module.params["vpcs"])
+        vpcs = self.query_list(path="/vpcs", result_key="vpcs")
+
+        vpc_ids = list()
+        for vpc in vpcs:
+            if vpc["description"] in vpc_names:
+                vpc_ids.append(vpc["id"])
+                vpc_names.remove(vpc["description"])
+
+        if vpc_names:
+            self.module.fail_json(msg="VPCs not found: %s" % ", ".join(vpc_names))
+
+        return vpc_ids
+
+    def get_instance_vpcs(self, resource):
+        path = "/instances/%s/vpcs" % resource["id"]
+        return self.query_list(path=path, result_key="vpcs")
 
     def get_firewall_group(self):
         return self.query_filter_list_by_name(
@@ -447,8 +495,15 @@ class AnsibleVultrInstance(AnsibleVultr):
         resource["backups"] = "enabled" if "auto_backups" in features else "disabled"
         resource["enable_ipv6"] = "ipv6" in features
         resource["ddos_protection"] = "ddos_protection" in features
-
+        resource["vpcs"] = self.get_instance_vpcs(resource=resource)
         return resource
+
+    def get_detach_vpcs_ids(self, resource):
+        detach_vpc_ids = []
+        for vpc in resource.get("vpcs", list()):
+            if vpc["id"] not in list(self.module.params["attach_vpc"]):
+                detach_vpc_ids.append(vpc["id"])
+        return detach_vpc_ids
 
     def configure(self):
         if self.module.params["state"] != "absent":
@@ -477,6 +532,10 @@ class AnsibleVultrInstance(AnsibleVultr):
             if self.module.params["backups"] is not None:
                 self.module.params["backups"] = "enabled" if self.module.params["backups"] else "disabled"
 
+            if self.module.params["vpcs"] is not None:
+                # attach_vpc is a list of ids used while creating
+                self.module.params["attach_vpc"] = self.get_vpc_ids()
+
     def handle_power_status(self, resource, state, action, power_status, force=False):
         if state == self.module.params["state"] and (resource["power_status"] != power_status or force):
             self.result["changed"] = True
@@ -497,6 +556,16 @@ class AnsibleVultrInstance(AnsibleVultr):
     def update(self, resource):
         user_data = self.get_user_data(resource=resource)
         resource["user_data"] = user_data.encode()
+
+        if self.module.params["vpcs"] is not None:
+            resource["attach_vpc"] = list()
+            for vpc in list(resource["vpcs"]):
+                resource["attach_vpc"].append(vpc["id"])
+
+            # detach_vpc is a list of ids to be detached
+            resource["detach_vpc"] = list()
+            self.module.params["detach_vpc"] = self.get_detach_vpcs_ids(resource=resource)
+
         return super(AnsibleVultrInstance, self).update(resource=resource)
 
     def create_or_update(self):
@@ -531,6 +600,7 @@ def main():
             backups=dict(type="bool"),
             enable_ipv6=dict(type="bool"),
             tags=dict(type="list", elements="str"),
+            vpcs=dict(type="list", elements="str"),
             reserved_ipv4=dict(type="str"),
             firewall_group=dict(type="str"),
             startup_script=dict(type="str"),
@@ -581,6 +651,7 @@ def main():
             "ddos_protection",
             "sshkey_id",
             "backups",
+            "attach_vpc",
         ],
         resource_update_param_keys=[
             "plan",
@@ -590,6 +661,8 @@ def main():
             "ddos_protection",
             "backups",
             "user_data",
+            "attach_vpc",
+            "detach_vpc",
         ],
         resource_key_name="label",
     )
