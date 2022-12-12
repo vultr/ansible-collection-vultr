@@ -378,6 +378,11 @@ vultr_instance:
           returned: success
           type: str
           sample: 5536d2a4-66fd-4dfb-b839-7672fd5bc116
+        description:
+          description: Description of the VPC.
+          returned: success
+          type: str
+          sample: my vpc
         ip_address:
           description: IP assigned from the VPC.
           returned: success
@@ -430,7 +435,15 @@ class AnsibleVultrInstance(AnsibleVultr):
 
     def get_instance_vpcs(self, resource):
         path = "/instances/%s/vpcs" % resource["id"]
-        return self.query_list(path=path, result_key="vpcs")
+        vpcs = self.query_list(path=path, result_key="vpcs")
+
+        # Workaround to get the description field into the list
+        result = list()
+        for vpc in vpcs:
+            vpc_detail = self.query_by_id(resource_id=vpc["id"], path="/vpcs", result_key="vpc")
+            vpc["description"] = vpc_detail["description"]
+            result.append(vpc)
+        return result
 
     def get_firewall_group(self):
         return self.query_filter_list_by_name(
@@ -496,6 +509,7 @@ class AnsibleVultrInstance(AnsibleVultr):
         resource["enable_ipv6"] = "ipv6" in features
         resource["ddos_protection"] = "ddos_protection" in features
         resource["vpcs"] = self.get_instance_vpcs(resource=resource)
+
         return resource
 
     def get_detach_vpcs_ids(self, resource):

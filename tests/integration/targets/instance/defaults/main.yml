@@ -14,6 +14,10 @@ vutr_instance_vpcs:
     v4_subnet: 192.168.23.0
     v4_subnet_mask: 24
     region: ams
+  - description: "{{ vultr_resource_prefix }}_instance_vpc_3"
+    v4_subnet: 192.168.98.0
+    v4_subnet_mask: 24
+    region: ams
 
 vultr_instances:
   - label: "{{ vultr_resource_prefix }}_os1"
@@ -47,8 +51,10 @@ vultr_instances:
     enable_ipv6_update: true
     vpcs:
       - "{{ vultr_resource_prefix }}_instance_vpc_1"
-    vpcs_update:
       - "{{ vultr_resource_prefix }}_instance_vpc_2"
+    vpcs_update:
+      - "{{ vultr_resource_prefix }}_instance_vpc_1"
+      - "{{ vultr_resource_prefix }}_instance_vpc_3"
 
   - label: "{{ vultr_resource_prefix }}_app1"
     plan: vc2-1c-1gb
@@ -61,6 +67,12 @@ vultr_instances:
     ddos_protection_update: false
     enable_ipv6: false
     enable_ipv6_update: false
+    vpcs:
+      - "{{ vultr_resource_prefix }}_instance_vpc_1"
+      - "{{ vultr_resource_prefix }}_instance_vpc_2"
+    vpcs_update:
+      - "{{ vultr_resource_prefix }}_instance_vpc_1"
+      - "{{ vultr_resource_prefix }}_instance_vpc_3"
 
   - label: "{{ vultr_resource_prefix }}_img1"
     plan: vc2-1c-1gb
@@ -74,3 +86,9 @@ vultr_instances:
     enable_ipv6: true
     # API does not disable IPv6 once enabled.
     enable_ipv6_update: true
+    vpcs:
+      - "{{ vultr_resource_prefix }}_instance_vpc_1"
+      - "{{ vultr_resource_prefix }}_instance_vpc_2"
+    vpcs_update:
+      - "{{ vultr_resource_prefix }}_instance_vpc_1"
+      - "{{ vultr_resource_prefix }}_instance_vpc_3"
