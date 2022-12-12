@@ -38,7 +38,7 @@ def vultr_argument_spec():
         api_retries=dict(
             type="int",
             fallback=(env_fallback, ["VULTR_API_RETRIES"]),
-            default=5
+            default=5,
         ),
         api_retry_max_delay=dict(
             type="int",
@@ -194,6 +194,7 @@ class AnsibleVultr:
         query_params=None,
         get_details=False,
         fail_not_found=False,
+        skip_transform=True,
     ):
         param_value = self.module.params.get(param_key or key_name)
 
@@ -205,9 +206,12 @@ class AnsibleVultr:
                 found = resource
         if found:
             if get_details:
-                return self.query_by_id(resource_id=found[key_id])
+                return self.query_by_id(resource_id=found[key_id], skip_transform=skip_transform)
             else:
-                return self.transform_resource(found)
+                if skip_transform:
+                    return found
+                else:
+                    return self.transform_resource(found)
 
         elif fail_not_found:
             self.module.fail_json(msg="No Resource %s with %s found: %s" % (path, key_name, param_value))
@@ -222,16 +226,20 @@ class AnsibleVultr:
             get_details=self.resource_get_details,
             path=self.resource_path,
             result_key=self.ressource_result_key_plural,
+            skip_transform=False,
         )
 
-    def query_by_id(self, resource_id=None, path=None, result_key=None):
+    def query_by_id(self, resource_id=None, path=None, result_key=None, skip_transform=True):
         # Defaults
         path = path or self.resource_path
         result_key = result_key or self.ressource_result_key_singular
 
         resource = self.api_query(path="%s%s" % (path, "/" + resource_id if resource_id else resource_id))
         if resource:
-            return self.transform_resource(resource[result_key])
+            if skip_transform:
+                return resource[result_key]
+            else:
+                return self.transform_resource(resource[result_key])
 
         return dict()
 
@@ -249,7 +257,7 @@ class AnsibleVultr:
 
     def wait_for_state(self, resource, key, state, cmp="="):
         for retry in range(0, 30):
-            resource = self.query_by_id(resource_id=resource[self.resource_key_id])
+            resource = self.query_by_id(resource_id=resource[self.resource_key_id], skip_transform=False)
             if cmp == "=":
                 if key not in resource or resource[key] == state or not resource[key]:
                     break
