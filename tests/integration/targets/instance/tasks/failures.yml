@@ -37,3 +37,19 @@
     that:
       - result is failed
       - '"SSH key names not found: does-not-exist" in result.msg'
+
+- name: test fail if vpc not found
+  vultr.cloud.instance:
+    label: my label
+    plan: a plan
+    region: a region
+    os: Debian 11 x64 (bullseye)
+    vpcs:
+      - does-not-exist
+  register: result
+  ignore_errors: true
+- name: verify test fail if vpc not found
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - '"VPCs not found: does-not-exist" in result.msg'

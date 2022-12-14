@@ -21,6 +21,14 @@
     name: "{{ vultr_instance_ssh_key_name }}"
     ssh_key: "{{ vultr_instance_ssh_key }}"
 
+- name: setup vpcs
+  vultr.cloud.vpc:
+    description: "{{ item.description }}"
+    v4_subnet: "{{ item.v4_subnet }}"
+    v4_subnet_mask: "{{ item.v4_subnet_mask }}"
+    region: "{{ item.region }}"
+  with_items: "{{ vutr_instance_vpcs }}"
+
 - ansible.builtin.include_tasks: present.yml
   with_items: "{{ vultr_instances }}"
   loop_control:
@@ -45,3 +53,14 @@
   vultr.cloud.ssh_key:
     name: "{{ vultr_instance_ssh_key_name }}"
     state: absent
+
+- name: cleanup vpcs
+  vultr.cloud.vpc:
+    description: "{{ item.description }}"
+    region: "{{ item.region }}"
+    state: absent
+  with_items: "{{ vutr_instance_vpcs }}"
+  retries: 5
+  delay: 3
+  register: result
+  until: result is not failed
