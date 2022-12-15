@@ -10,8 +10,9 @@ import random
 import time
 import urllib
 
-from ansible.module_utils._text import to_native, to_text
+from ansible.module_utils._text import to_text
 from ansible.module_utils.basic import env_fallback
+from ansible.module_utils.six.moves.urllib.parse import quote
 from ansible.module_utils.urls import fetch_url
 
 VULTR_USER_AGENT = "Ansible Vultr v2"
@@ -136,16 +137,14 @@ class AnsibleVultr:
         """
         return resource
 
-    def api_query(self, path, method="GET", data=None):
+    def api_query(self, path, method="GET", data=None, query_params=None):
+        if query_params:
+            query = "?"
+            for k, v in query_params.items():
+                query += "&%s=%s" % (to_text(k), quote(to_text(v)))
+            path += query
 
-        if method == "GET" and data:
-            data_encoded = data.copy()
-            try:
-                data = urllib.urlencode(data_encoded)
-            except AttributeError:
-                data = urllib.parse.urlencode(data_encoded)
-        else:
-            data = self.module.jsonify(data)
+        data = self.module.jsonify(data)
 
         retry_max_delay = self.module.params["api_retry_max_delay"]
 
@@ -252,7 +251,7 @@ class AnsibleVultr:
         path = path or self.resource_path
         result_key = result_key or self.ressource_result_key_plural
 
-        resources = self.api_query(path=path, data=query_params)
+        resources = self.api_query(path=path, query_params=query_params)
         return resources[result_key] if resources else []
 
     def wait_for_state(self, resource, key, state, cmp="="):
