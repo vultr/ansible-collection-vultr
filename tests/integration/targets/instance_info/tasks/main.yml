@@ -1,0 +1,7 @@
+---
+- block:
+      - ansible.builtin.import_tasks: tests.yml
+  always:
+      - ansible.builtin.import_role:
+            name: cleanup
+            tasks_from: cleanup_instance

@@ -1,0 +1,23 @@
+# Copyright (c) 2022, René Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+vultr_region1: ams
+vultr_region2: cdg
+
+vultr_instances:
+  - label: "{{ vultr_resource_prefix }}_info1"
+    hostname: info1
+    plan: vc2-1c-1gb
+    tags:
+      - one
+      - two
+    region: "{{ vultr_region1 }}"
+    os: Debian 11 x64 (bullseye)
+  - label: "{{ vultr_resource_prefix }}_info2"
+    hostname: info2
+    plan: vc2-1c-1gb
+    tags:
+      - three
+      - four
+    region: "{{ vultr_region2 }}"
+    os: Debian 11 x64 (bullseye)

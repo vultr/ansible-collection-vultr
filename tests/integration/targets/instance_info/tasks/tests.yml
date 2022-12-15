@@ -1,0 +1,62 @@
+# Copyright (c) 2022, René Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: setup
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    hostname: "{{ instance.hostname }}"
+    plan: "{{ instance.plan }}"
+    tags: "{{ instance.tags }}"
+    region: "{{ instance.region }}"
+    os: "{{ instance.os }}"
+  register: result
+  with_items: "{{ vultr_instances }}"
+  loop_control:
+    loop_var: instance
+
+- name: test gather vultr instance info in check mode
+  vultr.cloud.instance_info:
+  check_mode: true
+  register: result
+- name: verify test gather vultr instance info in check mode
+  ansible.builtin.assert:
+    that:
+      - result.vultr_instance_info|selectattr('label','search','^{{ vultr_resource_prefix }}') | list | count == 2
+      - result.vultr_instance_info|selectattr('label','equalto','{{ vultr_resource_prefix }}_info1') | list | count == 1
+
+- name: test gather vultr instance info
+  vultr.cloud.instance_info:
+  register: result
+- name: verify test gather vultr instance info
+  ansible.builtin.assert:
+    that:
+      - result.vultr_instance_info|selectattr('label','search','^{{ vultr_resource_prefix }}') | list | count == 2
+      - result.vultr_instance_info|selectattr('label','equalto','{{ vultr_resource_prefix }}_info1') | list | count == 1
+
+- name: test gather vultr instance info filter region
+  vultr.cloud.instance_info:
+    region: "{{ vultr_region1 }}"
+  register: result
+- name: verify test gather vultr instance info filter region
+  ansible.builtin.assert:
+    that:
+      - result.vultr_instance_info|selectattr('label','search','^{{ vultr_resource_prefix }}') | list | count == 1
+
+- name: test gather vultr instance info filter label
+  vultr.cloud.instance_info:
+    label: "{{ vultr_resource_prefix }}_info2"
+  register: result
+- name: verify test gather vultr instance info
+  ansible.builtin.assert:
+    that:
+      - result.vultr_instance_info|selectattr('label','search','^{{ vultr_resource_prefix }}') | list | count == 1
+      - result.vultr_instance_info|selectattr('label','equalto','{{ vultr_resource_prefix }}_info2') | list | count == 1
+
+- name: cleanup
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    region: "{{ instance.region }}"
+    state: absent
+  with_items: "{{ vultr_instances }}"
+  loop_control:
+    loop_var: instance
