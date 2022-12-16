@@ -5,6 +5,19 @@ Vultr Collection Release Notes
 .. contents:: Topics
 
 
+v1.5.0
+======
+
+Minor Changes
+-------------
+
+- instance - Implemented VPC support to attach/detach VPCs (https://github.com/vultr/ansible-collection-vultr/pull/46).
+
+New Modules
+-----------
+
+- instance_info - Get information about the Vultr instances
+
 v1.4.0
 ======
 

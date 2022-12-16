@@ -132,3 +132,14 @@ releases:
         name: vultr
         namespace: null
     release_date: '2022-12-08'
+  1.5.0:
+    changes:
+      minor_changes:
+      - instance - Implemented VPC support to attach/detach VPCs (https://github.com/vultr/ansible-collection-vultr/pull/46).
+    fragments:
+    - instance-vpcs.yml
+    modules:
+    - description: Get information about the Vultr instances
+      name: instance_info
+      namespace: ''
+    release_date: '2022-12-16'
