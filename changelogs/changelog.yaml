@@ -143,3 +143,14 @@ releases:
       name: instance_info
       namespace: ''
     release_date: '2022-12-16'
+  1.5.1:
+    changes:
+      bugfixes:
+      - instance - An error that caused the start script not to be processed has been
+        fixed. (https://github.com/vultr/ansible-collection-vultr/issues/49)
+      - instance_info - The problem that the module was missing in the runtime action
+        group has been fixed.
+    fragments:
+    - instance-script-id.yml
+    - instance_info-runtime.yml
+    release_date: '2022-12-30'

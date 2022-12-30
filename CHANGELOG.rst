@@ -5,6 +5,15 @@ Vultr Collection Release Notes
 .. contents:: Topics
 
 
+v1.5.1
+======
+
+Bugfixes
+--------
+
+- instance - An error that caused the start script not to be processed has been fixed. (https://github.com/vultr/ansible-collection-vultr/issues/49)
+- instance_info - The problem that the module was missing in the runtime action group has been fixed.
+
 v1.5.0
 ======
 
