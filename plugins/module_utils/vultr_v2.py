@@ -162,8 +162,10 @@ class AnsibleVultr:
 
             resp_body = resp.read() if resp is not None else ""
 
-            # Check for 429 Too Many Requests
-            if info["status"] != 429:
+            # Check for:
+            # 429 Too Many Requests
+            # 500 Internal Server Error
+            if info["status"] not in (429, 500):
                 break
 
             # Vultr has a rate limiting requests per second, try to be polite
