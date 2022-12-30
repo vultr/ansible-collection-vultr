@@ -1,0 +1,2 @@
+bugfixes:
+  - instance_info - The problem that the module was missing in the runtime action group has been fixed.
