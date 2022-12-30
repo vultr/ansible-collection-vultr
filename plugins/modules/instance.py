@@ -522,7 +522,7 @@ class AnsibleVultrInstance(AnsibleVultr):
     def configure(self):
         if self.module.params["state"] != "absent":
             if self.module.params["startup_script"] is not None:
-                self.module.params["startup_script_id"] = self.get_startup_script()["id"]
+                self.module.params["script_id"] = self.get_startup_script()["id"]
 
             if self.module.params["firewall_group"] is not None:
                 self.module.params["firewall_group_id"] = self.get_firewall_group()["id"]
