@@ -119,6 +119,12 @@ keyed_groups:
 filters:
   - '"vpc" in vultr_tags'
   - 'vultr_plan == "vc2-2c-4gb"'
+
+# Unless you can connect to your servers via it's vultr label,
+# we suggest setting ansible_host with compose:
+plugin: vultr.cloud.vultr
+compose:
+  ansible_host: vultr_main_ip
 """
 
 RETURN = r""" # """
