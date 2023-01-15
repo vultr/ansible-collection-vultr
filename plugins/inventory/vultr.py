@@ -75,6 +75,7 @@ options:
       - plan
       - hostname
       - main_ip
+      - v6_main_ip
   filters:
     description:
       - Filter hosts with Jinja2 templates.
@@ -125,6 +126,16 @@ filters:
 plugin: vultr.cloud.vultr
 compose:
   ansible_host: vultr_main_ip
+
+# Respectively for IPv6:
+plugin: vultr.cloud.vultr
+compose:
+  ansible_host: vultr_v6_main_ip
+
+# Prioritize IPv6 over IPv4 if available.
+plugin: vultr.cloud.vultr
+compose:
+  ansible_host: vultr_v6_main_ip or vultr_main_ip
 """
 
 RETURN = r""" # """
