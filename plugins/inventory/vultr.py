@@ -131,6 +131,11 @@ compose:
 plugin: vultr.cloud.vultr
 compose:
   ansible_host: vultr_v6_main_ip
+
+# Prioritize IPv6 over IPv4 if available.
+plugin: vultr.cloud.vultr
+compose:
+  ansible_host: vultr_v6_main_ip or vultr_main_ip
 """
 
 RETURN = r""" # """
