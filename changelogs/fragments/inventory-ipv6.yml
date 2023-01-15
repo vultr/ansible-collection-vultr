@@ -1,2 +1,0 @@
-minor_changes:
-  - inventory - Added IPv6 support by adding ``v6_main_ip`` to the attributes and improved docs (https://github.com/vultr/ansible-collection-vultr/pull/54).

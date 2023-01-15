@@ -154,3 +154,11 @@ releases:
     - instance-script-id.yml
     - instance_info-runtime.yml
     release_date: '2022-12-30'
+  1.6.0:
+    changes:
+      minor_changes:
+      - inventory - Added IPv6 support by adding ``v6_main_ip`` to the attributes
+        and improved docs (https://github.com/vultr/ansible-collection-vultr/pull/54).
+    fragments:
+    - inventory-ipv6.yml
+    release_date: '2023-01-15'
