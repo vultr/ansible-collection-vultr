@@ -19,6 +19,7 @@
     os: "{{ instance.os | default(omit) }}"
     app: "{{ instance.app | default(omit) }}"
     image: "{{ instance.image | default(omit) }}"
+    snapshot: "{{ instance.snapshot | default(omit) }}"
     vpcs: "{{ instance.vpcs | default(omit) }}"
   register: result
   check_mode: true
@@ -43,6 +44,7 @@
     os: "{{ instance.os | default(omit) }}"
     app: "{{ instance.app | default(omit) }}"
     image: "{{ instance.image | default(omit) }}"
+    snapshot: "{{ instance.snapshot | default(omit) }}"
     vpcs: "{{ instance.vpcs | default(omit) }}"
   register: result
 - name: verify test create instance
@@ -74,6 +76,7 @@
     os: "{{ instance.os | default(omit) }}"
     app: "{{ instance.app | default(omit) }}"
     image: "{{ instance.image | default(omit) }}"
+    snapshot: "{{ instance.snapshot | default(omit) }}"
     vpcs: "{{ instance.vpcs | default(omit) }}"
   register: result
 - name: verify test create instance idempotence
@@ -105,6 +108,7 @@
     os: "{{ instance.os | default(omit) }}"
     app: "{{ instance.app | default(omit) }}"
     image: "{{ instance.image | default(omit) }}"
+    snapshot: "{{ instance.snapshot | default(omit) }}"
     vpcs: "{{ instance.vpcs_update | default(omit) }}"
   register: result
   check_mode: true
@@ -137,6 +141,7 @@
     os: "{{ instance.os | default(omit) }}"
     app: "{{ instance.app | default(omit) }}"
     image: "{{ instance.image | default(omit) }}"
+    snapshot: "{{ instance.snapshot | default(omit) }}"
     vpcs: "{{ instance.vpcs_update | default(omit) }}"
   register: result
 - name: verify test update instance
@@ -168,6 +173,7 @@
     os: "{{ instance.os | default(omit) }}"
     app: "{{ instance.app | default(omit) }}"
     image: "{{ instance.image | default(omit) }}"
+    snapshot: "{{ instance.snapshot | default(omit) }}"
     vpcs: "{{ instance.vpcs_update | default(omit) }}"
   register: result
 - name: verify test update instance idempotence
