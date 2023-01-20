@@ -90,6 +90,12 @@ options:
       - List of SSH key names passed to the instance on creation.
     type: list
     elements: str
+  snapshot:
+    description:
+      - Description or ID of the snapshot.
+      - Only considered while creating the instance.
+    type: str
+    version_added: "1.7.0"
   reserved_ipv4:
     description:
       - IP address of the floating IP to use as the main IP of this instance.
@@ -454,6 +460,15 @@ class AnsibleVultrInstance(AnsibleVultr):
             fail_not_found=True,
         )
 
+    def get_snapshot(self):
+        return self.query_filter_list_by_name(
+            key_name="description",
+            param_key="snapshot",
+            path="/snapshots",
+            result_key="snapshots",
+            fail_not_found=True,
+        )
+
     def get_startup_script(self):
         return self.query_filter_list_by_name(
             key_name="name",
@@ -524,6 +539,9 @@ class AnsibleVultrInstance(AnsibleVultr):
             if self.module.params["startup_script"] is not None:
                 self.module.params["script_id"] = self.get_startup_script()["id"]
 
+            if self.module.params["snapshot"] is not None:
+                self.module.params["snapshot_id"] = self.get_snapshot()["id"]
+
             if self.module.params["firewall_group"] is not None:
                 self.module.params["firewall_group_id"] = self.get_firewall_group()["id"]
 
@@ -562,7 +580,7 @@ class AnsibleVultrInstance(AnsibleVultr):
         return resource
 
     def create(self):
-        param_keys = ("os", "image", "app")
+        param_keys = ("os", "image", "app", "snapshot")
         if not any(self.module.params.get(x) is not None for x in param_keys):
             self.module.fail_json(msg="missing required arguements, one of the following required: %s" % ", ".join(param_keys))
         return super(AnsibleVultrInstance, self).create()
@@ -607,6 +625,7 @@ def main():
             hostname=dict(type="str"),
             app=dict(type="str"),
             image=dict(type="str"),
+            snapshot=dict(type="str"),
             os=dict(type="str"),
             plan=dict(type="str"),
             activation_email=dict(type="bool", default=False),
@@ -637,7 +656,7 @@ def main():
     module = AnsibleModule(
         argument_spec=argument_spec,
         required_if=(("state", "present", ("plan",)),),
-        mutually_exclusive=(("os", "app", "image"),),
+        mutually_exclusive=(("os", "app", "image", "snapshot"),),
         supports_check_mode=True,
     )
 
@@ -654,6 +673,7 @@ def main():
             "os_id",
             "iso_id",
             "image_id",
+            "snapshot_id",
             "script_id",
             "region",
             "enable_ipv6",
