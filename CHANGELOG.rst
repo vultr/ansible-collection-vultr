@@ -5,6 +5,20 @@ Vultr Collection Release Notes
 .. contents:: Topics
 
 
+v1.7.0
+======
+
+Minor Changes
+-------------
+
+- instance - Added argument ``snapshot`` to support creation of instances via snapshot (https://github.com/vultr/ansible-collection-vultr/pull/56).
+
+New Modules
+-----------
+
+- snapshot - Manages snapshots on Vultr
+- snapshot_info - Gather information about the Vultr snapshots
+
 v1.6.0
 ======
 

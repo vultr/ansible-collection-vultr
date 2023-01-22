@@ -162,3 +162,18 @@ releases:
     fragments:
     - inventory-ipv6.yml
     release_date: '2023-01-15'
+  1.7.0:
+    changes:
+      minor_changes:
+      - instance - Added argument ``snapshot`` to support creation of instances via
+        snapshot (https://github.com/vultr/ansible-collection-vultr/pull/56).
+    fragments:
+    - 56-instance_snapshot.yml
+    modules:
+    - description: Manages snapshots on Vultr
+      name: snapshot
+      namespace: ''
+    - description: Gather information about the Vultr snapshots
+      name: snapshot_info
+      namespace: ''
+    release_date: '2023-01-22'

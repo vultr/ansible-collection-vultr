@@ -1,2 +1,0 @@
-minor_changes:
-  - instance - Added argument ``snapshot`` to support creation of instances via snapshot (https://github.com/vultr/ansible-collection-vultr/pull/56).
