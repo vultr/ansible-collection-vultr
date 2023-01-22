@@ -15,7 +15,7 @@ module: snapshot
 short_description: Manages snapshots on Vultr
 description:
   - Create and remove snapshots.
-version_added: "1.8.0"
+version_added: "1.7.0"
 author: "René Moser (@resmo)"
 options:
   description:

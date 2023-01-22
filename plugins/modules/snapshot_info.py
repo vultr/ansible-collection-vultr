@@ -14,7 +14,7 @@ module: snapshot_info
 short_description: Gather information about the Vultr snapshots
 description:
   - Gather information about snapshots available.
-version_added: "1.8.0"
+version_added: "1.7.0"
 author:
   - "René Moser (@resmo)"
 extends_documentation_fragment:
