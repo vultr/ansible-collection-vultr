@@ -30,6 +30,6 @@
 
 - name: cleanup instance
   vultr.cloud.instance:
-    description: "{{ vultr_instance.description }}"
+    label: "{{ vultr_instance.label }}"
     region: "{{ vultr_instance.region }}"
     state: absent
