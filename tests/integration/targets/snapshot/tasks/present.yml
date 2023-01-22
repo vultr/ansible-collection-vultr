@@ -1,0 +1,36 @@
+---
+- name: test create snapshot in check mode
+  vultr.cloud.snapshot:
+    description: "{{ snapshot.description }}"
+    instance: "{{ snapshot.instance | default(omit) }}"
+    url: "{{ snapshot.url | default(omit) }}"
+  register: result
+  check_mode: true
+- name: verify test create snapshot in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test create snapshot
+  vultr.cloud.snapshot:
+    description: "{{ snapshot.description }}"
+    instance: "{{ snapshot.instance | default(omit) }}"
+    url: "{{ snapshot.url | default(omit) }}"
+  register: result
+- name: verify test create snapshot
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_snapshot.description == snapshot.description
+
+- name: test create snapshot idempotence
+  vultr.cloud.snapshot:
+    description: "{{ snapshot.description }}"
+    instance: "{{ snapshot.instance | default(omit) }}"
+    url: "{{ snapshot.url | default(omit) }}"
+  register: result
+- name: verify test create snapshot idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+      - result.vultr_snapshot.description == snapshot.description

@@ -1,0 +1,35 @@
+# Copyright (c) 2023, René Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: setup
+  vultr.cloud.snapshot:
+    description: "{{ snapshot.description }}"
+    state: absent
+  with_items: "{{ vultr_snapshots }}"
+  loop_control:
+    loop_var: snapshot
+
+- ansible.builtin.import_tasks: failures.yml
+
+- name: setup instance
+  vultr.cloud.instance:
+    label: "{{ vultr_instance.label }}"
+    plan: "{{ vultr_instance.plan }}"
+    region: "{{ vultr_instance.region }}"
+    os: "{{ vultr_instance.os }}"
+
+- ansible.builtin.include_tasks: present.yml
+  with_items: "{{ vultr_snapshots }}"
+  loop_control:
+    loop_var: snapshot
+
+- ansible.builtin.include_tasks: absent.yml
+  with_items: "{{ vultr_snapshots }}"
+  loop_control:
+    loop_var: snapshot
+
+- name: cleanup instance
+  vultr.cloud.instance:
+    label: "{{ vultr_instance.label }}"
+    region: "{{ vultr_instance.region }}"
+    state: absent

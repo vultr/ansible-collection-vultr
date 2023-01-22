@@ -1,0 +1,29 @@
+---
+- name: cleanup
+  when: vultr_api_key
+  block:
+    - name: List snapshots
+      ansible.builtin.uri:
+        url: "{{ vultr_api_url }}/snapshots"
+        headers:
+          Authorization: Bearer {{ vultr_api_key }}
+        status_code: 200
+      register: res
+      no_log: true
+
+    - name: Found resources
+      ansible.builtin.debug:
+        var: res.json
+
+    - name: Remove all snapshots created by this test run
+      ansible.builtin.uri:
+        url: "{{ vultr_api_url }}/snapshots/{{ item.id }}"
+        method: "DELETE"
+        headers:
+          Authorization: Bearer {{ vultr_api_key }}
+        status_code: 204
+      when: vultr_resource_prefix in item.description
+      with_items: "{{ res.json.snapshots }}"
+      loop_control:
+        label: "{{ item.description }}"
+      no_log: true
