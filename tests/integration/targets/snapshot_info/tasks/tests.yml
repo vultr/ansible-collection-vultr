@@ -1,0 +1,34 @@
+# Copyright (c) 2023, René Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: test gather snapshot info - empty resources
+  vultr.cloud.snapshot_info:
+
+- name: Create the snapshot
+  vultr.cloud.snapshot:
+    description: "{{ vultr_snapshot_description }}"
+    url: "{{ vultr_snapshot_url }}"
+
+- name: test gather snapshot info in check mode
+  vultr.cloud.snapshot_info:
+  check_mode: true
+  register: result
+
+- name: verify test gather vultr snapshot info in check mode
+  ansible.builtin.assert:
+    that:
+      - result.vultr_snapshot_info|selectattr('description','equalto','{{ vultr_snapshot_description }}') | list | count == 1
+
+- name: test gather snapshot info
+  vultr.cloud.snapshot_info:
+  register: result
+
+- name: verify test gather vultr snapshot info
+  ansible.builtin.assert:
+    that:
+      - result.vultr_snapshot_info|selectattr('description','equalto','{{ vultr_snapshot_description }}') | list | count == 1
+
+- name: Delete the snapshot
+  vultr.cloud.snapshot:
+    name: "{{ vultr_snapshot_description }}"
+    state: absent

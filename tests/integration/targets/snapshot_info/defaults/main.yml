@@ -1,0 +1,3 @@
+---
+vultr_snapshot_description: "{{ vultr_resource_prefix }}_snap_info"
+vultr_snapshot_url: https://cloud.debian.org/images/cloud/bullseye/latest/debian-11-generic-amd64.raw

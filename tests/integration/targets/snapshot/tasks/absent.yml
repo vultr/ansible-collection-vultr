@@ -1,0 +1,35 @@
+---
+- name: snapshot info
+  ansible.builtin.debug:
+    var: snapshot
+
+- name: test absent snapshot in check mode
+  vultr.cloud.snapshot:
+    description: "{{ snapshot.description }}"
+    state: absent
+  register: result
+  check_mode: true
+- name: verify test absent snapshot in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test absent snapshot
+  vultr.cloud.snapshot:
+    description: "{{ snapshot.description }}"
+    state: absent
+  register: result
+- name: verify test absent snapshot
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test absent snapshot idempotence
+  vultr.cloud.snapshot:
+    description: "{{ snapshot.description }}"
+    state: absent
+  register: result
+- name: verify test absent snapshot idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed

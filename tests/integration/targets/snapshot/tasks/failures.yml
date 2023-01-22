@@ -1,0 +1,33 @@
+---
+- name: test fail if missing arguments
+  vultr.cloud.snapshot:
+  register: result
+  ignore_errors: true
+- name: verify test fail if missing arguments
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - 'result.msg == "missing required arguments: description"'
+
+- name: test fail if missing arguments required one of
+  vultr.cloud.snapshot:
+    description: my snapshot
+  register: result
+  ignore_errors: true
+- name: verify test fail if missing arguments required one of
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - '"one of the following required" in result.msg'
+
+- name: test fail if instance not found
+  vultr.cloud.snapshot:
+    description: my snapshot
+    instance: does-not-exist
+  register: result
+  ignore_errors: true
+- name: verify test fail if instance not found
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - '"No Resource /instances with label found: does-not-exist" in result.msg'
