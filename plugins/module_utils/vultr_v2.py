@@ -8,7 +8,6 @@ __metaclass__ = type
 
 import random
 import time
-import urllib
 
 from ansible.module_utils._text import to_text
 from ansible.module_utils.basic import env_fallback
