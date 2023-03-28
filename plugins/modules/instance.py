@@ -115,8 +115,9 @@ options:
   state:
     description:
       - State of the instance.
+      - The state I(reinstalled) was added in version 1.8.0.
     default: present
-    choices: [ present, absent, started, stopped, restarted ]
+    choices: [ present, absent, started, stopped, restarted, reinstalled ]
     type: str
 extends_documentation_fragment:
   - vultr.cloud.vultr_v2
@@ -170,6 +171,12 @@ EXAMPLES = """
     label: my web server
     region: ams
     state: started
+
+- name: Reinstall an instance
+  vultr.cloud.instance:
+    label: my web server
+    region: ams
+    state: reinstalled
 
 - name: Delete an instance
   vultr.cloud.instance:
@@ -609,6 +616,8 @@ class AnsibleVultrInstance(AnsibleVultr):
             resource = self.handle_power_status(resource=resource, state="stopped", action="halt", power_status="stopped")
             resource = self.handle_power_status(resource=resource, state="started", action="start", power_status="running")
             resource = self.handle_power_status(resource=resource, state="restarted", action="reboot", power_status="running", force=True)
+            resource = self.handle_power_status(resource=resource, state="reinstalled", action="reinstall", power_status="running", force=True)
+
         return resource
 
     def transform_result(self, resource):
@@ -653,6 +662,7 @@ def main():
                     "started",
                     "stopped",
                     "restarted",
+                    "reinstalled",
                 ],
                 default="present",
             ),
