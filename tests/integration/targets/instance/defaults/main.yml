@@ -78,7 +78,7 @@ vultr_instances:
     plan: vc2-1c-1gb
     plan_update: vc2-1c-2gb
     region: ams
-    image: Gitea on Ubuntu 20.04
+    image: NodeJS on Ubuntu 22.04
     backups: false
     backups_update: true
     ddos_protection: false
