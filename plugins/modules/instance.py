@@ -616,6 +616,12 @@ class AnsibleVultrInstance(AnsibleVultr):
             resource["user_data"] = self.get_user_data(resource=resource)
         return resource
 
+    def absent(self):
+        resource = self.query()
+        if resource:
+            resource = self.wait_for_state(resource=resource, key="server_status", state="locked", cmp="!=")
+        return super(AnsibleVultrInstance, self).absent(resource=resource)
+
 
 def main():
     argument_spec = vultr_argument_spec()
