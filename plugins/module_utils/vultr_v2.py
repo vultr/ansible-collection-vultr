@@ -339,8 +339,10 @@ class AnsibleVultr:
                 resource = self.query_by_id(resource_id=resource[self.resource_key_id])
         return resource
 
-    def absent(self):
-        resource = self.query()
+    def absent(self, resource=None):
+        if resource is None:
+            resource = self.query()
+
         if resource:
             self.result["changed"] = True
 
