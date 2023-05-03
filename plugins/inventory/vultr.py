@@ -76,6 +76,7 @@ options:
       - hostname
       - main_ip
       - v6_main_ip
+      - tags
   filters:
     description:
       - Filter hosts with Jinja2 templates.
