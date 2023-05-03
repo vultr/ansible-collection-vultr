@@ -207,6 +207,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             instance_label = instance.get("label")
 
             if not instance_label:
+                self.display.warning(msg="instance ID {0} has no label, skipping.".format(instance.get("id")))
                 continue
 
             host_variables = {}
