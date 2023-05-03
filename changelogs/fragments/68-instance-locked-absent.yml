@@ -1,2 +1,0 @@
-bugfixes:
-  - instance - Fixed an issue when deleting an instance in locked state. (https://github.com/vultr/ansible-collection-vultr/pull/68)

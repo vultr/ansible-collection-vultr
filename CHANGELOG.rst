@@ -5,6 +5,15 @@ Vultr Collection Release Notes
 .. contents:: Topics
 
 
+v1.7.1
+======
+
+Bugfixes
+--------
+
+- instance - Fixed an issue when deleting an instance in locked state. (https://github.com/vultr/ansible-collection-vultr/pull/68)
+- inventory - Fixed the issue instance tags were not returned (https://github.com/vultr/ansible-collection-vultr/issues/69)
+
 v1.7.0
 ======
 
