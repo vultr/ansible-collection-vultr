@@ -1,0 +1,2 @@
+bugfixes:
+  - inventory - Fixed the issue instance tags were not returned (https://github.com/vultr/ansible-collection-vultr/issues/69)
