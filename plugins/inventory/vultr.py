@@ -146,6 +146,10 @@ compose:
 plugin: vultr.cloud.vultr
 compose:
   ansible_host: vultr_v6_main_ip or vultr_main_ip
+
+# Querying the bare metal instances
+plugin: vultr.cloud.vultr
+instance_type: bare_metal
 """
 
 RETURN = r""" # """
