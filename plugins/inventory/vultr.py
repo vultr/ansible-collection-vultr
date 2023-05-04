@@ -84,6 +84,15 @@ options:
     type: list
     elements: str
     default: []
+  instance_type:
+    description:
+      - Type of instance.
+    type: str
+    default: cloud
+    choices:
+      - cloud
+      - bare_metal
+    version_added: '1.8.0'
   plugin:
     description:
       - Name of Vultr inventory plugin.
@@ -137,16 +146,21 @@ compose:
 plugin: vultr.cloud.vultr
 compose:
   ansible_host: vultr_v6_main_ip or vultr_main_ip
+
+# Querying the bare metal instances
+plugin: vultr.cloud.vultr
+instance_type: bare_metal
 """
 
 RETURN = r""" # """
 
 import json
+
 from ansible.errors import AnsibleError, AnsibleParserError
 from ansible.module_utils._text import to_native
+from ansible.module_utils.six.moves.urllib.error import HTTPError, URLError
 from ansible.module_utils.urls import Request
-from ansible.module_utils.six.moves.urllib.error import URLError, HTTPError
-from ansible.plugins.inventory import BaseInventoryPlugin, Constructable, Cacheable
+from ansible.plugins.inventory import BaseInventoryPlugin, Cacheable, Constructable
 
 from ..module_utils.vultr_v2 import VULTR_USER_AGENT
 
@@ -154,6 +168,17 @@ from ..module_utils.vultr_v2 import VULTR_USER_AGENT
 class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
     NAME = "vultr.cloud.vultr"
+
+    RESOURCES_PER_TYPE = {
+        "cloud": {
+            "resource": "instances",
+            "response": "instances",
+        },
+        "bare_metal": {
+            "resource": "bare-metals",
+            "response": "bare_metals",
+        },
+    }
 
     def _get_instances(self):
         instances = []
@@ -173,8 +198,15 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             validate_certs=self.get_option("validate_certs"),  # type: ignore
         )
 
-        api_endpoint = "{0}/instances?per_page={1}".format(
-            self.get_option("api_endpoint"), self.get_option("api_results_per_page")
+        instance_type_config = self.get_option("instance_type") or "cloud"
+        self.display.vvv("Type is: {0}".format(instance_type_config))
+
+        instance_type = self.RESOURCES_PER_TYPE[instance_type_config]
+
+        api_endpoint = "{0}/{1}?per_page={2}".format(
+            self.get_option("api_endpoint"),
+            instance_type["resource"],  # type: ignore
+            self.get_option("api_results_per_page"),
         )
 
         cursor = ""
@@ -184,7 +216,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                 self.display.vvv("Querying API: {0}".format(req_url))
 
                 page = json.load(self.req.get(req_url))
-                instances.extend(page["instances"])
+                instances.extend(page[instance_type["response"]])  # type: ignore
                 cursor = page["meta"]["links"]["next"]
 
                 if cursor == "":
@@ -216,29 +248,38 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                     host_variables["{0}{1}".format(variable_prefix, k)] = v
 
             if not self._passes_filters(
-                host_filters, host_variables, instance_label, strict  # type: ignore
+                host_filters,
+                host_variables,
+                instance_label,
+                strict,  # type: ignore
             ):
                 self.display.vvv("Host {0} excluded by filters".format(instance_label))
                 continue
 
-            self.inventory.add_host(instance_label)
+            self.inventory.add_host(instance_label)  # type: ignore
 
             for var_name, var_val in host_variables.items():
-                self.inventory.set_variable(instance_label, var_name, var_val)
+                self.inventory.set_variable(instance_label, var_name, var_val)  # type: ignore
 
             self._set_composite_vars(
                 self.get_option("compose"),
-                self.inventory.get_host(instance_label).get_vars(),
+                self.inventory.get_host(instance_label).get_vars(),  # type: ignore
                 instance_label,
                 strict,  # type: ignore
             )
 
             self._add_host_to_composed_groups(
-                self.get_option("groups"), dict(), instance_label, strict  # type: ignore
+                self.get_option("groups"),
+                dict(),
+                instance_label,
+                strict,  # type: ignore
             )
 
             self._add_host_to_keyed_groups(
-                self.get_option("keyed_groups"), dict(), instance_label, strict  # type: ignore
+                self.get_option("keyed_groups"),
+                dict(),
+                instance_label,
+                strict,  # type: ignore
             )
 
     def _passes_filters(self, filters, variables, host, strict=False):
@@ -251,8 +292,10 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
                     if strict:
                         raise AnsibleError(
                             "Could not evaluate host filter {0} for {1}: {2}".format(
-                                template, host, to_native(e)
-                            )
+                                template,
+                                host,
+                                to_native(e),
+                            ),
                         )
                     return False
         return True
