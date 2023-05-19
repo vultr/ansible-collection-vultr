@@ -33,7 +33,7 @@ def vultr_argument_spec():
         api_timeout=dict(
             type="int",
             fallback=(env_fallback, ["VULTR_API_TIMEOUT"]),
-            default=60,
+            default=180,
         ),
         api_retries=dict(
             type="int",
@@ -256,7 +256,7 @@ class AnsibleVultr:
         return resources[result_key] if resources else []
 
     def wait_for_state(self, resource, key, state, cmp="="):
-        for retry in range(0, 30):
+        for retry in range(0, 60):
             resource = self.query_by_id(resource_id=resource[self.resource_key_id], skip_transform=False)
             if cmp == "=":
                 if key not in resource or resource[key] == state or not resource[key]:

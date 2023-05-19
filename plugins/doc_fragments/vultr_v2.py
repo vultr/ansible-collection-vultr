@@ -22,7 +22,7 @@ options:
       - HTTP timeout to Vultr API.
       - Fallback environment variable C(VULTR_API_TIMEOUT).
     type: int
-    default: 60
+    default: 180
   api_retries:
     description:
       - Amount of retries in case of the Vultr API retuns an HTTP 503 code.
