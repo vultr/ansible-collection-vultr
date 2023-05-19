@@ -575,15 +575,17 @@ class AnsibleVultrInstance(AnsibleVultr):
                 # attach_vpc is a list of ids used while creating
                 self.module.params["attach_vpc"] = self.get_vpc_ids()
 
-    def handle_power_status(self, resource, state, action, power_status, force=False):
+    def handle_power_status(self, resource, state, action, power_status, force=False, wait_for_state=True):
         if state == self.module.params["state"] and (resource["power_status"] != power_status or force):
             self.result["changed"] = True
             if not self.module.check_mode:
+                resource = self.wait_for_state(resource=resource, key="server_status", states=["none", "locked"], cmp="!=")
                 self.api_query(
                     path="%s/%s/%s" % (self.resource_path, resource[self.resource_key_id], action),
                     method="POST",
                 )
-                resource = self.wait_for_state(resource=resource, key="power_status", state=power_status)
+                if wait_for_state:
+                    resource = self.wait_for_state(resource=resource, key="power_status", states=["power_status"])
         return resource
 
     def create(self):
@@ -610,13 +612,21 @@ class AnsibleVultrInstance(AnsibleVultr):
     def create_or_update(self):
         resource = super(AnsibleVultrInstance, self).create_or_update()
         if resource:
-            resource = self.wait_for_state(resource=resource, key="status", state="active")
-            resource = self.wait_for_state(resource=resource, key="server_status", state="locked", cmp="!=")
+            resource = self.wait_for_state(resource=resource, key="status", states=["active"])
+            resource = self.wait_for_state(resource=resource, key="server_status", states=["none", "locked"], cmp="!=")
+
             # Hanlde power status
             resource = self.handle_power_status(resource=resource, state="stopped", action="halt", power_status="stopped")
             resource = self.handle_power_status(resource=resource, state="started", action="start", power_status="running")
             resource = self.handle_power_status(resource=resource, state="restarted", action="reboot", power_status="running", force=True)
-            resource = self.handle_power_status(resource=resource, state="reinstalled", action="reinstall", power_status="running", force=True)
+            resource = self.handle_power_status(
+                resource=resource,
+                state="reinstalled",
+                action="reinstall",
+                power_status="running",
+                force=True,
+                wait_for_state=False,
+            )
 
         return resource
 
@@ -627,8 +637,9 @@ class AnsibleVultrInstance(AnsibleVultr):
 
     def absent(self):
         resource = self.query()
-        if resource:
-            resource = self.wait_for_state(resource=resource, key="server_status", state="locked", cmp="!=")
+        if resource and not self.module.check_mode:
+            resource = self.wait_for_state(resource=resource, key="server_status", states=["none", "locked"], cmp="!=")
+
         return super(AnsibleVultrInstance, self).absent(resource=resource)
 
 

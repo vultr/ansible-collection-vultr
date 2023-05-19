@@ -171,7 +171,7 @@ class AnsibleVultrSnapshot(AnsibleVultr):
         self.resource_path = "/snapshots"
 
         if resource:
-            resource = self.wait_for_state(resource=resource, key="status", state="complete")
+            resource = self.wait_for_state(resource=resource, key="status", states=["complete"])
 
         return resource
 
