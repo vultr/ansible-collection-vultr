@@ -143,7 +143,8 @@ class AnsibleVultr:
                 query += "&%s=%s" % (to_text(k), quote(to_text(v)))
             path += query
 
-        data = self.module.jsonify(data)
+        if data:
+            data = self.module.jsonify(data)
 
         retry_max_delay = self.module.params["api_retry_max_delay"]
 
