@@ -63,7 +63,7 @@ options:
       - Whether to use more than one record with similar I(name) including no name and I(type).
       - Only allowed for a few record types, e.g. C(type=A), C(type=NS) or C(type=MX).
       - I(data) will not be updated, instead it is used as a key to find existing records.
-    default: no
+    default: false
     type: bool
   state:
     description:
@@ -214,7 +214,7 @@ class AnsibleVultrDnsRecord(AnsibleVultr):
                     if result:
                         self.module.fail_json(
                             msg="More than one record with record_type=%s and name=%s params. "
-                            "Use multiple=yes for more than one record." % (record_type, name)
+                            "Use multiple=true for more than one record." % (record_type, name)
                         )
                     else:
                         result = resource
