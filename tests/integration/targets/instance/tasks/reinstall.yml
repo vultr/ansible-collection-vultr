@@ -3,25 +3,6 @@
   ansible.builtin.debug:
     var: instance
 
-- name: setup create instance
-  vultr.cloud.instance:
-    label: "{{ instance.label }}"
-    hostname: "{{ instance.hostname | default(omit) }}"
-    user_data: "{{ instance.user_data | default(omit) }}"
-    firewall_group: "{{ vultr_instance_firewall_group }}"
-    ssh_keys: "{{ instance.ssh_keys | default(omit) }}"
-    plan: "{{ instance.plan }}"
-    ddos_protection: "{{ instance.ddos_protection | default(omit) }}"
-    backups: "{{ instance.backups | default(omit) }}"
-    enable_ipv6: "{{ instance.enable_ipv6 | default(omit) }}"
-    tags: "{{ instance.tags | default(omit) }}"
-    region: "{{ instance.region }}"
-    os: "{{ instance.os | default(omit) }}"
-    app: "{{ instance.app | default(omit) }}"
-    image: "{{ instance.image | default(omit) }}"
-    snapshot: "{{ instance.snapshot | default(omit) }}"
-    vpcs: "{{ instance.vpcs | default(omit) }}"
-
 - name: test reinstall instance in check mode
   vultr.cloud.instance:
     label: "{{ instance.label }}"
