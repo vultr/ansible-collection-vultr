@@ -34,15 +34,15 @@ extends_documentation_fragment:
 
 EXAMPLES = """
 - name: Get Vultr instance infos of region ams
-  vultr.cloud.instances_info:
+  vultr.cloud.instance_info:
     region: ams
 
 - name: Get Vultr instance infos of a single host
-  vultr.cloud.instances_info:
+  vultr.cloud.instance_info:
     label: myhost
 
 - name: Get all Vultr instance infos
-  vultr.cloud.instances_info:
+  vultr.cloud.instance_info:
   register: results
 
 - name: Print the gathered infos

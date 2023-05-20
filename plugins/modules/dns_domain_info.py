@@ -25,7 +25,7 @@ extends_documentation_fragment:
 
 EXAMPLES = """
 - name: Gather Vultr DNS domains information
-  vultr.cloud.dns_domains_info:
+  vultr.cloud.dns_domain_info:
   register: result
 
 - name: Print the gathered information
