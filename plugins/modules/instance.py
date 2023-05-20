@@ -585,7 +585,7 @@ class AnsibleVultrInstance(AnsibleVultr):
                     method="POST",
                 )
                 if wait_for_state:
-                    resource = self.wait_for_state(resource=resource, key="power_status", states=["power_status"])
+                    resource = self.wait_for_state(resource=resource, key="power_status", states=[power_status])
         return resource
 
     def create(self):
