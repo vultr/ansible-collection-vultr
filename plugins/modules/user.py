@@ -31,17 +31,17 @@ options:
   password:
     description:
       - Password of the user.
-      - Only considered while creating a user or when C(force=yes).
+      - Only considered while creating a user or when C(force=true).
     type: str
   force:
     description:
       - Password will only be changed with enforcement.
-    default: no
+    default: false
     type: bool
   api_enabled:
     description:
       - Whether the API is enabled or not.
-    default: yes
+    default: true
     type: bool
   acls:
     description:

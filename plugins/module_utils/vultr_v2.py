@@ -203,7 +203,7 @@ class AnsibleVultr:
         for resource in self.query_list(path=path, result_key=result_key, query_params=query_params):
             if resource.get(key_name) == param_value:
                 if found:
-                    self.module.fail_json(msg="More than one record with name=%s found. " "Use multiple=yes if module supports it." % param_value)
+                    self.module.fail_json(msg="More than one record with name=%s found. " "Use multiple=true if module supports it." % param_value)
                 found = resource
         if found:
             if get_details:
