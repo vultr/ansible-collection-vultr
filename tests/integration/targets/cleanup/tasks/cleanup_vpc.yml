@@ -26,3 +26,8 @@
       with_items: "{{ res.json.vpcs }}"
       loop_control:
         label: "{{ item.description }}"
+        pause: 2
+      retries: 5
+      delay: 3
+      register: result
+      until: result is not failed

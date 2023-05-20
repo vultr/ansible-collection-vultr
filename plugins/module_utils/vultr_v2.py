@@ -33,7 +33,7 @@ def vultr_argument_spec():
         api_timeout=dict(
             type="int",
             fallback=(env_fallback, ["VULTR_API_TIMEOUT"]),
-            default=60,
+            default=180,
         ),
         api_retries=dict(
             type="int",
@@ -143,7 +143,8 @@ class AnsibleVultr:
                 query += "&%s=%s" % (to_text(k), quote(to_text(v)))
             path += query
 
-        data = self.module.jsonify(data)
+        if data:
+            data = self.module.jsonify(data)
 
         retry_max_delay = self.module.params["api_retry_max_delay"]
 
@@ -255,18 +256,21 @@ class AnsibleVultr:
         resources = self.api_query(path=path, query_params=query_params)
         return resources[result_key] if resources else []
 
-    def wait_for_state(self, resource, key, state, cmp="="):
-        for retry in range(0, 30):
+    def wait_for_state(self, resource, key, states, cmp="="):
+        for retry in range(0, 60):
             resource = self.query_by_id(resource_id=resource[self.resource_key_id], skip_transform=False)
             if cmp == "=":
-                if key not in resource or resource[key] == state or not resource[key]:
+                if key not in resource or resource[key] in states or not resource[key]:
                     break
             else:
-                if key not in resource or resource[key] != state or not resource[key]:
+                if key not in resource or resource[key] not in states or not resource[key]:
                     break
             backoff(retry=retry)
         else:
-            self.module.fail_json(msg="Wait for %s to become %s timed out" % (key, state))
+            if cmp == "=":
+                self.module.fail_json(msg="Wait for %s to become %s timed out" % (key, states))
+            else:
+                self.module.fail_json(msg="Wait for %s to not be in %s timed out" % (key, states))
 
         return resource
 

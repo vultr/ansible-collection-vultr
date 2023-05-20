@@ -1,0 +1,28 @@
+---
+- name: instance info
+  ansible.builtin.debug:
+    var: instance
+
+- name: test reinstall instance in check mode
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    region: "{{ instance.region }}"
+    state: reinstalled
+  register: result
+  check_mode: true
+- name: verify test reinstall instance in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_instance.power_status == "running"
+
+- name: test reinstall instance
+  vultr.cloud.instance:
+    label: "{{ instance.label }}"
+    region: "{{ instance.region }}"
+    state: reinstalled
+  register: result
+- name: verify test reinstall instance
+  ansible.builtin.assert:
+    that:
+      - result is changed
