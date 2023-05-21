@@ -5,6 +5,15 @@ Vultr Collection Release Notes
 .. contents:: Topics
 
 
+v1.8.0
+======
+
+Minor Changes
+-------------
+
+- instance - Implemented a new ``state`` equal ``reinstalled`` to reinstall an existing instance (https://github.com/vultr/ansible-collection-vultr/pull/66).
+- inventory - Bare metal support has been implemented (https://github.com/vultr/ansible-collection-vultr/pull/63).
+
 v1.7.1
 ======
 

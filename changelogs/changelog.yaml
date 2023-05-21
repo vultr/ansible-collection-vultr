@@ -186,3 +186,13 @@ releases:
     - 68-instance-locked-absent.yml
     - 70-inventory-fix-tags-not-returned.yml
     release_date: '2023-05-03'
+  1.8.0:
+    changes:
+      minor_changes:
+      - instance - Implemented a new ``state`` equal ``reinstalled`` to reinstall
+        an existing instance (https://github.com/vultr/ansible-collection-vultr/pull/66).
+      - inventory - Bare metal support has been implemented (https://github.com/vultr/ansible-collection-vultr/pull/63).
+    fragments:
+    - 63-inventory-bare-metal.yml
+    - instance-reinstall.yml
+    release_date: '2023-05-21'

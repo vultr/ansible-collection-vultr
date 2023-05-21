@@ -1,2 +1,0 @@
-minor_changes:
-  - inventory - Bare metal support has been implemented (https://github.com/vultr/ansible-collection-vultr/pull/63).

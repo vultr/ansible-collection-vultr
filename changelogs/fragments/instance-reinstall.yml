@@ -1,2 +1,0 @@
-minor_changes:
-  - instance - Implemented a new ``state`` equal ``reinstalled`` to reinstall an existing instance (https://github.com/vultr/ansible-collection-vultr/pull/66).
