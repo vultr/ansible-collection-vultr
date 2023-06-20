@@ -116,7 +116,7 @@ notes:
 
 EXAMPLES = """
 ---
-# File endings vultr{,-{hosts,instances}}.y{,a}ml
+# File endings vultr{,_{hosts,instances}}.y{,a}ml
 # All configuration done via environment variables:
 plugin: vultr.cloud.vultr
 
