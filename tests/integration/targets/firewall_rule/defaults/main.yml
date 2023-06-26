@@ -33,6 +33,9 @@ vultr_firewall_rules:
     protocol: icmp
     subnet: "0.0.0.0"
     subnet_size: 0
+    # Port should be ignored, but should show a warning
+    port: "7"
+    port_assert: ""
 
   - notes: web app
     port: "8000:8080"

@@ -35,7 +35,7 @@
       - result is changed
       - result.vultr_firewall_rule.action == "accept"
       - result.vultr_firewall_rule.protocol == "{{ rule.protocol | default('tcp') }}"
-      - result.vultr_firewall_rule.port == "{{ rule.port | default('') }}"
+      - result.vultr_firewall_rule.port == "{{ rule.port_assert | default(rule.port | default('')) }}"
       - result.vultr_firewall_rule.subnet == "{{ rule.subnet | default('') }}"
       - result.vultr_firewall_rule.subnet_size == {{ rule.subnet_size | default(0) }}
       - result.vultr_firewall_rule.ip_type == "{{ rule.ip_type | default('v4') }}"
@@ -56,7 +56,7 @@
       - result is not changed
       - result.vultr_firewall_rule.action == "accept"
       - result.vultr_firewall_rule.protocol == "{{ rule.protocol | default('tcp') }}"
-      - result.vultr_firewall_rule.port == "{{ rule.port | default('') }}"
+      - result.vultr_firewall_rule.port == "{{ rule.port_assert | default(rule.port | default('')) }}"
       - result.vultr_firewall_rule.subnet == "{{ rule.subnet | default('') }}"
       - result.vultr_firewall_rule.subnet_size == {{ rule.subnet_size | default(0) }}
       - result.vultr_firewall_rule.ip_type == "{{ rule.ip_type | default('v4') }}"

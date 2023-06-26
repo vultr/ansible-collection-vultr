@@ -212,6 +212,21 @@ class AnsibleVultrFirewallRule(AnsibleVultr):
         if source is not None and source != "cloudflare":
             self.module.params["source"] = self.get_load_balancer()["id"]
 
+        # Warn about port only affects TCP and UDP protocol
+        if (
+            self.module.params.get("protocol")
+            not in (
+                "tcp",
+                "udp",
+            )
+            and self.module.params.get("port") is not None
+        ):
+            self.module.warn(
+                "Setting a port (%s) only affects protocols TCP/UDP, but protocol is: %s. Ignoring."
+                % (self.module.params.get("port"), self.module.params.get("protocol"))
+            )
+            self.module.params["port"] = None
+
     def query(self):
         result = dict()
         for resource in self.query_list():
