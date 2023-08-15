@@ -3,6 +3,7 @@ requires_ansible: ">=2.11"
 action_groups:
   vultr:
     - account_info
+    - bare_metal
     - block_storage
     - block_storage_info
     - dns_domain

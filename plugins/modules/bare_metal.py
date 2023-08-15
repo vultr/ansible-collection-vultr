@@ -1,33 +1,32 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2022, René Moser <mail@renemoser.net>
+# Copyright (c) 2023, René Moser <mail@renemoser.net>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-
 DOCUMENTATION = """
 ---
-module: instance
-short_description: Manages server instances on Vultr.
+module: bare_metal
+short_description: Manages bare metal machines on Vultr.
 description:
-  - Manage server instances on Vultr.
-version_added: "1.1.0"
+  - Manage bare metal machines on Vultr.
+version_added: "1.9.0"
 author:
   - "René Moser (@resmo)"
 options:
   label:
     description:
-      - Name of the instance.
+      - Name of the bare metal machine.
     required: true
     aliases: [ name ]
     type: str
   hostname:
     description:
-      - The hostname to assign to this instance.
+      - The hostname to assign to this bare metal machine.
     type: str
   os:
     description:
@@ -46,26 +45,22 @@ options:
     type: str
   firewall_group:
     description:
-      - The firewall group description to assign this instance to.
+      - The firewall group description to assign this bare metal machine to.
     type: str
   plan:
     description:
-      - The plan name to use for the instance.
-      - Required if the instance does not yet exist.
+      - The plan name to use for the bare metal machine.
+      - Required if the bare metal machine does not yet exist.
     type: str
   activation_email:
     description:
-      - Whether to send an activation email when the instance is ready or not.
+      - Whether to send an activation email when the bare metal machine is ready or not.
       - Only considered on creation.
     type: bool
     default: false
-  backups:
+  persistent_pxe:
     description:
-      - Whether to enable automatic backups or not.
-    type: bool
-  ddos_protection:
-    description:
-      - Whether to enable ddos_protection or not.
+      - Whether to enable persistent PXE or not.
     type: bool
   enable_ipv6:
     description:
@@ -73,49 +68,47 @@ options:
     type: bool
   tags:
     description:
-      - Tags for the instance.
+      - Tags for the bare metal machine.
     type: list
     elements: str
   user_data:
     description:
-      - User data to be passed to the instance.
+      - User data to be passed to the bare metal machine.
     type: str
   startup_script:
     description:
       - Name or ID of the startup script to execute on boot.
-      - Only considered while creating the instance.
+      - Only considered while creating the bare metal machine.
     type: str
   ssh_keys:
     description:
-      - List of SSH key names passed to the instance on creation.
+      - List of SSH key names passed to the bare metal machine on creation.
     type: list
     elements: str
   snapshot:
     description:
       - Description or ID of the snapshot.
-      - Only considered while creating the instance.
+      - Only considered while creating the bare metal machine.
     type: str
-    version_added: "1.7.0"
   reserved_ipv4:
     description:
-      - IP address of the floating IP to use as the main IP of this instance.
+      - IP address of the floating IP to use as the main IP of this bare metal machine.
       - Only considered on creation.
     type: str
   region:
     description:
-      - Region the instance is deployed into.
+      - Region the bare metal machine is deployed into.
     type: str
     required: true
-  vpcs:
+  vpcs2:
     description:
-      - A list of VPCs identified by their description to be assigned to the instance.
+      - A list of VPCs (VPC 2.0) identified by their description to be assigned to the bare metal machine.
     type: list
     elements: str
-    version_added: "1.5.0"
+    aliases: [ vpcs ]
   state:
     description:
-      - State of the instance.
-      - The state I(reinstalled) was added in version 1.8.0.
+      - State of the bare metal machine.
     default: present
     choices: [ present, absent, started, stopped, restarted, reinstalled ]
     type: str
@@ -125,8 +118,8 @@ extends_documentation_fragment:
 
 EXAMPLES = """
 ---
-- name: Create an instance using OS
-  vultr.cloud.instance:
+- name: Create an bare metal machine using OS
+  vultr.cloud.bare_metal:
     label: my web server
     hostname: my-hostname
     user_data: |
@@ -134,9 +127,7 @@ EXAMPLES = """
       packages:
         - nginx
     firewall_group: my firewall group
-    plan: vc2-1c-2gb
-    ddos_protection: true
-    backups: true
+    plan: vbm-4c-32gb
     enable_ipv6: true
     ssh_keys:
       - my ssh key
@@ -148,38 +139,36 @@ EXAMPLES = """
     region: ams
     os: Debian 12 x64 (bookworm)
 
-- name: Deploy an instance of a marketplace app
-  vultr.cloud.instance:
+- name: Deploy an bare metal machine of a marketplace app
+  vultr.cloud.bare_metal:
     label: git-server
     hostname: git
     firewall_group: my firewall group
-    plan: vc2-1c-2gb
-    ddos_protection: true
-    backups: true
+    plan: vbm-4c-32gb
     enable_ipv6: true
     region: ams
     image: Gitea on Ubuntu 20.04
 
-- name: Stop an existing instance
-  vultr.cloud.instance:
+- name: Stop an existing bare metal machine
+  vultr.cloud.bare_metal:
     label: my web server
     region: ams
     state: stopped
 
-- name: Start an existing instance
-  vultr.cloud.instance:
+- name: Start an existing bare metal machine
+  vultr.cloud.bare_metal:
     label: my web server
     region: ams
     state: started
 
-- name: Reinstall an instance
-  vultr.cloud.instance:
+- name: Reinstall an bare metal machine
+  vultr.cloud.bare_metal:
     label: my web server
     region: ams
     state: reinstalled
 
-- name: Delete an instance
-  vultr.cloud.instance:
+- name: Delete an bare metal machine
+  vultr.cloud.bare_metal:
     label: my web server
     region: ams
     state: absent
@@ -212,48 +201,48 @@ vultr_api:
       returned: success
       type: str
       sample: "https://api.vultr.com/v2"
-vultr_instance:
+vultr_bare_metal:
   description: Response from Vultr API.
   returned: success
   type: dict
   contains:
     id:
-      description: ID of the instance.
+      description: ID of the bare metal machine.
       returned: success
       type: str
       sample: cb676a46-66fd-4dfb-b839-443f2e6c0b60
     v6_main_ip:
-      description: IPv6 of the instance.
+      description: IPv6 of the bare metal machine.
       returned: success
       type: str
       sample: ""
     v6_network:
-      description: IPv6 network of the instance.
+      description: IPv6 network of the bare metal machine.
       returned: success
       type: str
       sample: ""
     v6_network_size:
-      description: IPv6 network size of the instance.
+      description: IPv6 network size of the bare metal machine.
       returned: success
       type: int
       sample: 0
     main_ip:
-      description: IPv4 of the instance.
+      description: IPv4 of the bare metal machine.
       returned: success
       type: str
       sample: 95.179.189.95
     netmask_v4:
-      description: Netmask IPv4 of the instance.
+      description: Netmask IPv4 of the bare metal machine.
       returned: success
       type: str
       sample: 255.255.254.0
     hostname:
-      description: Hostname of the instance.
+      description: Hostname of the bare metal machine.
       returned: success
       type: str
       sample: vultr.guest
     internal_ip:
-      description: Internal IP of the instance.
+      description: Internal IP of the bare metal machine.
       returned: success
       type: str
       sample: ""
@@ -263,128 +252,114 @@ vultr_instance:
       type: str
       sample: 95.179.188.1
     kvm:
-      description: KVM of the instance.
+      description: KVM of the bare metal machine.
       returned: success
       type: str
       sample: "https://my.vultr.com/subs/vps/novnc/api.php?data=..."
     disk:
-      description: Disk size of the instance.
+      description: Disk size of the bare metal machine.
       returned: success
       type: int
       sample: 25
     allowed_bandwidth:
-      description: Allowed bandwidth of the instance.
+      description: Allowed bandwidth of the bare metal machine.
       returned: success
       type: int
       sample: 1000
     vcpu_count:
-      description: vCPUs of the instance.
+      description: vCPUs of the bare metal machine.
       returned: success
       type: int
       sample: 1
     firewall_group_id:
-      description: Firewall group ID of the instance.
+      description: Firewall group ID of the bare metal machine.
       returned: success
       type: str
       sample: ""
     plan:
-      description: Plan of the instance.
+      description: Plan of the bare metal machine.
       returned: success
       type: str
       sample: vc2-1c-1gb
     image_id:
-      description: Image ID of the instance.
+      description: Image ID of the bare metal machine.
       returned: success
       type: str
       sample: ""
     os_id:
-      description: OS ID of the instance.
+      description: OS ID of the bare metal machine.
       returned: success
       type: int
       sample: 186
     app_id:
-      description: App ID of the instance.
+      description: App ID of the bare metal machine.
       returned: success
       type: int
       sample: 37
     date_created:
-      description: Date when the instance was created.
+      description: Date when the bare metal machine was created.
       returned: success
       type: str
       sample: "2020-10-10T01:56:20+00:00"
     label:
-      description: Label of the instance.
+      description: Label of the bare metal machine.
       returned: success
       type: str
-      sample: my instance
+      sample: my bare metal machine
     region:
-      description: Region the instance was deployed into.
+      description: Region the bare metal machine was deployed into.
       returned: success
       type: str
       sample: ews
     status:
-      description: Status about the deployment of the instance.
+      description: Status about the deployment of the bare metal machine.
       returned: success
       type: str
       sample: active
     server_status:
-      description: Server status of the instance.
+      description: Server status of the bare metal machine.
       returned: success
       type: str
       sample: installingbooting
     power_status:
-      description: Power status of the instance.
+      description: Power status of the bare metal machine.
       returned: success
       type: str
       sample: running
     ram:
-      description: RAM in MB of the instance.
+      description: RAM in MB of the bare metal machine.
       returned: success
       type: int
       sample: 1024
     os:
-      description: OS of the instance.
+      description: OS of the bare metal machine.
       returned: success
       type: str
       sample: Application
     tags:
-      description: Tags of the instance.
+      description: Tags of the bare metal machine.
       returned: success
       type: list
       sample: [ my-tag ]
     features:
-      description: Features of the instance.
+      description: Features of the bare metal machine.
       returned: success
       type: list
       sample: [ ddos_protection, ipv6, auto_backups ]
     user_data:
-      description: Base64 encoded user data (cloud init) of the instance.
+      description: Base64 encoded user data (cloud init) of the bare metal machine.
       returned: success
       type: str
       sample: I2Nsb3VkLWNvbmZpZwpwYWNrYWdlczoKICAtIGh0b3AK
-    backups:
-      description: Whether backups are enabled or disabled.
-      returned: success
-      type: str
-      sample: enabled
-      version_added: "1.3.0"
-    ddos_protection:
-      description: Whether DDOS protections is enabled or not.
-      returned: success
-      type: bool
-      sample: true
-      version_added: "1.3.0"
     enable_ipv6:
       description: Whether IPv6 is enabled or not.
       returned: success
       type: bool
       sample: true
-      version_added: "1.3.0"
-    vpcs:
-      description: List of VPCs attached.
+    vpcs2:
+      description: List of VPCs (VPC 2.0) attached.
       returned: success
       type: list
-      version_added: "1.5.0"
       contains:
         id:
           description: ID of the VPC.
@@ -396,16 +371,26 @@ vultr_instance:
           returned: success
           type: str
           sample: my vpc
-        ip_address:
-          description: IP assigned from the VPC.
+        region:
+          description: Region the VPC is assigned to.
           returned: success
           type: str
-          sample: "192.168.23.3"
-        mac_address:
-          description: MAC address of the network interface.
+          sample: ews
+        date_created:
+          description: Date when the VPC was created.
           returned: success
           type: str
-          sample: "5a:01:04:3d:5e:72"
+          sample: "2020-10-10T01:56:20+00:00"
+        ip_block:
+          description: IP block assigned to the VPC.
+          returned: success
+          type: str
+          sample: "10.99.0.0"
+        prefix_length:
+          description: The number of bits for the netmask in CIDR notation.
+          returned: success
+          type: int
+          sample: 24
 """
 
 
@@ -427,11 +412,10 @@ def main():
             os=dict(type="str"),
             plan=dict(type="str"),
             activation_email=dict(type="bool", default=False),
-            ddos_protection=dict(type="bool"),
-            backups=dict(type="bool"),
             enable_ipv6=dict(type="bool"),
+            persistent_pxe=dict(type="bool"),
             tags=dict(type="list", elements="str"),
-            vpcs=dict(type="list", elements="str"),
+            vpcs2=dict(type="list", elements="str", aliases=["vpcs"]),
             reserved_ipv4=dict(type="str"),
             firewall_group=dict(type="str"),
             startup_script=dict(type="str"),
@@ -461,9 +445,9 @@ def main():
 
     vultr = AnsibleVultrCommonInstance(
         module=module,
-        namespace="vultr_instance",
-        resource_path="/instances",
-        ressource_result_key_singular="instance",
+        namespace="vultr_bare_metal",
+        resource_path="/bare-metals",
+        ressource_result_key_singular="bare_metal",
         resource_create_param_keys=[
             "label",
             "hostname",
@@ -481,21 +465,18 @@ def main():
             "user_data",
             "tags",
             "activation_email",
-            "ddos_protection",
             "sshkey_id",
-            "backups",
-            "attach_vpc",
+            "persistent_pxe",
+            "attach_vpc2",
         ],
         resource_update_param_keys=[
             "plan",
             "tags",
             "firewall_group_id",
             "enable_ipv6",
-            "ddos_protection",
-            "backups",
             "user_data",
-            "attach_vpc",
-            "detach_vpc",
+            "attach_vpc2",
+            "detach_vpc2",
         ],
         resource_key_name="label",
     )
