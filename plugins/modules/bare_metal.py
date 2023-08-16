@@ -43,10 +43,6 @@ options:
       - The image deploy name of Vultr Marketplace apps.
       - Mutually exclusive with I(os) and I(app).
     type: str
-  firewall_group:
-    description:
-      - The firewall group description to assign this bare metal machine to.
-    type: str
   plan:
     description:
       - The plan name to use for the bare metal machine.
