@@ -206,19 +206,6 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
                 # attach_vpc2 is a list of ids used while creating
                 self.module.params["attach_vpc2"] = self.get_vpc_ids(api_version="v2")
 
-    def handle_power_status(self, resource, state, action, power_status, force=False, wait_for_state=True):
-        if state == self.module.params["state"] and (resource["power_status"] != power_status or force):
-            self.result["changed"] = True
-            if not self.module.check_mode:
-                resource = self.wait_for_state(resource=resource, key="server_status", states=["none", "locked"], cmp="!=")
-                self.api_query(
-                    path="%s/%s/%s" % (self.resource_path, resource[self.resource_key_id], action),
-                    method="POST",
-                )
-                if wait_for_state:
-                    resource = self.wait_for_state(resource=resource, key="power_status", states=[power_status])
-        return resource
-
     def create(self):
         param_keys = ("os", "image", "app", "snapshot")
         if not any(self.module.params.get(x) is not None for x in param_keys):
@@ -255,21 +242,6 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
         resource = super(AnsibleVultrCommonInstance, self).create_or_update()
         if resource:
             resource = self.wait_for_state(resource=resource, key="status", states=["active"])
-            resource = self.wait_for_state(resource=resource, key="server_status", states=["none", "locked"], cmp="!=")
-
-            # Hanlde power status
-            resource = self.handle_power_status(resource=resource, state="stopped", action="halt", power_status="stopped")
-            resource = self.handle_power_status(resource=resource, state="started", action="start", power_status="running")
-            resource = self.handle_power_status(resource=resource, state="restarted", action="reboot", power_status="running", force=True)
-            resource = self.handle_power_status(
-                resource=resource,
-                state="reinstalled",
-                action="reinstall",
-                power_status="running",
-                force=True,
-                wait_for_state=False,
-            )
-
         return resource
 
     def transform_result(self, resource):
