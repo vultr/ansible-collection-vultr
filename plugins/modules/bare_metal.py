@@ -226,6 +226,11 @@ vultr_bare_metal:
       returned: success
       type: int
       sample: 0
+    mac_address:
+      description: MAC address of the bare metal machine.
+      returned: success
+      type: int
+      sample: 2199756823533
     main_ip:
       description: IPv4 of the bare metal machine.
       returned: success
@@ -236,51 +241,26 @@ vultr_bare_metal:
       returned: success
       type: str
       sample: 255.255.254.0
-    hostname:
-      description: Hostname of the bare metal machine.
-      returned: success
-      type: str
-      sample: vultr.guest
-    internal_ip:
-      description: Internal IP of the bare metal machine.
-      returned: success
-      type: str
-      sample: ""
     gateway_v4:
       description: Gateway IPv4.
       returned: success
       type: str
       sample: 95.179.188.1
-    kvm:
-      description: KVM of the bare metal machine.
+    disk:
+      description: Disk info of the bare metal machine.
       returned: success
       type: str
-      sample: "https://my.vultr.com/subs/vps/novnc/api.php?data=..."
-    disk:
-      description: Disk size of the bare metal machine.
-      returned: success
-      type: int
-      sample: 25
-    allowed_bandwidth:
-      description: Allowed bandwidth of the bare metal machine.
-      returned: success
-      type: int
-      sample: 1000
-    vcpu_count:
-      description: vCPUs of the bare metal machine.
+      sample: "2x 240GB SSD"
+    cpu_count:
+      description: CPU count of the bare metal machine.
       returned: success
       type: int
       sample: 1
-    firewall_group_id:
-      description: Firewall group ID of the bare metal machine.
-      returned: success
-      type: str
-      sample: ""
     plan:
       description: Plan of the bare metal machine.
       returned: success
       type: str
-      sample: vc2-1c-1gb
+      sample: vbm-4c-32gb
     image_id:
       description: Image ID of the bare metal machine.
       returned: success
@@ -316,21 +296,21 @@ vultr_bare_metal:
       returned: success
       type: str
       sample: active
-    server_status:
-      description: Server status of the bare metal machine.
+    default_password:
+      description: The default password assigned at deployment. Only available for ten minutes after deployment.
       returned: success
       type: str
-      sample: installingbooting
+      sample: "examplePassword"
     power_status:
       description: Power status of the bare metal machine.
       returned: success
       type: str
       sample: running
     ram:
-      description: RAM in MB of the bare metal machine.
+      description: RAM info of the bare metal machine.
       returned: success
-      type: int
-      sample: 1024
+      type: str
+      sample: "32768 MB"
     os:
       description: OS of the bare metal machine.
       returned: success
@@ -417,7 +397,6 @@ def main():
             tags=dict(type="list", elements="str"),
             vpcs2=dict(type="list", elements="str", aliases=["vpcs"]),
             reserved_ipv4=dict(type="str"),
-            firewall_group=dict(type="str"),
             startup_script=dict(type="str"),
             user_data=dict(type="str"),
             ssh_keys=dict(type="list", elements="str", no_log=False),
@@ -461,7 +440,6 @@ def main():
             "region",
             "enable_ipv6",
             "reserved_ipv4",
-            "firewall_group_id",
             "user_data",
             "tags",
             "activation_email",
@@ -472,7 +450,6 @@ def main():
         resource_update_param_keys=[
             "plan",
             "tags",
-            "firewall_group_id",
             "enable_ipv6",
             "user_data",
             "attach_vpc2",
