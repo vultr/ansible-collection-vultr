@@ -1,0 +1,29 @@
+---
+- name: cleanup
+  when: vultr_api_key
+  block:
+    - name: List bare metals
+      ansible.builtin.uri:
+        url: "{{ vultr_api_url }}/bare-metals"
+        headers:
+          Authorization: Bearer {{ vultr_api_key }}
+        status_code: 200
+      register: res
+      no_log: true
+
+    - name: Found resources
+      ansible.builtin.debug:
+        var: res.json
+
+    - name: Remove all bare metals created by this test run
+      ansible.builtin.uri:
+        url: "{{ vultr_api_url }}/bare-metals/{{ item.id }}"
+        method: "DELETE"
+        headers:
+          Authorization: Bearer {{ vultr_api_key }}
+        status_code: 204
+      when: vultr_resource_prefix in item.label
+      with_items: "{{ res.json.bare_metals }}"
+      loop_control:
+        label: "{{ item.label }}"
+      no_log: true
