@@ -418,17 +418,17 @@ from ..module_utils.vultr_v2 import vultr_argument_spec
 class AnsibleVultrInstance(AnsibleVultrCommonInstance):
 
     def handle_power_status(self, resource, state, action, power_status, force=False, wait_for_state=True):
-      if state == self.module.params["state"] and (resource["power_status"] != power_status or force):
-          self.result["changed"] = True
-          if not self.module.check_mode:
-              resource = self.wait_for_state(resource=resource, key="server_status", states=["none", "locked"], cmp="!=")
-              self.api_query(
-                  path="%s/%s/%s" % (self.resource_path, resource[self.resource_key_id], action),
-                  method="POST",
-              )
-              if wait_for_state:
-                  resource = self.wait_for_state(resource=resource, key="power_status", states=[power_status])
-      return resource
+        if state == self.module.params["state"] and (resource["power_status"] != power_status or force):
+            self.result["changed"] = True
+            if not self.module.check_mode:
+                resource = self.wait_for_state(resource=resource, key="server_status", states=["none", "locked"], cmp="!=")
+                self.api_query(
+                    path="%s/%s/%s" % (self.resource_path, resource[self.resource_key_id], action),
+                    method="POST",
+                )
+                if wait_for_state:
+                    resource = self.wait_for_state(resource=resource, key="power_status", states=[power_status])
+        return resource
 
     def create_or_update(self):
         resource = super(AnsibleVultrInstance, self).create_or_update()
