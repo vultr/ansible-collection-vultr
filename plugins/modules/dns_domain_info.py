@@ -1,4 +1,3 @@
-#!/usr/bin/python
 #
 # Copyright (c) 2018, Yanis Guenane <yanis+ansible@guenane.org>
 # Copyright (c) 2021, René Moser <mail@renemoser.net>
