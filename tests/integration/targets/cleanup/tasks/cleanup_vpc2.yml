@@ -1,0 +1,33 @@
+---
+- name: cleanup
+  when: vultr_api_key
+  block:
+    - name: List vpc2s
+      ansible.builtin.uri:
+        url: "{{ vultr_api_url }}/vpc2"
+        headers:
+          Authorization: Bearer {{ vultr_api_key }}
+        status_code: 200
+      register: res
+      no_log: true
+
+    - name: Found resources
+      ansible.builtin.debug:
+        var: res.json
+
+    - name: Remove all vpc2s created by this test run
+      ansible.builtin.uri:
+        url: "{{ vultr_api_url }}/vpc2/{{ item.id }}"
+        method: "DELETE"
+        headers:
+          Authorization: Bearer {{ vultr_api_key }}
+        status_code: 204
+      when: vultr_resource_prefix in item.description
+      with_items: "{{ res.json.vpcs }}"
+      loop_control:
+        label: "{{ item.description }}"
+        pause: 3
+      retries: 10
+      delay: 3
+      register: result
+      until: result is not failed

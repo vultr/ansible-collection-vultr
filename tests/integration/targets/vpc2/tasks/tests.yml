@@ -1,0 +1,112 @@
+# Copyright (c) 2023, René Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: setup
+  vultr.cloud.vpc2:
+    description: "{{ vultr_vpc2_description }}"
+    state: absent
+
+- name: test fail if missing description
+  vultr.cloud.vpc2:
+  register: result
+  ignore_errors: true
+- name: verify test fail if missing description
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - 'result.msg == "missing required arguments: description"'
+
+- name: test fail if missing params for state=present
+  vultr.cloud.vpc2:
+    description: "{{ vultr_vpc2_description }}"
+  register: result
+  ignore_errors: true
+- name: verify fail if missing params for state=present
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - '"state is present but all of the following are missing:" in result.msg'
+
+- name: test create vpc2 in check mode
+  vultr.cloud.vpc2:
+    description: "{{ vultr_vpc2_description }}"
+    ip_block: "{{ vultr_vpc2_subnet }}"
+    prefix_length: "{{ vultr_vpc2_cidr }}"
+    region: "{{ vultr_vpc2_region }}"
+  register: result
+  check_mode: true
+- name: verify test create server in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test create vpc
+  vultr.cloud.vpc2:
+    description: "{{ vultr_vpc2_description }}"
+    ip_block: "{{ vultr_vpc2_subnet }}"
+    prefix_length: "{{ vultr_vpc2_cidr }}"
+    region: "{{ vultr_vpc2_region }}"
+  register: result
+- name: verify test create vpc
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_vpc2.description == vultr_vpc2_description
+      - result.vultr_vpc2.region == vultr_vpc2_region
+      - result.vultr_vpc2.ip_block == vultr_vpc2_subnet
+      - result.vultr_vpc2.prefix_length == vultr_vpc2_cidr
+
+- name: test create vpc2 idempotence
+  vultr.cloud.vpc2:
+    description: "{{ vultr_vpc2_description }}"
+    ip_block: "{{ vultr_vpc2_subnet }}"
+    prefix_length: "{{ vultr_vpc2_cidr }}"
+    region: "{{ vultr_vpc2_region }}"
+  register: result
+- name: verify test vpc2 idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+      - result.vultr_vpc2.description == vultr_vpc2_description
+      - result.vultr_vpc2.region == vultr_vpc2_region
+      - result.vultr_vpc2.ip_block == vultr_vpc2_subnet
+      - result.vultr_vpc2.prefix_length == vultr_vpc2_cidr
+
+- name: test destroy vpc2 in check mode
+  vultr.cloud.vpc2:
+    description: "{{ vultr_vpc2_description }}"
+    state: absent
+  register: result
+  check_mode: true
+- name: verify test destroy vpc2 in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_vpc2.description == vultr_vpc2_description
+      - result.vultr_vpc2.region == vultr_vpc2_region
+      - result.vultr_vpc2.ip_block == vultr_vpc2_subnet
+      - result.vultr_vpc2.prefix_length == vultr_vpc2_cidr
+
+- name: test destroy vpc
+  vultr.cloud.vpc2:
+    description: "{{ vultr_vpc2_description }}"
+    state: absent
+  register: result
+- name: verify test destroy vpc
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_vpc2.description == vultr_vpc2_description
+      - result.vultr_vpc2.region == vultr_vpc2_region
+      - result.vultr_vpc2.ip_block == vultr_vpc2_subnet
+      - result.vultr_vpc2.prefix_length == vultr_vpc2_cidr
+
+- name: test destroy an existing vpc2 idempotence
+  vultr.cloud.vpc2:
+    description: "{{ vultr_vpc2_description }}"
+    state: absent
+  register: result
+- name: verify test destroy an existing vpc2 idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed

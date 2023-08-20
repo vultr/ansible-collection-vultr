@@ -1,0 +1,36 @@
+# Copyright (c) 2023, René Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: test gather vpc2 info - empty resources
+  vultr.cloud.vpc2_info:
+
+- name: Create the vpc2
+  vultr.cloud.vpc2:
+    description: "{{ vultr_vpc2_description }}"
+    ip_block: "{{ vultr_vpc2_subnet }}"
+    prefix_length: "{{ vultr_vpc2_cidr }}"
+    region: "{{ vultr_vpc2_region }}"
+
+- name: test gather vpc2 info in check mode
+  vultr.cloud.vpc2_info:
+  check_mode: true
+  register: result
+
+- name: verify test gather vultr vpc2 info in check mode
+  ansible.builtin.assert:
+    that:
+      - result.vultr_vpc2_info|selectattr('description','equalto','{{ vultr_vpc2_description }}') | list | count == 1
+
+- name: test gather vpc2 info
+  vultr.cloud.vpc2_info:
+  register: result
+
+- name: verify test gather vultr vpc2 info
+  ansible.builtin.assert:
+    that:
+      - result.vultr_vpc2_info|selectattr('description','equalto','{{ vultr_vpc2_description }}') | list | count == 1
+
+- name: delete the vpc2
+  vultr.cloud.vpc2:
+    name: "{{ vultr_vpc2_description }}"
+    state: absent
