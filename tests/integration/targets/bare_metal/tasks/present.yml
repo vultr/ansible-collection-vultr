@@ -74,8 +74,6 @@
       - result is not changed
       - result.vultr_bare_metal.plan == bare_metal.plan
       - result.vultr_bare_metal.region == bare_metal.region
-      - "result.vultr_bare_metal.backups == '{{ 'enabled' if bare_metal.backups else 'disabled' }}'"
-      - result.vultr_bare_metal.ddos_protection == bare_metal.ddos_protection
       - result.vultr_bare_metal.enable_ipv6 == bare_metal.enable_ipv6
       # - result.vultr_bare_metal.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc_1') | list | count == 1
       # - result.vultr_bare_metal.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc_2') | list | count == 1

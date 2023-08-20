@@ -122,7 +122,6 @@ EXAMPLES = """
       #cloud-config
       packages:
         - nginx
-    firewall_group: my firewall group
     plan: vbm-4c-32gb
     enable_ipv6: true
     ssh_keys:
@@ -139,7 +138,6 @@ EXAMPLES = """
   vultr.cloud.bare_metal:
     label: git-server
     hostname: git
-    firewall_group: my firewall group
     plan: vbm-4c-32gb
     enable_ipv6: true
     region: ams

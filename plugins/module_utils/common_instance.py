@@ -170,32 +170,35 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
 
     def configure(self):
         if self.module.params["state"] != "absent":
-            if self.module.params["startup_script"] is not None:
+            if self.module.params.get("startup_script") is not None:
                 self.module.params["script_id"] = self.get_startup_script()["id"]
 
-            if self.module.params["snapshot"] is not None:
+            # TODO: move to instance
+            if self.module.params.get("snapshot") is not None:
                 self.module.params["snapshot_id"] = self.get_snapshot()["id"]
 
-            if self.module.params["firewall_group"] is not None:
+            # TODO: move to instance
+            if self.module.params.get("firewall_group") is not None:
                 self.module.params["firewall_group_id"] = self.get_firewall_group()["id"]
 
-            if self.module.params["os"] is not None:
+            if self.module.params.get("os") is not None:
                 self.module.params["os_id"] = self.get_os()["id"]
 
-            if self.module.params["app"] is not None:
+            if self.module.params.get("app") is not None:
                 self.module.params["app_id"] = self.get_app()["id"]
 
-            if self.module.params["image"] is not None:
+            if self.module.params.get("image") is not None:
                 self.module.params["image_id"] = self.get_image()["image_id"]
 
-            if self.module.params["user_data"] is not None:
+            if self.module.params.get("user_data") is not None:
                 self.module.params["user_data"] = base64.b64encode(self.module.params["user_data"].encode())
 
-            if self.module.params["ssh_keys"] is not None:
+            if self.module.params.get("ssh_keys") is not None:
                 # sshkey_id ist a list of ids
                 self.module.params["sshkey_id"] = self.get_ssh_key_ids()
 
-            if self.module.params["backups"] is not None:
+            # TODO: move to instance
+            if self.module.params.get("backups") is not None:
                 self.module.params["backups"] = "enabled" if self.module.params["backups"] else "disabled"
 
             if self.module.params.get("vpcs") is not None:
