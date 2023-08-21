@@ -242,10 +242,3 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
         if resource:
             resource["user_data"] = self.get_user_data(resource=resource)
         return resource
-
-    def absent(self):
-        resource = self.query()
-        if resource and not self.module.check_mode:
-            resource = self.wait_for_state(resource=resource, key="server_status", states=["none", "locked"], cmp="!=")
-
-        return super(AnsibleVultrCommonInstance, self).absent(resource=resource)
