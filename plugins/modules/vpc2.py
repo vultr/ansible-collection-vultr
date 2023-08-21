@@ -65,7 +65,7 @@ EXAMPLES = """
     region: ewr
 
 - name: Ensure a VPC is absent
-  vultr.cloud.vpc:
+  vultr.cloud.vpc2:
     description: my VPC.
     state: absent
 """
