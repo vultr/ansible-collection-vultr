@@ -465,7 +465,7 @@ class AnsibleVultrInstance(AnsibleVultrCommonInstance):
         if resource and not self.module.check_mode:
             resource = self.wait_for_state(resource=resource, key="server_status", states=["none", "locked"], cmp="!=")
 
-        return super(AnsibleVultrCommonInstance, self).absent(resource=resource)
+        return super(AnsibleVultrInstance, self).absent(resource=resource)
 
 
 def main():
