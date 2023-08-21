@@ -8,6 +8,6 @@
     - ansible.builtin.import_role:
         name: cleanup
         tasks_from: cleanup_ssh_key
-    # - ansible.builtin.import_role:
-    #     name: cleanup
-    #     tasks_from: cleanup_vpc
+    - ansible.builtin.import_role:
+        name: cleanup
+        tasks_from: cleanup_vpc2

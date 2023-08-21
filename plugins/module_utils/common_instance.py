@@ -19,7 +19,7 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
             "suffix": "",
         },
         "v2": {
-            "param": "vpcs2",
+            "param": "vpc2s",
             "path": "/vpc2",
             "suffix": "2",
         }
@@ -50,7 +50,7 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
             if "description" in vpc:
                 return vpcs
 
-            vpc_detail = self.query_by_id(resource_id=vpc["id"], path="/vpcs", result_key="vpc")
+            vpc_detail = self.query_by_id(resource_id=vpc["id"], path=self.VPC_CONFIGS[api_version]["path"], result_key="vpc")
             vpc["description"] = vpc_detail["description"]
             result.append(vpc)
         return result
@@ -66,7 +66,7 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
                 vpc_names.remove(vpc["description"])
 
         if vpc_names:
-            self.module.fail_json(msg="VPCs not found: %s" % ", ".join(vpc_names))
+            self.module.fail_json(msg="VPCs (%s) not found: %s" % (api_version, ", ".join(vpc_names)))
 
         return vpc_ids
 
@@ -155,8 +155,8 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
         # VPCs
         if "vpcs" in self.module.params:
             resource["vpcs"] = self.get_resource_vpcs(resource=resource)
-        if "vpcs2" in self.module.params:
-            resource["vpcs2"] = self.get_resource_vpcs(resource=resource, api_version="v2")
+        if "vpc2s" in self.module.params:
+            resource["vpc2s"] = self.get_resource_vpcs(resource=resource, api_version="v2")
 
         return resource
 
@@ -173,7 +173,6 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
             if self.module.params.get("startup_script") is not None:
                 self.module.params["script_id"] = self.get_startup_script()["id"]
 
-            # TODO: move to instance
             if self.module.params.get("snapshot") is not None:
                 self.module.params["snapshot_id"] = self.get_snapshot()["id"]
 
@@ -205,7 +204,7 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
                 # attach_vpc is a list of ids used while creating
                 self.module.params["attach_vpc"] = self.get_vpc_ids()
 
-            if self.module.params.get("vpcs2") is not None:
+            if self.module.params.get("vpc2s") is not None:
                 # attach_vpc2 is a list of ids used while creating
                 self.module.params["attach_vpc2"] = self.get_vpc_ids(api_version="v2")
 
@@ -230,9 +229,9 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
             self.module.params["detach_vpc"] = self.get_detach_vpcs_ids(resource=resource)
 
         # VPC2
-        if self.module.params.get("vpcs2") is not None:
+        if self.module.params.get("vpc2s") is not None:
             resource["attach_vpc2"] = list()
-            for vpc in list(resource["vpcs2"]):
+            for vpc in list(resource["vpc2s"]):
                 resource["attach_vpc2"].append(vpc["id"])
 
             # detach_vpc2 is a list of ids to be detached
@@ -244,7 +243,7 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
     def create_or_update(self):
         resource = super(AnsibleVultrCommonInstance, self).create_or_update()
         if resource:
-            resource = self.wait_for_state(resource=resource, key="status", states=["active"])
+            resource = self.wait_for_state(resource=resource, key="status", states=["active"], retries=300)
         return resource
 
     def transform_result(self, resource):

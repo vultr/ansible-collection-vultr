@@ -30,3 +30,17 @@ vultr_bare_metals:
     os: Debian 12 x64 (bookworm)
     enable_ipv6: false
     enable_ipv6_update: true
+    # vpc2s:
+    #   - "{{ vultr_resource_prefix }}_instance_vpc2_1"
+    # vpc2s_update:
+    #   - "{{ vultr_resource_prefix }}_instance_vpc2_2"
+
+vutr_bare_metal_vpc2s: []
+  # - description: "{{ vultr_resource_prefix }}_instance_vpc2_1"
+  #   subnet: 192.168.42.0
+  #   cidr: 24
+  #   region: ams
+  # - description: "{{ vultr_resource_prefix }}_instance_vpc2_2"
+  #   subnet: 192.168.23.0
+  #   cidr: 24
+  #   region: ams

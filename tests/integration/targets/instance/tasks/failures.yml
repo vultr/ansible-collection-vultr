@@ -52,4 +52,4 @@
   ansible.builtin.assert:
     that:
       - result is failed
-      - '"VPCs not found: does-not-exist" in result.msg'
+      - '"VPCs (v1) not found: does-not-exist" in result.msg'

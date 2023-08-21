@@ -17,7 +17,7 @@
     app: "{{ bare_metal.app | default(omit) }}"
     image: "{{ bare_metal.image | default(omit) }}"
     snapshot: "{{ bare_metal.snapshot | default(omit) }}"
-    vpcs: "{{ bare_metal.vpcs | default(omit) }}"
+    vpc2s: "{{ bare_metal.vpc2s | default(omit) }}"
   register: result
   check_mode: true
 - name: verify test create bare_metal in check mode
@@ -39,7 +39,7 @@
     app: "{{ bare_metal.app | default(omit) }}"
     image: "{{ bare_metal.image | default(omit) }}"
     snapshot: "{{ bare_metal.snapshot | default(omit) }}"
-    vpcs: "{{ bare_metal.vpcs | default(omit) }}"
+    vpc2s: "{{ bare_metal.vpc2s | default(omit) }}"
   register: result
 - name: verify test create bare_metal
   ansible.builtin.assert:
@@ -48,9 +48,7 @@
       - result.vultr_bare_metal.plan == bare_metal.plan
       - result.vultr_bare_metal.region == bare_metal.region
       - result.vultr_bare_metal.enable_ipv6 == bare_metal.enable_ipv6
-      # - result.vultr_bare_metal.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc_1') | list | count == 1
-      # - result.vultr_bare_metal.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc_2') | list | count == 1
-      # - result.vultr_bare_metal.vpcs | list | count == 2
+      # - result.vultr_bare_metal.vpc2s | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc2_1') | list | count == 1
 
 - name: test create bare_metal idempotence
   vultr.cloud.bare_metal:
@@ -66,7 +64,7 @@
     app: "{{ bare_metal.app | default(omit) }}"
     image: "{{ bare_metal.image | default(omit) }}"
     snapshot: "{{ bare_metal.snapshot | default(omit) }}"
-    vpcs: "{{ bare_metal.vpcs | default(omit) }}"
+    vpc2s: "{{ bare_metal.vpc2s | default(omit) }}"
   register: result
 - name: verify test create bare_metal idempotence
   ansible.builtin.assert:
@@ -75,9 +73,7 @@
       - result.vultr_bare_metal.plan == bare_metal.plan
       - result.vultr_bare_metal.region == bare_metal.region
       - result.vultr_bare_metal.enable_ipv6 == bare_metal.enable_ipv6
-      # - result.vultr_bare_metal.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc_1') | list | count == 1
-      # - result.vultr_bare_metal.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc_2') | list | count == 1
-      # - result.vultr_bare_metal.vpcs | list | count == 2
+      # - result.vultr_bare_metal.vpc2s | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc2_1') | list | count == 1
 
 - name: test update bare_metal in check mode
   vultr.cloud.bare_metal:
@@ -93,7 +89,7 @@
     app: "{{ bare_metal.app | default(omit) }}"
     image: "{{ bare_metal.image | default(omit) }}"
     snapshot: "{{ bare_metal.snapshot | default(omit) }}"
-    vpcs: "{{ bare_metal.vpcs_update | default(omit) }}"
+    vpc2s: "{{ bare_metal.vpc2s_update | default(omit) }}"
   register: result
   check_mode: true
 - name: verify test update bare_metal in check mode
@@ -103,9 +99,7 @@
       - result.vultr_bare_metal.plan == bare_metal.plan
       - result.vultr_bare_metal.region == bare_metal.region
       - result.vultr_bare_metal.enable_ipv6 == bare_metal.enable_ipv6
-      # - result.vultr_bare_metal.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc_1') | list | count == 1
-      # - result.vultr_bare_metal.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc_2') | list | count == 1
-      # - result.vultr_bare_metal.vpcs | list | count == 2
+      # - result.vultr_bare_metal.vpc2s | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc2_2') | list | count == 1
 
 - name: test update bare_metal
   vultr.cloud.bare_metal:
@@ -121,7 +115,7 @@
     app: "{{ bare_metal.app | default(omit) }}"
     image: "{{ bare_metal.image | default(omit) }}"
     snapshot: "{{ bare_metal.snapshot | default(omit) }}"
-    vpcs: "{{ bare_metal.vpcs_update | default(omit) }}"
+    vpc2s: "{{ bare_metal.vpc2s_update | default(omit) }}"
   register: result
 - name: verify test update bare_metal
   ansible.builtin.assert:
@@ -130,9 +124,7 @@
       - result.vultr_bare_metal.plan == bare_metal.plan_update
       - result.vultr_bare_metal.region == bare_metal.region
       - result.vultr_bare_metal.enable_ipv6 == bare_metal.enable_ipv6_update
-      # - result.vultr_bare_metal.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc_1') | list | count == 1
-      # - result.vultr_bare_metal.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc_3') | list | count == 1
-      # - result.vultr_bare_metal.vpcs | list | count == 2
+      # - result.vultr_bare_metal.vpc2s | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc2_2') | list | count == 1
 
 - name: test update bare_metal idempotence
   vultr.cloud.bare_metal:
@@ -148,7 +140,7 @@
     app: "{{ bare_metal.app | default(omit) }}"
     image: "{{ bare_metal.image | default(omit) }}"
     snapshot: "{{ bare_metal.snapshot | default(omit) }}"
-    vpcs: "{{ bare_metal.vpcs_update | default(omit) }}"
+    vpc2s: "{{ bare_metal.vpc2s_update | default(omit) }}"
   register: result
 - name: verify test update bare_metal idempotence
   ansible.builtin.assert:
@@ -157,6 +149,4 @@
       - result.vultr_bare_metal.plan == bare_metal.plan_update
       - result.vultr_bare_metal.region == bare_metal.region
       - result.vultr_bare_metal.enable_ipv6 == bare_metal.enable_ipv6_update
-      # - result.vultr_bare_metal.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc_1') | list | count == 1
-      # - result.vultr_bare_metal.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc_3') | list | count == 1
-      # - result.vultr_bare_metal.vpcs | list | count == 2
+      # - result.vultr_bare_metal.vpc2s | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc2_2') | list | count == 1

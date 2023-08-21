@@ -96,17 +96,16 @@ options:
       - Region the bare metal machine is deployed into.
     type: str
     required: true
-  vpcs2:
+  vpc2s:
     description:
       - A list of VPCs (VPC 2.0) identified by their description to be assigned to the bare metal machine.
     type: list
     elements: str
-    aliases: [ vpcs ]
   state:
     description:
       - State of the bare metal machine.
     default: present
-    choices: [ present, absent, started, stopped, restarted, reinstalled ]
+    choices: [ present, absent ]
     type: str
 extends_documentation_fragment:
   - vultr.cloud.vultr_v2
@@ -126,7 +125,7 @@ EXAMPLES = """
     enable_ipv6: true
     ssh_keys:
       - my ssh key
-    vpcs:
+    vpc2s:
       - my vpc description
     tags:
       - web
@@ -142,24 +141,6 @@ EXAMPLES = """
     enable_ipv6: true
     region: ams
     image: Gitea on Ubuntu 20.04
-
-- name: Stop an existing bare metal machine
-  vultr.cloud.bare_metal:
-    label: my web server
-    region: ams
-    state: stopped
-
-- name: Start an existing bare metal machine
-  vultr.cloud.bare_metal:
-    label: my web server
-    region: ams
-    state: started
-
-- name: Reinstall an bare metal machine
-  vultr.cloud.bare_metal:
-    label: my web server
-    region: ams
-    state: reinstalled
 
 - name: Delete an bare metal machine
   vultr.cloud.bare_metal:
@@ -330,7 +311,7 @@ vultr_bare_metal:
       returned: success
       type: bool
       sample: true
-    vpcs2:
+    vpc2s:
       description: List of VPCs (VPC 2.0) attached.
       returned: success
       type: list
@@ -389,7 +370,7 @@ def main():
             enable_ipv6=dict(type="bool"),
             persistent_pxe=dict(type="bool"),
             tags=dict(type="list", elements="str"),
-            vpcs2=dict(type="list", elements="str", aliases=["vpcs"]),
+            vpc2s=dict(type="list", elements="str"),
             reserved_ipv4=dict(type="str"),
             startup_script=dict(type="str"),
             user_data=dict(type="str"),
@@ -399,10 +380,6 @@ def main():
                 choices=[
                     "present",
                     "absent",
-                    "started",
-                    "stopped",
-                    "restarted",
-                    "reinstalled",
                 ],
                 default="present",
             ),
