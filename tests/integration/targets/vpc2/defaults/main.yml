@@ -1,0 +1,5 @@
+---
+vultr_vpc2_description: "{{ vultr_resource_prefix }}_vpc2"
+vultr_vpc2_subnet: 192.168.42.0
+vultr_vpc2_cidr: 24
+vultr_vpc2_region: ewr

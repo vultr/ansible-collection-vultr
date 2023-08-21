@@ -27,3 +27,5 @@ action_groups:
     - user_info
     - vpc
     - vpc_info
+    - vpc2
+    - vpc2_info
