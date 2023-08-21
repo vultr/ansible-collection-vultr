@@ -176,10 +176,6 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
             if self.module.params.get("snapshot") is not None:
                 self.module.params["snapshot_id"] = self.get_snapshot()["id"]
 
-            # TODO: move to instance
-            if self.module.params.get("firewall_group") is not None:
-                self.module.params["firewall_group_id"] = self.get_firewall_group()["id"]
-
             if self.module.params.get("os") is not None:
                 self.module.params["os_id"] = self.get_os()["id"]
 
@@ -195,10 +191,6 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
             if self.module.params.get("ssh_keys") is not None:
                 # sshkey_id ist a list of ids
                 self.module.params["sshkey_id"] = self.get_ssh_key_ids()
-
-            # TODO: move to instance
-            if self.module.params.get("backups") is not None:
-                self.module.params["backups"] = "enabled" if self.module.params["backups"] else "disabled"
 
             if self.module.params.get("vpcs") is not None:
                 # attach_vpc is a list of ids used while creating

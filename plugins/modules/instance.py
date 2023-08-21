@@ -450,6 +450,16 @@ class AnsibleVultrInstance(AnsibleVultrCommonInstance):
 
         return resource
 
+    def configure(self):
+        super(AnsibleVultrInstance, self).configure()
+
+        if self.module.params["state"] != "absent":
+            if self.module.params.get("firewall_group") is not None:
+                self.module.params["firewall_group_id"] = self.get_firewall_group()["id"]
+
+            if self.module.params.get("backups") is not None:
+                self.module.params["backups"] = "enabled" if self.module.params["backups"] else "disabled"
+
 
 def main():
     argument_spec = vultr_argument_spec()
