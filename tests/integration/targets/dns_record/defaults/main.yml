@@ -5,10 +5,17 @@ vultr_dns_domain_name: "{{ vultr_resource_prefix }}-t3-vultr.com"
 
 vultr_dns_record_items:
   # Single A record
-  - name: test-www
+  - name: test-www-ip
     data: 10.10.10.10
     ttl: 400
     update_data: 10.10.10.11
+    update_ttl: 400
+
+  # Single A record
+  - name: test-www-ttl
+    data: 10.10.10.10
+    ttl: 400
+    update_data: 10.10.10.10
     update_ttl: 200
 
   # Multiple A records
