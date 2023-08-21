@@ -1,0 +1,52 @@
+# Copyright (c) 2023, René Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: setup
+  vultr.cloud.bare_metal:
+    label: "{{ bare_metal.label }}"
+    region: "{{ bare_metal.region }}"
+    state: absent
+  with_items: "{{ vultr_bare_metals }}"
+  loop_control:
+    loop_var: bare_metal
+
+- ansible.builtin.import_tasks: failures.yml
+
+# - name: setup ssh key
+#   vultr.cloud.ssh_key:
+#     name: "{{ vultr_bare_metal_ssh_key_name }}"
+#     ssh_key: "{{ vultr_bare_metal_ssh_key }}"
+
+# - name: setup vpc2s
+#   vultr.cloud.vpc2:
+#     description: "{{ item.description }}"
+#     ip_block: "{{ item.subnet }}"
+#     prefix_length: "{{ item.cidr }}"
+#     region: "{{ item.region }}"
+#   with_items: "{{ vutr_bare_metal_vpc2s }}"
+
+# - ansible.builtin.include_tasks: present.yml
+#   with_items: "{{ vultr_bare_metals }}"
+#   loop_control:
+#     loop_var: bare_metal
+
+# - ansible.builtin.include_tasks: absent.yml
+#   with_items: "{{ vultr_bare_metals }}"
+#   loop_control:
+#     loop_var: bare_metal
+
+# - name: cleanup ssh key
+#   vultr.cloud.ssh_key:
+#     name: "{{ vultr_bare_metal_ssh_key_name }}"
+#     state: absent
+
+# - name: cleanup vpc2s
+#   vultr.cloud.vpc:
+#     description: "{{ item.description }}"
+#     region: "{{ item.region }}"
+#     state: absent
+#   with_items: "{{ vutr_bare_metal_vpc2s }}"
+#   retries: 5
+#   delay: 3
+#   register: result
+#   until: result is not failed

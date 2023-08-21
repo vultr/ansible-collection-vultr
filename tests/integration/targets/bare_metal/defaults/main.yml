@@ -1,0 +1,46 @@
+# Copyright (c) 2023, René Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+vultr_bare_metal_ssh_key_name: "{{ vultr_resource_prefix }}_bare_metal_sshkey"
+vultr_bare_metal_ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAgEAyWYItY+3w5b8PdGRoz0oY5mufqydW96naE+VM3JSvJFAUS08rAjQQpQ03ymoALeHQy6JVZbcgecxn6p0pAOINQdqufn4udPtOPCtMjNiPGpkSM9ah/6X5+kvyWMNrvlf+Ld4OOoszP5sAkgQzIbrFQAm41XknBUha0zkewZwfrVhain4pnDjV7wCcChId/Q/Gbi4xMtXkisznWcAJcueBs3EEZDKhJ5q0VeWSJEhYJDLFN1sOxF0AIUnMrOhfKQ/LjgREXPB6uCl899INUTXRNNjRpeMXyJ2wMMmOAbua2qEd1r13Bu1n+6A823Hzb33fyMXuqWnJwBJ4DCvMlGuEsfuOK+xk7DaBfLHbcM6fsPk0/4psTE6YLgC41remr6+u5ZWsY/faMtSnNPie8Z8Ov0DIYGdhbJjUXk1HomxRV9+ZfZ2Ob8iCwlaAQAyEUM6fs3Kxt8pBD8dx1HOkhsfBWPvuDr5y+kqE7H8/MuPDTc0QgH2pjUMpmw/XBwNDHshVEjrZvtICOjOLUJxcowLO1ivNYwPwowQxfisMy56LfYdjsOslBiqsrkAqvNGm1zu8wKHeqVN9w5l3yUELpvubfm9NKIvYcl6yWF36T0c5vE+g0DU/Jy4XpTj0hZG9QV2mRQcLJnd2pxQtJT7cPFtrn/+tgRxzjEtbDXummDV4sE= ansible@example.com"
+
+vultr_bare_metals:
+  - label: "{{ vultr_resource_prefix }}_bm1"
+    hostname: myhostname
+    user_data: |
+      #cloud-config
+      packages:
+        - htop
+    user_data_update: |
+      #cloud-config
+      packages:
+        - htop
+        - vim
+    plan: vbm-6c-32gb
+    plan_update: vbm-6c-32gb
+    ssh_keys:
+      - "{{ vultr_bare_metal_ssh_key_name }}"
+    tags:
+      - one
+      - two
+    tags_update:
+      - three
+      - four
+    region: ams
+    os: Debian 12 x64 (bookworm)
+    enable_ipv6: false
+    enable_ipv6_update: true
+    # vpc2s:
+    #   - "{{ vultr_resource_prefix }}_instance_vpc2_1"
+    # vpc2s_update:
+    #   - "{{ vultr_resource_prefix }}_instance_vpc2_2"
+
+vutr_bare_metal_vpc2s: []
+  # - description: "{{ vultr_resource_prefix }}_instance_vpc2_1"
+  #   subnet: 192.168.42.0
+  #   cidr: 24
+  #   region: ams
+  # - description: "{{ vultr_resource_prefix }}_instance_vpc2_2"
+  #   subnet: 192.168.23.0
+  #   cidr: 24
+  #   region: ams

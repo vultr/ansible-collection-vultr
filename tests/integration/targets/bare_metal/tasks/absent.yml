@@ -1,0 +1,38 @@
+---
+- name: bare metal info
+  ansible.builtin.debug:
+    var: bare_metal
+
+- name: test absent bare metal in check mode
+  vultr.cloud.bare_metal:
+    label: "{{ bare_metal.label }}"
+    region: "{{ bare_metal.region }}"
+    state: absent
+  register: result
+  check_mode: true
+- name: verify test absent bare metal in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test absent bare metal
+  vultr.cloud.bare_metal:
+    label: "{{ bare_metal.label }}"
+    region: "{{ bare_metal.region }}"
+    state: absent
+  register: result
+- name: verify test absent bare metal
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test absent bare metal idempotence
+  vultr.cloud.bare_metal:
+    label: "{{ bare_metal.label }}"
+    region: "{{ bare_metal.region }}"
+    state: absent
+  register: result
+- name: verify test absent bare metal idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed

@@ -1,0 +1,152 @@
+---
+- name: bare_metal info
+  ansible.builtin.debug:
+    var: bare_metal
+
+- name: test create bare_metal in check mode
+  vultr.cloud.bare_metal:
+    label: "{{ bare_metal.label }}"
+    hostname: "{{ bare_metal.hostname | default(omit) }}"
+    user_data: "{{ bare_metal.user_data | default(omit) }}"
+    ssh_keys: "{{ bare_metal.ssh_keys | default(omit) }}"
+    plan: "{{ bare_metal.plan }}"
+    enable_ipv6: "{{ bare_metal.enable_ipv6 | default(omit) }}"
+    tags: "{{ bare_metal.tags | default(omit) }}"
+    region: "{{ bare_metal.region }}"
+    os: "{{ bare_metal.os | default(omit) }}"
+    app: "{{ bare_metal.app | default(omit) }}"
+    image: "{{ bare_metal.image | default(omit) }}"
+    snapshot: "{{ bare_metal.snapshot | default(omit) }}"
+    vpc2s: "{{ bare_metal.vpc2s | default(omit) }}"
+  register: result
+  check_mode: true
+- name: verify test create bare_metal in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test create bare_metal
+  vultr.cloud.bare_metal:
+    label: "{{ bare_metal.label }}"
+    hostname: "{{ bare_metal.hostname | default(omit) }}"
+    user_data: "{{ bare_metal.user_data | default(omit) }}"
+    ssh_keys: "{{ bare_metal.ssh_keys | default(omit) }}"
+    plan: "{{ bare_metal.plan }}"
+    enable_ipv6: "{{ bare_metal.enable_ipv6 | default(omit) }}"
+    tags: "{{ bare_metal.tags | default(omit) }}"
+    region: "{{ bare_metal.region }}"
+    os: "{{ bare_metal.os | default(omit) }}"
+    app: "{{ bare_metal.app | default(omit) }}"
+    image: "{{ bare_metal.image | default(omit) }}"
+    snapshot: "{{ bare_metal.snapshot | default(omit) }}"
+    vpc2s: "{{ bare_metal.vpc2s | default(omit) }}"
+  register: result
+- name: verify test create bare_metal
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_bare_metal.plan == bare_metal.plan
+      - result.vultr_bare_metal.region == bare_metal.region
+      - result.vultr_bare_metal.enable_ipv6 == bare_metal.enable_ipv6
+      # - result.vultr_bare_metal.vpc2s | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc2_1') | list | count == 1
+
+- name: test create bare_metal idempotence
+  vultr.cloud.bare_metal:
+    label: "{{ bare_metal.label }}"
+    hostname: "{{ bare_metal.hostname | default(omit) }}"
+    user_data: "{{ bare_metal.user_data | default(omit) }}"
+    ssh_keys: "{{ bare_metal.ssh_keys | default(omit) }}"
+    plan: "{{ bare_metal.plan }}"
+    enable_ipv6: "{{ bare_metal.enable_ipv6 | default(omit) }}"
+    tags: "{{ bare_metal.tags | default(omit) }}"
+    region: "{{ bare_metal.region }}"
+    os: "{{ bare_metal.os | default(omit) }}"
+    app: "{{ bare_metal.app | default(omit) }}"
+    image: "{{ bare_metal.image | default(omit) }}"
+    snapshot: "{{ bare_metal.snapshot | default(omit) }}"
+    vpc2s: "{{ bare_metal.vpc2s | default(omit) }}"
+  register: result
+- name: verify test create bare_metal idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+      - result.vultr_bare_metal.plan == bare_metal.plan
+      - result.vultr_bare_metal.region == bare_metal.region
+      - result.vultr_bare_metal.enable_ipv6 == bare_metal.enable_ipv6
+      # - result.vultr_bare_metal.vpc2s | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc2_1') | list | count == 1
+
+- name: test update bare_metal in check mode
+  vultr.cloud.bare_metal:
+    label: "{{ bare_metal.label }}"
+    hostname: "{{ bare_metal.hostname | default(omit) }}"
+    user_data: "{{ bare_metal.user_data_update | default(omit) }}"
+    ssh_keys: "{{ bare_metal.ssh_keys | default(omit) }}"
+    plan: "{{ bare_metal.plan_update }}"
+    enable_ipv6: "{{ bare_metal.enable_ipv6_update | default(omit) }}"
+    tags: "{{ bare_metal.tags_update | default(omit) }}"
+    region: "{{ bare_metal.region }}"
+    os: "{{ bare_metal.os | default(omit) }}"
+    app: "{{ bare_metal.app | default(omit) }}"
+    image: "{{ bare_metal.image | default(omit) }}"
+    snapshot: "{{ bare_metal.snapshot | default(omit) }}"
+    vpc2s: "{{ bare_metal.vpc2s_update | default(omit) }}"
+  register: result
+  check_mode: true
+- name: verify test update bare_metal in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_bare_metal.plan == bare_metal.plan
+      - result.vultr_bare_metal.region == bare_metal.region
+      - result.vultr_bare_metal.enable_ipv6 == bare_metal.enable_ipv6
+      # - result.vultr_bare_metal.vpc2s | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc2_2') | list | count == 1
+
+- name: test update bare_metal
+  vultr.cloud.bare_metal:
+    label: "{{ bare_metal.label }}"
+    hostname: "{{ bare_metal.hostname | default(omit) }}"
+    user_data: "{{ bare_metal.user_data_update | default(omit) }}"
+    ssh_keys: "{{ bare_metal.ssh_keys | default(omit) }}"
+    plan: "{{ bare_metal.plan_update }}"
+    enable_ipv6: "{{ bare_metal.enable_ipv6_update | default(omit) }}"
+    tags: "{{ bare_metal.tags_update | default(omit) }}"
+    region: "{{ bare_metal.region }}"
+    os: "{{ bare_metal.os | default(omit) }}"
+    app: "{{ bare_metal.app | default(omit) }}"
+    image: "{{ bare_metal.image | default(omit) }}"
+    snapshot: "{{ bare_metal.snapshot | default(omit) }}"
+    vpc2s: "{{ bare_metal.vpc2s_update | default(omit) }}"
+  register: result
+- name: verify test update bare_metal
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_bare_metal.plan == bare_metal.plan_update
+      - result.vultr_bare_metal.region == bare_metal.region
+      - result.vultr_bare_metal.enable_ipv6 == bare_metal.enable_ipv6_update
+      # - result.vultr_bare_metal.vpc2s | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc2_2') | list | count == 1
+
+- name: test update bare_metal idempotence
+  vultr.cloud.bare_metal:
+    label: "{{ bare_metal.label }}"
+    hostname: "{{ bare_metal.hostname | default(omit) }}"
+    user_data: "{{ bare_metal.user_data_update | default(omit) }}"
+    ssh_keys: "{{ bare_metal.ssh_keys | default(omit) }}"
+    plan: "{{ bare_metal.plan_update }}"
+    enable_ipv6: "{{ bare_metal.enable_ipv6_update | default(omit) }}"
+    tags: "{{ bare_metal.tags_update | default(omit) }}"
+    region: "{{ bare_metal.region }}"
+    os: "{{ bare_metal.os | default(omit) }}"
+    app: "{{ bare_metal.app | default(omit) }}"
+    image: "{{ bare_metal.image | default(omit) }}"
+    snapshot: "{{ bare_metal.snapshot | default(omit) }}"
+    vpc2s: "{{ bare_metal.vpc2s_update | default(omit) }}"
+  register: result
+- name: verify test update bare_metal idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+      - result.vultr_bare_metal.plan == bare_metal.plan_update
+      - result.vultr_bare_metal.region == bare_metal.region
+      - result.vultr_bare_metal.enable_ipv6 == bare_metal.enable_ipv6_update
+      # - result.vultr_bare_metal.vpc2s | selectattr('description','equalto','{{ vultr_resource_prefix }}_bare_metal_vpc2_2') | list | count == 1

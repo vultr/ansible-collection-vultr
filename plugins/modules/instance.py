@@ -146,7 +146,7 @@ EXAMPLES = """
       - web
       - project-genesis
     region: ams
-    os: Debian 11 x64 (bullseye)
+    os: Debian 12 x64 (bookworm)
 
 - name: Deploy an instance of a marketplace app
   vultr.cloud.instance:
@@ -408,172 +408,14 @@ vultr_instance:
           sample: "5a:01:04:3d:5e:72"
 """
 
-import base64
 
 from ansible.module_utils.basic import AnsibleModule
 
-from ..module_utils.vultr_v2 import AnsibleVultr, vultr_argument_spec
+from ..module_utils.common_instance import AnsibleVultrCommonInstance
+from ..module_utils.vultr_v2 import vultr_argument_spec
 
 
-class AnsibleVultrInstance(AnsibleVultr):
-    def get_ssh_key_ids(self):
-        ssh_key_names = list(self.module.params["ssh_keys"])
-        ssh_keys = self.query_list(path="/ssh-keys", result_key="ssh_keys")
-
-        ssh_key_ids = list()
-        for ssh_key in ssh_keys:
-            if ssh_key["name"] in ssh_key_names:
-                ssh_key_ids.append(ssh_key["id"])
-                ssh_key_names.remove(ssh_key["name"])
-
-        if ssh_key_names:
-            self.module.fail_json(msg="SSH key names not found: %s" % ", ".join(ssh_key_names))
-
-        return ssh_key_ids
-
-    def get_vpc_ids(self):
-        vpc_names = list(self.module.params["vpcs"])
-        vpcs = self.query_list(path="/vpcs", result_key="vpcs")
-
-        vpc_ids = list()
-        for vpc in vpcs:
-            if vpc["description"] in vpc_names:
-                vpc_ids.append(vpc["id"])
-                vpc_names.remove(vpc["description"])
-
-        if vpc_names:
-            self.module.fail_json(msg="VPCs not found: %s" % ", ".join(vpc_names))
-
-        return vpc_ids
-
-    def get_instance_vpcs(self, resource):
-        path = "/instances/%s/vpcs" % resource["id"]
-        vpcs = self.query_list(path=path, result_key="vpcs")
-
-        # Workaround to get the description field into the list
-        result = list()
-        for vpc in vpcs:
-            vpc_detail = self.query_by_id(resource_id=vpc["id"], path="/vpcs", result_key="vpc")
-            vpc["description"] = vpc_detail["description"]
-            result.append(vpc)
-        return result
-
-    def get_firewall_group(self):
-        return self.query_filter_list_by_name(
-            key_name="description",
-            param_key="firewall_group",
-            path="/firewalls",
-            result_key="firewall_groups",
-            fail_not_found=True,
-        )
-
-    def get_snapshot(self):
-        return self.query_filter_list_by_name(
-            key_name="description",
-            param_key="snapshot",
-            path="/snapshots",
-            result_key="snapshots",
-            fail_not_found=True,
-        )
-
-    def get_startup_script(self):
-        return self.query_filter_list_by_name(
-            key_name="name",
-            param_key="startup_script",
-            path="/startup-scripts",
-            result_key="startup_scripts",
-            fail_not_found=True,
-        )
-
-    def get_os(self):
-        return self.query_filter_list_by_name(
-            key_name="name",
-            param_key="os",
-            path="/os",
-            result_key="os",
-            fail_not_found=True,
-        )
-
-    def get_app(self):
-        return self.query_filter_list_by_name(
-            key_name="deploy_name",
-            param_key="app",
-            path="/applications",
-            result_key="applications",
-            fail_not_found=True,
-            query_params={"type": "one-click"},
-        )
-
-    def get_image(self):
-        return self.query_filter_list_by_name(
-            key_name="deploy_name",
-            param_key="image",
-            path="/applications",
-            result_key="applications",
-            fail_not_found=True,
-            query_params={"type": "marketplace"},
-        )
-
-    def get_user_data(self, resource):
-        res = self.api_query(
-            path="%s/%s/%s" % (self.resource_path, resource[self.resource_key_id], "user-data"),
-        )
-        if res:
-            return str(res.get("user_data", dict()).get("data"))
-        return ""
-
-    def transform_resource(self, resource):
-        if not resource:
-            return resource
-
-        features = resource.get("features", list())
-        resource["backups"] = "enabled" if "auto_backups" in features else "disabled"
-        resource["enable_ipv6"] = "ipv6" in features
-        resource["ddos_protection"] = "ddos_protection" in features
-        resource["vpcs"] = self.get_instance_vpcs(resource=resource)
-
-        return resource
-
-    def get_detach_vpcs_ids(self, resource):
-        detach_vpc_ids = []
-        for vpc in resource.get("vpcs", list()):
-            if vpc["id"] not in list(self.module.params["attach_vpc"]):
-                detach_vpc_ids.append(vpc["id"])
-        return detach_vpc_ids
-
-    def configure(self):
-        if self.module.params["state"] != "absent":
-            if self.module.params["startup_script"] is not None:
-                self.module.params["script_id"] = self.get_startup_script()["id"]
-
-            if self.module.params["snapshot"] is not None:
-                self.module.params["snapshot_id"] = self.get_snapshot()["id"]
-
-            if self.module.params["firewall_group"] is not None:
-                self.module.params["firewall_group_id"] = self.get_firewall_group()["id"]
-
-            if self.module.params["os"] is not None:
-                self.module.params["os_id"] = self.get_os()["id"]
-
-            if self.module.params["app"] is not None:
-                self.module.params["app_id"] = self.get_app()["id"]
-
-            if self.module.params["image"] is not None:
-                self.module.params["image_id"] = self.get_image()["image_id"]
-
-            if self.module.params["user_data"] is not None:
-                self.module.params["user_data"] = base64.b64encode(self.module.params["user_data"].encode())
-
-            if self.module.params["ssh_keys"] is not None:
-                # sshkey_id ist a list of ids
-                self.module.params["sshkey_id"] = self.get_ssh_key_ids()
-
-            if self.module.params["backups"] is not None:
-                self.module.params["backups"] = "enabled" if self.module.params["backups"] else "disabled"
-
-            if self.module.params["vpcs"] is not None:
-                # attach_vpc is a list of ids used while creating
-                self.module.params["attach_vpc"] = self.get_vpc_ids()
+class AnsibleVultrInstance(AnsibleVultrCommonInstance):
 
     def handle_power_status(self, resource, state, action, power_status, force=False, wait_for_state=True):
         if state == self.module.params["state"] and (resource["power_status"] != power_status or force):
@@ -588,31 +430,9 @@ class AnsibleVultrInstance(AnsibleVultr):
                     resource = self.wait_for_state(resource=resource, key="power_status", states=[power_status])
         return resource
 
-    def create(self):
-        param_keys = ("os", "image", "app", "snapshot")
-        if not any(self.module.params.get(x) is not None for x in param_keys):
-            self.module.fail_json(msg="missing required arguements, one of the following required: %s" % ", ".join(param_keys))
-        return super(AnsibleVultrInstance, self).create()
-
-    def update(self, resource):
-        user_data = self.get_user_data(resource=resource)
-        resource["user_data"] = user_data.encode()
-
-        if self.module.params["vpcs"] is not None:
-            resource["attach_vpc"] = list()
-            for vpc in list(resource["vpcs"]):
-                resource["attach_vpc"].append(vpc["id"])
-
-            # detach_vpc is a list of ids to be detached
-            resource["detach_vpc"] = list()
-            self.module.params["detach_vpc"] = self.get_detach_vpcs_ids(resource=resource)
-
-        return super(AnsibleVultrInstance, self).update(resource=resource)
-
     def create_or_update(self):
         resource = super(AnsibleVultrInstance, self).create_or_update()
         if resource:
-            resource = self.wait_for_state(resource=resource, key="status", states=["active"])
             resource = self.wait_for_state(resource=resource, key="server_status", states=["none", "locked"], cmp="!=")
 
             # Hanlde power status
@@ -630,10 +450,15 @@ class AnsibleVultrInstance(AnsibleVultr):
 
         return resource
 
-    def transform_result(self, resource):
-        if resource:
-            resource["user_data"] = self.get_user_data(resource=resource)
-        return resource
+    def configure(self):
+        super(AnsibleVultrInstance, self).configure()
+
+        if self.module.params["state"] != "absent":
+            if self.module.params.get("firewall_group") is not None:
+                self.module.params["firewall_group_id"] = self.get_firewall_group()["id"]
+
+            if self.module.params.get("backups") is not None:
+                self.module.params["backups"] = "enabled" if self.module.params["backups"] else "disabled"
 
     def absent(self):
         resource = self.query()
