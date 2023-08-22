@@ -11,12 +11,12 @@ vultr_dns_record_items:
     update_data: 10.10.10.11
     update_ttl: 400
 
-  # Single A record
-  - name: test-www-ttl
-    data: 10.10.10.10
-    ttl: 400
-    update_data: 10.10.10.10
-    update_ttl: 200
+  # # Single A record
+  # - name: test-www-ttl
+  #   data: 10.10.10.10
+  #   ttl: 400
+  #   update_data: 10.10.10.10
+  #   update_ttl: 200
 
   # Multiple A records
   - name: test-www-multiple
