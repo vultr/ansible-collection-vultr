@@ -1,0 +1,19 @@
+- set_fact:
+    vultr_resource_prefix: ansible-test-
+
+- debug:
+    msg: Cleaning up resources with prefix {{ vultr_resource_prefix }}
+
+- ansible.builtin.import_tasks: cleanup_instance.yml
+- ansible.builtin.import_tasks: cleanup_bare_metal.yml
+- ansible.builtin.import_tasks: cleanup_ssh_key.yml
+- ansible.builtin.import_tasks: cleanup_vpc.yml
+- ansible.builtin.import_tasks: cleanup_vpc2.yml
+- ansible.builtin.import_tasks: cleanup_firewall_group.yml
+- ansible.builtin.import_tasks: cleanup_snapshot.yml
+- ansible.builtin.import_tasks: cleanup_user.yml
+- ansible.builtin.import_tasks: cleanup_dns_domain.yml
+- ansible.builtin.import_tasks: cleanup_block_storage.yml
+- ansible.builtin.import_tasks: cleanup_startup_script.yml
+- ansible.builtin.import_tasks: cleanup_reserved_ip.yml
+- ansible.builtin.import_tasks: cleanup_network.yml
