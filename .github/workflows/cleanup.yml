@@ -1,0 +1,69 @@
+---
+name: Cleanup
+
+on:
+  pull_request:
+    types: [labeled]
+  schedule:
+    - cron: 55 5 * * 2 # Run weekly
+
+jobs:
+  integration-test:
+    name: Cleaning up cloud test env
+    if: ${{ github.event.label.name == 'cleanup' || github.event_name == 'schedule' }}
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ansible_collections/vultr/cloud
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        ansible:
+          - stable-2.14
+        python:
+          - "3.10"
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          path: ansible_collections/vultr/cloud
+
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install ansible-base (${{ matrix.ansible }})
+        run: |
+          python -m pip install --upgrade pip
+          pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
+
+      - name: Build and install collection
+        run: |
+          ansible-galaxy collection build .
+          ansible-galaxy collection install *.gz
+
+      - name: Add config file
+        env:
+          VULTR_CONFIG_FILE: ${{ secrets.VULTR_CONFIG_FILE }}
+        run: |
+          echo "$VULTR_CONFIG_FILE" > tests/integration/cloud-config-vultr.ini
+
+      - name: Ensure no other integration test is currently running
+        uses: softprops/turnstyle@v1
+        timeout-minutes: 60
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          same-branch-only: false
+
+      - name: Cleanup resources
+        run: >-
+          ansible-test
+          integration
+          --docker
+          -v
+          --color
+          --continue-on-error
+          cloud/vultr/_reset_cloud

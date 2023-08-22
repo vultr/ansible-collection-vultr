@@ -1,0 +1,4 @@
+---
+- ansible.builtin.import_role:
+      name: cleanup
+      tasks_from: cleanup_all
