@@ -196,3 +196,21 @@ releases:
     - 63-inventory-bare-metal.yml
     - instance-reinstall.yml
     release_date: '2023-05-21'
+  1.9.0:
+    changes:
+      bugfixes:
+      - firewall_rule - Fixed an idempotency issue if parameter ``port`` is set on
+        protocols other than TCP/UDP (https://github.com/vultr/ansible-collection-vultr/issues/76).
+    fragments:
+    - firewall_rule-fix-idempotency-icmp.yml
+    modules:
+    - description: Manages bare metal machines on Vultr.
+      name: bare_metal
+      namespace: ''
+    - description: Manages VPCs 2.0 on Vultr
+      name: vpc2
+      namespace: ''
+    - description: Gather information about the Vultr VPCs 2.0
+      name: vpc2_info
+      namespace: ''
+    release_date: '2023-08-22'

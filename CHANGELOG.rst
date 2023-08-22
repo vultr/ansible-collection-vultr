@@ -5,6 +5,21 @@ Vultr Collection Release Notes
 .. contents:: Topics
 
 
+v1.9.0
+======
+
+Bugfixes
+--------
+
+- firewall_rule - Fixed an idempotency issue if parameter ``port`` is set on protocols other than TCP/UDP (https://github.com/vultr/ansible-collection-vultr/issues/76).
+
+New Modules
+-----------
+
+- bare_metal - Manages bare metal machines on Vultr.
+- vpc2 - Manages VPCs 2.0 on Vultr
+- vpc2_info - Gather information about the Vultr VPCs 2.0
+
 v1.8.0
 ======
 
