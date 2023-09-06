@@ -5,10 +5,7 @@ on:
   pull_request:
     types: [labeled]
   push:
-    branches:
-      - main
     paths:
-      - ".github/workflows/integration.yml"
       - "plugins/**"
       - "tests/integration/**"
   schedule:
@@ -17,7 +14,7 @@ on:
 jobs:
   integration-test:
     name: Integration test Ansible ${{ matrix.ansible }} Py${{ matrix.python }}
-    if: ${{ github.event.label.name == 'automation' || github.ref_name == 'main' }}
+    if: ${{ github.event.label.name == 'automation' || github.ref_name == 'main' || github.event_name == 'schedule' }}
     runs-on: ubuntu-20.04
     defaults:
       run:
