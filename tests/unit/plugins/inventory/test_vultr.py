@@ -4,23 +4,22 @@ __metaclass__ = type
 
 import json
 import os.path
-import pytest
 
+import ansible_collections.vultr.cloud.plugins.inventory.vultr as module_under_test
+import pytest
 from ansible.errors import AnsibleError, AnsibleParserError
 from ansible.inventory.data import InventoryData
 from ansible.parsing.dataloader import DataLoader
 from ansible.template import Templar
-
-import ansible_collections.vultr.cloud.plugins.inventory.vultr as module_under_test
-from ansible_collections.vultr.cloud.plugins.inventory.vultr import InventoryModule
-
+from ansible_collections.vultr.cloud.plugins.inventory.vultr import \
+    InventoryModule
 
 default_options = {
     "api_endpoint": "https://test.api.vultr.com/v2",
     "api_key": "TEST_VULTR_API_KEY",
     "api_results_per_page": 100,
     "api_timeout": 60,
-    "attributes": ["id", "region", "label", "plan", "hostname", "main_ip"],
+    "attributes": ["id", "region", "label", "plan", "hostname", "main_ip", "tags", "internal_ip"],
     "filters": [],
     "plugin": "vultr.cloud.vultr",
     "variable_prefix": "vultr_",

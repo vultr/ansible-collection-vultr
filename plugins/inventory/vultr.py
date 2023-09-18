@@ -66,6 +66,7 @@ options:
     description:
       - Instance attributes to add as host variables to each host added to inventory.
       - See U(https://www.vultr.com/api/#operation/list-instances) for valid values.
+      - The I(internal_ip) attribute was added in version 1.10.0.
     type: list
     elements: str
     default:
@@ -77,6 +78,7 @@ options:
       - main_ip
       - v6_main_ip
       - tags
+      - internal_ip
   filters:
     description:
       - Filter hosts with Jinja2 templates.
@@ -147,6 +149,11 @@ plugin: vultr.cloud.vultr
 compose:
   ansible_host: vultr_v6_main_ip or vultr_main_ip
 
+# Use the internal IP
+plugin: vultr.cloud.vultr
+compose:
+  ansible_host: vultr_internal_ip
+
 # Querying the bare metal instances
 plugin: vultr.cloud.vultr
 instance_type: bare_metal
@@ -160,7 +167,8 @@ from ansible.errors import AnsibleError, AnsibleParserError
 from ansible.module_utils._text import to_native
 from ansible.module_utils.six.moves.urllib.error import HTTPError, URLError
 from ansible.module_utils.urls import Request
-from ansible.plugins.inventory import BaseInventoryPlugin, Cacheable, Constructable
+from ansible.plugins.inventory import (BaseInventoryPlugin, Cacheable,
+                                       Constructable)
 
 from ..module_utils.vultr_v2 import VULTR_USER_AGENT
 
