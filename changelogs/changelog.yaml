@@ -100,6 +100,14 @@ releases:
       name: instance
       namespace: ''
     release_date: '2022-09-09'
+  1.10.0:
+    changes:
+      minor_changes:
+      - inventory - Added VPC/VPC 2.0 support by adding ``internal_ip`` to the attributes
+        (https://github.com/vultr/ansible-collection-vultr/issues/86).
+    fragments:
+    - 86-inventory-internal_ip.yml
+    release_date: '2023-09-18'
   1.2.0:
     changes:
       minor_changes:
