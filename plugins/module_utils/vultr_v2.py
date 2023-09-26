@@ -259,18 +259,18 @@ class AnsibleVultr:
     def wait_for_state(self, resource, key, states, cmp="=", retries=60):
         for retry in range(0, retries):
             resource = self.query_by_id(resource_id=resource[self.resource_key_id], skip_transform=False)
-            if cmp == "=":
-                if key not in resource or resource[key] in states or not resource[key]:
+            if resource and key in resource:
+                if cmp == "=" and resource[key] in states:
                     break
-            else:
-                if key not in resource or resource[key] not in states or not resource[key]:
+                elif resource[key] not in states:
                     break
             backoff(retry=retry)
         else:
             if cmp == "=":
-                self.module.fail_json(msg="Wait for %s to become %s timed out" % (key, states))
+                msg = "Wait for %s to become one in %s timed out" % (key, states)
             else:
-                self.module.fail_json(msg="Wait for %s to not be in %s timed out" % (key, states))
+                msg = "Wait for %s to not be in %s timed out" % (key, states)
+            self.module.fail_json(msg=msg)
 
         return resource
 
