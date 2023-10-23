@@ -23,7 +23,7 @@ Release notes are available in our [changelog](https://github.com/vultr/ansible-
 
 This collection will be shipped with the Ansible package >=6.0.0. If you have it installed, no more action is required.
 
-If you have a minimal installation (only Ansible Core installed) or you want to use the latest version of the collection along with the whole Ansible package, you need to install the collection from [Ansible Galaxy](https://galaxy.ansible.com/vultr/cloud) manually with the `ansible-galaxy` command-line tool:
+If you have a minimal installation (only Ansible Core installed) or you want to use the latest version of the collection along with the whole Ansible package, you need to install the collection from [Ansible Galaxy](https://galaxy.ansible.com/ui/repo/published/vultr/cloud/) manually with the `ansible-galaxy` command-line tool:
 
     ansible-galaxy collection install vultr.cloud
 
