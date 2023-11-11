@@ -5,6 +5,14 @@ Vultr Collection Release Notes
 .. contents:: Topics
 
 
+v1.10.1
+=======
+
+Bugfixes
+--------
+
+- instance - Fixed an issue detecting the instance state returned by the API (https://github.com/vultr/ansible-collection-vultr/pull/89).
+
 v1.10.0
 =======
 

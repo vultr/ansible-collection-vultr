@@ -1,2 +1,0 @@
-bugfixes:
-  - instance - Fixed an issue detecting the instance state returned by the API (https://github.com/vultr/ansible-collection-vultr/pull/89).

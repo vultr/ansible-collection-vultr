@@ -108,6 +108,14 @@ releases:
     fragments:
     - 86-inventory-internal_ip.yml
     release_date: '2023-09-18'
+  1.10.1:
+    changes:
+      bugfixes:
+      - instance - Fixed an issue detecting the instance state returned by the API
+        (https://github.com/vultr/ansible-collection-vultr/pull/89).
+    fragments:
+    - fix-instance-state-wait-for.yml
+    release_date: '2023-11-11'
   1.2.0:
     changes:
       minor_changes:
