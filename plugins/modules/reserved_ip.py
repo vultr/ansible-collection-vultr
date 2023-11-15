@@ -166,7 +166,6 @@ class AnsibleVultrReservedIp(AnsibleVultr):
 
         instance_name = self.module.params["instance_name"]
         if instance_name is not None:
-
             # Empty string ID means detach instance
             if len(instance_name) == 0:
                 return ""
@@ -187,7 +186,7 @@ class AnsibleVultrReservedIp(AnsibleVultr):
 
             return resources["instances"][0]["id"]
 
-    def query_list(self, path=None, result_key=None):
+    def query_list(self, path=None, result_key=None, query_params=None):
         resources = self.api_query(path=self.resource_path) or dict()
 
         resources_filtered = list()
