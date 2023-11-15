@@ -5,7 +5,7 @@
   vultr.cloud.reserved_ip:
     label: "{{ vultr_reserved_ip_name }}"
     ip_type: v4
-    region: ewr
+    region: "{{ vultr_reserved_ip_region }}"
     state: absent
   register: result
 - name: verify setup
@@ -23,20 +23,18 @@
       - result is failed
       - 'result.msg == "missing required arguments: ip_type, label, region"'
 
-# TODO: topic of changes
-- name: setup create the server
-  ngine_io.vultr.vultr_server:
-    name: "{{ vultr_server_name }}"
-    os: "{{ vultr_server_os }}"
-    plan: "{{ vultr_server_plan }}"
-    region: New Jersey
-  register: server
+- name: setup instance
+  vultr.cloud.instance:
+    label: "{{ vultr_instance.label }}"
+    os: "{{ vultr_instance.os }}"
+    plan: "{{ vultr_instance.plan }}"
+    region: "{{ vultr_instance.region }}"
 
 - name: test create reserved ip in check mode
   vultr.cloud.reserved_ip:
     label: "{{ vultr_reserved_ip_name }}"
     ip_type: v4
-    region: ewr
+    region: "{{ vultr_reserved_ip_region }}"
   register: result
   check_mode: true
 - name: verify test create reserved ip in check mode
@@ -48,7 +46,7 @@
   vultr.cloud.reserved_ip:
     label: "{{ vultr_reserved_ip_name }}"
     ip_type: v4
-    region: ewr
+    region: "{{ vultr_reserved_ip_region }}"
   register: result
 - name: verify test create reserved ip
   ansible.builtin.assert:
@@ -63,7 +61,7 @@
   vultr.cloud.reserved_ip:
     label: "{{ vultr_reserved_ip_name }}"
     ip_type: v4
-    region: ewr
+    region: "{{ vultr_reserved_ip_region }}"
   register: result
 - name: verify test create reserved ip idempotence
   ansible.builtin.assert:
@@ -78,8 +76,8 @@
   vultr.cloud.reserved_ip:
     label: "{{ vultr_reserved_ip_name }}"
     ip_type: v4
-    region: ewr
-    instance_name: "{{ vultr_server_name }}"
+    region: "{{ vultr_reserved_ip_region }}"
+    instance_name: "{{ vultr_instance.label }}"
   register: result
   check_mode: true
 - name: verify test detach instance of reserved ip in check mode
@@ -95,8 +93,8 @@
   vultr.cloud.reserved_ip:
     label: "{{ vultr_reserved_ip_name }}"
     ip_type: v4
-    region: ewr
-    instance_name: "{{ vultr_server_name }}"
+    region: "{{ vultr_reserved_ip_region }}"
+    instance_name: "{{ vultr_instance.label }}"
   register: result
 - name: verify test attach instance of reserved ip
   ansible.builtin.assert:
@@ -111,8 +109,8 @@
   vultr.cloud.reserved_ip:
     label: "{{ vultr_reserved_ip_name }}"
     ip_type: v4
-    region: ewr
-    instance_name: "{{ vultr_server_name }}"
+    region: "{{ vultr_reserved_ip_region }}"
+    instance_name: "{{ vultr_instance.label }}"
   register: result
 - name: verify test attach instance of reserved ip idempotence
   ansible.builtin.assert:
@@ -127,7 +125,7 @@
   vultr.cloud.reserved_ip:
     label: "{{ vultr_reserved_ip_name }}"
     ip_type: v4
-    region: ewr
+    region: "{{ vultr_reserved_ip_region }}"
   register: result
 - name: verify test test ignore instance attached reserved ip idempotence
   ansible.builtin.assert:
@@ -142,7 +140,7 @@
   vultr.cloud.reserved_ip:
     label: "{{ vultr_reserved_ip_name }}"
     ip_type: v4
-    region: ewr
+    region: "{{ vultr_reserved_ip_region }}"
     instance_id: ""
   register: result
   check_mode: true
@@ -159,7 +157,7 @@
   vultr.cloud.reserved_ip:
     label: "{{ vultr_reserved_ip_name }}"
     ip_type: v4
-    region: ewr
+    region: "{{ vultr_reserved_ip_region }}"
     instance_id: ""
   register: result
 - name: verify test detach instance of reserved ip
@@ -175,7 +173,7 @@
   vultr.cloud.reserved_ip:
     label: "{{ vultr_reserved_ip_name }}"
     ip_type: v4
-    region: ewr
+    region: "{{ vultr_reserved_ip_region }}"
     instance_id: ""
   register: result
 - name: verify test detach instance of reserved ip idempotence
@@ -191,7 +189,7 @@
   vultr.cloud.reserved_ip:
     label: "{{ vultr_reserved_ip_name }}"
     ip_type: v4
-    region: ewr
+    region: "{{ vultr_reserved_ip_region }}"
     state: absent
   register: result
   check_mode: true
@@ -208,7 +206,7 @@
   vultr.cloud.reserved_ip:
     label: "{{ vultr_reserved_ip_name }}"
     ip_type: v4
-    region: ewr
+    region: "{{ vultr_reserved_ip_region }}"
     state: absent
   register: result
 - name: verify test absent reserved ip
@@ -225,7 +223,7 @@
   vultr.cloud.reserved_ip:
     label: "{{ vultr_reserved_ip_name }}"
     ip_type: v4
-    region: ewr
+    region: "{{ vultr_reserved_ip_region }}"
     state: absent
   register: result
 - name: verify test absent reserved ip idempotence
@@ -233,8 +231,8 @@
     that:
       - result is not changed
 
-# TODO: topic of changes
-- name: cleanup the server
-  ngine_io.vultr.vultr_server:
-    name: "{{ vultr_server_name }}"
+- name: cleanup instance
+  vultr.cloud.instance:
+    label: "{{ vultr_instance.label }}"
+    region: "{{ vultr_instance.region }}"
     state: absent
