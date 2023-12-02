@@ -15,7 +15,7 @@
 - name: verify test gather vultr dns domain info in check mode
   ansible.builtin.assert:
     that:
-      - result.vultr_dns_domain_info|selectattr('domain','equalto','{{ dns_domain_name }}') | list | count == 1
+      - result.vultr_dns_domain_info|selectattr('domain','equalto',dns_domain_name) | list | count == 1
 
 - name: test gather vultr dns domain info
   vultr.cloud.dns_domain_info:
@@ -24,4 +24,4 @@
 - name: verify test gather vultr dns domain info
   ansible.builtin.assert:
     that:
-      - result.vultr_dns_domain_info|selectattr('domain','equalto','{{ dns_domain_name }}') | list | count == 1
+      - result.vultr_dns_domain_info|selectattr('domain','equalto',dns_domain_name) | list | count == 1

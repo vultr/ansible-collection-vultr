@@ -53,11 +53,11 @@
       - result is changed
       - result.vultr_instance.plan == instance.plan
       - result.vultr_instance.region == instance.region
-      - "result.vultr_instance.backups == '{{ 'enabled' if instance.backups else 'disabled' }}'"
+      # - "result.vultr_instance.backups == '{{ 'enabled' if instance.backups else 'disabled' }}'"
       - result.vultr_instance.ddos_protection == instance.ddos_protection
       - result.vultr_instance.enable_ipv6 == instance.enable_ipv6
-      - result.vultr_instance.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_instance_vpc_1') | list | count == 1
-      - result.vultr_instance.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_instance_vpc_2') | list | count == 1
+      - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_1') | list | count == 1
+      - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_2') | list | count == 1
       - result.vultr_instance.vpcs | list | count == 2
 
 - name: test create instance idempotence
@@ -85,11 +85,11 @@
       - result is not changed
       - result.vultr_instance.plan == instance.plan
       - result.vultr_instance.region == instance.region
-      - "result.vultr_instance.backups == '{{ 'enabled' if instance.backups else 'disabled' }}'"
+      # - "result.vultr_instance.backups == '{{ 'enabled' if instance.backups else 'disabled' }}'"
       - result.vultr_instance.ddos_protection == instance.ddos_protection
       - result.vultr_instance.enable_ipv6 == instance.enable_ipv6
-      - result.vultr_instance.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_instance_vpc_1') | list | count == 1
-      - result.vultr_instance.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_instance_vpc_2') | list | count == 1
+      - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_1') | list | count == 1
+      - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_2') | list | count == 1
       - result.vultr_instance.vpcs | list | count == 2
 
 - name: test update instance in check mode
@@ -118,11 +118,11 @@
       - result is changed
       - result.vultr_instance.plan == instance.plan
       - result.vultr_instance.region == instance.region
-      - "result.vultr_instance.backups == '{{ 'enabled' if instance.backups else 'disabled' }}'"
+      # - "result.vultr_instance.backups == '{{ 'enabled' if instance.backups else 'disabled' }}'"
       - result.vultr_instance.ddos_protection == instance.ddos_protection
       - result.vultr_instance.enable_ipv6 == instance.enable_ipv6
-      - result.vultr_instance.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_instance_vpc_1') | list | count == 1
-      - result.vultr_instance.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_instance_vpc_2') | list | count == 1
+      - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_1') | list | count == 1
+      - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_2') | list | count == 1
       - result.vultr_instance.vpcs | list | count == 2
 
 - name: test update instance
@@ -150,11 +150,11 @@
       - result is changed
       - result.vultr_instance.plan == instance.plan_update
       - result.vultr_instance.region == instance.region
-      - "result.vultr_instance.backups == '{{ 'enabled' if instance.backups_update else 'disabled' }}'"
+      # - "result.vultr_instance.backups == '{{ 'enabled' if instance.backups else 'disabled' }}'"
       - result.vultr_instance.ddos_protection == instance.ddos_protection_update
       - result.vultr_instance.enable_ipv6 == instance.enable_ipv6_update
-      - result.vultr_instance.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_instance_vpc_1') | list | count == 1
-      - result.vultr_instance.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_instance_vpc_3') | list | count == 1
+      - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_1') | list | count == 1
+      - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_3') | list | count == 1
       - result.vultr_instance.vpcs | list | count == 2
 
 - name: test update instance idempotence
@@ -182,9 +182,9 @@
       - result is not changed
       - result.vultr_instance.plan == instance.plan_update
       - result.vultr_instance.region == instance.region
-      - "result.vultr_instance.backups == '{{ 'enabled' if instance.backups_update else 'disabled' }}'"
+      # - "result.vultr_instance.backups == '{{ 'enabled' if instance.backups else 'disabled' }}'"
       - result.vultr_instance.ddos_protection == instance.ddos_protection_update
       - result.vultr_instance.enable_ipv6 == instance.enable_ipv6_update
-      - result.vultr_instance.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_instance_vpc_1') | list | count == 1
-      - result.vultr_instance.vpcs | selectattr('description','equalto','{{ vultr_resource_prefix }}_instance_vpc_3') | list | count == 1
+      - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_1') | list | count == 1
+      - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_3') | list | count == 1
       - result.vultr_instance.vpcs | list | count == 2

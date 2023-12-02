@@ -19,7 +19,7 @@
 - name: verify test gather vultr vpc info in check mode
   ansible.builtin.assert:
     that:
-      - result.vultr_vpc_info|selectattr('description','equalto','{{ vultr_vpc_description }}') | list | count == 1
+      - result.vultr_vpc_info|selectattr('description','equalto',vultr_vpc_description) | list | count == 1
 
 - name: test gather VPC info
   vultr.cloud.vpc_info:
@@ -28,7 +28,7 @@
 - name: verify test gather vultr vpc info
   ansible.builtin.assert:
     that:
-      - result.vultr_vpc_info|selectattr('description','equalto','{{ vultr_vpc_description }}') | list | count == 1
+      - result.vultr_vpc_info|selectattr('description','equalto',vultr_vpc_description) | list | count == 1
 
 - name: Delete the VPC
   vultr.cloud.vpc:

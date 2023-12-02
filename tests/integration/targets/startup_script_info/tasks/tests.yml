@@ -18,7 +18,7 @@
 - name: verify test gather vultr startup script info in check mode
   ansible.builtin.assert:
     that:
-      - result.vultr_startup_script_info|selectattr('name','equalto','{{ startup_script_name }}') | list | count == 1
+      - result.vultr_startup_script_info|selectattr('name','equalto',startup_script_name) | list | count == 1
 
 - name: test gather vultr startup script info
   vultr.cloud.startup_script_info:
@@ -27,7 +27,7 @@
 - name: verify test gather vultr startup script info
   ansible.builtin.assert:
     that:
-      - result.vultr_startup_script_info|selectattr('name','equalto','{{ startup_script_name }}') | list | count == 1
+      - result.vultr_startup_script_info|selectattr('name','equalto',startup_script_name) | list | count == 1
 
 - name: Delete the script
   vultr.cloud.startup_script:
