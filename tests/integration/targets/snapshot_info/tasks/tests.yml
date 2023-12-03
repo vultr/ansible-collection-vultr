@@ -17,7 +17,7 @@
 - name: verify test gather vultr snapshot info in check mode
   ansible.builtin.assert:
     that:
-      - result.vultr_snapshot_info|selectattr('description','equalto','{{ vultr_snapshot_description }}') | list | count == 1
+      - result.vultr_snapshot_info|selectattr('description','equalto',vultr_snapshot_description) | list | count == 1
 
 - name: test gather snapshot info
   vultr.cloud.snapshot_info:
@@ -26,7 +26,7 @@
 - name: verify test gather vultr snapshot info
   ansible.builtin.assert:
     that:
-      - result.vultr_snapshot_info|selectattr('description','equalto','{{ vultr_snapshot_description }}') | list | count == 1
+      - result.vultr_snapshot_info|selectattr('description','equalto',vultr_snapshot_description) | list | count == 1
 
 - name: Delete the snapshot
   vultr.cloud.snapshot:

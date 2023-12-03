@@ -21,8 +21,8 @@
 - name: verify test gather vultr instance info in check mode
   ansible.builtin.assert:
     that:
-      - result.vultr_instance_info|selectattr('label','search','^{{ vultr_resource_prefix }}') | list | count == 2
-      - result.vultr_instance_info|selectattr('label','equalto','{{ vultr_resource_prefix }}_info1') | list | count == 1
+      - result.vultr_instance_info|selectattr('label','search','^' ~ vultr_resource_prefix) | list | count == 2
+      - result.vultr_instance_info|selectattr('label','equalto',vultr_resource_prefix ~ '_info1') | list | count == 1
 
 - name: test gather vultr instance info
   vultr.cloud.instance_info:
@@ -30,8 +30,8 @@
 - name: verify test gather vultr instance info
   ansible.builtin.assert:
     that:
-      - result.vultr_instance_info|selectattr('label','search','^{{ vultr_resource_prefix }}') | list | count == 2
-      - result.vultr_instance_info|selectattr('label','equalto','{{ vultr_resource_prefix }}_info1') | list | count == 1
+      - result.vultr_instance_info|selectattr('label','search','^' ~ vultr_resource_prefix) | list | count == 2
+      - result.vultr_instance_info|selectattr('label','equalto',vultr_resource_prefix ~ '_info1') | list | count == 1
 
 - name: test gather vultr instance info filter region
   vultr.cloud.instance_info:
@@ -40,7 +40,7 @@
 - name: verify test gather vultr instance info filter region
   ansible.builtin.assert:
     that:
-      - result.vultr_instance_info|selectattr('label','search','^{{ vultr_resource_prefix }}') | list | count == 1
+      - result.vultr_instance_info|selectattr('label','search','^' ~ vultr_resource_prefix) | list | count == 1
 
 - name: test gather vultr instance info filter label
   vultr.cloud.instance_info:
@@ -49,8 +49,8 @@
 - name: verify test gather vultr instance info
   ansible.builtin.assert:
     that:
-      - result.vultr_instance_info|selectattr('label','search','^{{ vultr_resource_prefix }}') | list | count == 1
-      - result.vultr_instance_info|selectattr('label','equalto','{{ vultr_resource_prefix }}_info2') | list | count == 1
+      - result.vultr_instance_info|selectattr('label','search','^' ~ vultr_resource_prefix) | list | count == 1
+      - result.vultr_instance_info|selectattr('label','equalto',vultr_resource_prefix ~ '_info2') | list | count == 1
 
 - name: cleanup
   vultr.cloud.instance:

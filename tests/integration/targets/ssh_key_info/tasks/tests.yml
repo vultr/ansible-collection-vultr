@@ -9,8 +9,8 @@
 - name: verify test get vultr ssh key infos in check mode
   ansible.builtin.assert:
     that:
-      - result.vultr_ssh_key_info|selectattr('name','equalto','{{ ssh_key_name }}') | list | count == 0
-      - result.vultr_ssh_key_info|selectattr('ssh_key','equalto','{{ ssh_key_content }}') | list | count == 0
+      - result.vultr_ssh_key_info|selectattr('name','equalto',ssh_key_name) | list | count == 0
+      - result.vultr_ssh_key_info|selectattr('ssh_key','equalto',ssh_key_content) | list | count == 0
 
 - name: Upload an ssh key
   vultr.cloud.ssh_key:
@@ -25,8 +25,8 @@
 - name: verify test get vultr ssh key infos in check mode
   ansible.builtin.assert:
     that:
-      - result.vultr_ssh_key_info|selectattr('name','equalto','{{ ssh_key_name }}') | list | count == 1
-      - result.vultr_ssh_key_info|selectattr('ssh_key','equalto','{{ ssh_key_content }}') | list | count == 1
+      - result.vultr_ssh_key_info|selectattr('name','equalto',ssh_key_name) | list | count == 1
+      - result.vultr_ssh_key_info|selectattr('ssh_key','equalto',ssh_key_content) | list | count == 1
 
 - name: test get vultr ssh key info
   vultr.cloud.ssh_key_info:
@@ -35,8 +35,8 @@
 - name: verify test get vultr ssh key infos
   ansible.builtin.assert:
     that:
-      - result.vultr_ssh_key_info|selectattr('name','equalto','{{ ssh_key_name }}') | list | count == 1
-      - result.vultr_ssh_key_info|selectattr('ssh_key','equalto','{{ ssh_key_content }}') | list | count == 1
+      - result.vultr_ssh_key_info|selectattr('name','equalto',ssh_key_name) | list | count == 1
+      - result.vultr_ssh_key_info|selectattr('ssh_key','equalto',ssh_key_content) | list | count == 1
 
 - name: Destroy the ssh key
   vultr.cloud.ssh_key:

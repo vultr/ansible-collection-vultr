@@ -28,7 +28,7 @@
 - name: verify test gather vultr firewall rule info in check mode
   ansible.builtin.assert:
     that:
-      - result.vultr_firewall_rule_info|selectattr('notes','equalto','{{ firewall_group_name }}') | list | count == 1
+      - result.vultr_firewall_rule_info|selectattr('notes','equalto',firewall_group_name) | list | count == 1
 
 - name: test gather vultr firewall rule info
   vultr.cloud.firewall_rule_info:
@@ -37,7 +37,7 @@
 - name: verify test gather vultr firewall rule info
   ansible.builtin.assert:
     that:
-      - result.vultr_firewall_rule_info|selectattr('notes','equalto','{{ firewall_group_name }}') | list | count == 1
+      - result.vultr_firewall_rule_info|selectattr('notes','equalto',firewall_group_name) | list | count == 1
 
 - name: Delete the firewall group
   vultr.cloud.firewall_group:
