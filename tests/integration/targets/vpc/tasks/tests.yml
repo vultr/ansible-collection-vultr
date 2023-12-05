@@ -72,9 +72,38 @@
       - result.vultr_vpc.v4_subnet == vultr_vpc_v4_subnet
       - result.vultr_vpc.v4_subnet_mask == vultr_vpc_v4_subnet_mask
 
+- name: test create vpc in diff region but same description
+  vultr.cloud.vpc:
+    description: "{{ vultr_vpc_description }}"
+    v4_subnet: "{{ vultr_vpc_v4_subnet }}"
+    v4_subnet_mask: "{{ vultr_vpc_v4_subnet_mask }}"
+    region: "{{ vultr_vpc_region_2 }}"
+  register: result
+- name: verify test create vpc in diff region but same description
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_vpc.description == vultr_vpc_description
+      - result.vultr_vpc.region == vultr_vpc_region_2
+      - result.vultr_vpc.v4_subnet == vultr_vpc_v4_subnet
+      - result.vultr_vpc.v4_subnet_mask == vultr_vpc_v4_subnet_mask
+
+- name: test destroy vpc having 2 vpcs with same description distinqush region
+  vultr.cloud.vpc:
+    description: "{{ vultr_vpc_description }}"
+    state: absent
+  register: result
+  ignore_errors: true
+  check_mode: true
+- name: verify test destroy vpc having 2 vpcs with same description distinqush region
+  ansible.builtin.assert:
+    that:
+      - result is failed
+
 - name: test destroy vpc in check mode
   vultr.cloud.vpc:
     description: "{{ vultr_vpc_description }}"
+    region: "{{ vultr_vpc_region }}"
     state: absent
   register: result
   check_mode: true
@@ -90,6 +119,7 @@
 - name: test destroy vpc
   vultr.cloud.vpc:
     description: "{{ vultr_vpc_description }}"
+    region: "{{ vultr_vpc_region }}"
     state: absent
   register: result
 - name: verify test destroy vpc
@@ -104,9 +134,21 @@
 - name: test destroy an existing vpc idempotence
   vultr.cloud.vpc:
     description: "{{ vultr_vpc_description }}"
+    region: "{{ vultr_vpc_region }}"
     state: absent
   register: result
 - name: verify test destroy an existing vpc idempotence
   ansible.builtin.assert:
     that:
       - result is not changed
+
+- name: cleanup vpc in diff region
+  vultr.cloud.vpc:
+    description: "{{ vultr_vpc_description }}"
+    region: "{{ vultr_vpc_region_2 }}"
+    state: absent
+  register: result
+- name: verify test cleanup vpc in diff region
+  ansible.builtin.assert:
+    that:
+      - result is changed

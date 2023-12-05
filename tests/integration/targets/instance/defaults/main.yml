@@ -7,6 +7,10 @@ vultr_instance_ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAgEAyWYItY+3w5b8PdGRoz0
 
 vutr_instance_vpcs:
   - description: "{{ vultr_resource_prefix }}_instance_vpc_1"
+    v4_subnet: 192.168.24.0
+    v4_subnet_mask: 24
+    region: ewr
+  - description: "{{ vultr_resource_prefix }}_instance_vpc_1"
     v4_subnet: 192.168.42.0
     v4_subnet_mask: 24
     region: ams
