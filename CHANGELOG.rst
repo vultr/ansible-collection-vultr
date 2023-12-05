@@ -5,6 +5,20 @@ Vultr Collection Release Notes
 .. contents:: Topics
 
 
+v1.11.0
+=======
+
+Minor Changes
+-------------
+
+- Implemented a feature to distinguish resources by region if available. This allows to have identical name per region e.g. a VPC named ``default`` in each region. (https://github.com/vultr/ansible-collection-vultr/pull/98).
+- instance - Added a new param ``user_scheme`` to change user scheme to non-root on Linux while creating the instance (https://github.com/vultr/ansible-collection-vultr/issues/96).
+
+Bugfixes
+--------
+
+- reserved_ip - Fixed an issue which caused the module to fail, also enabled integration tests (https://github.com/vultr/ansible-collection-vultr/issues/92).
+
 v1.10.1
 =======
 
