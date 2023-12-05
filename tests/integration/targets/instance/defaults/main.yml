@@ -42,13 +42,14 @@ vultr_instances:
       - three
       - four
     region: ams
-    os: Debian 11 x64 (bullseye)
+    os: Debian 12 x64 (bookworm)
     backups: true
     backups_update: false
     ddos_protection: true
     ddos_protection_update: false
     enable_ipv6: false
     enable_ipv6_update: true
+    user_scheme: limited
     vpcs:
       - "{{ vultr_resource_prefix }}_instance_vpc_1"
       - "{{ vultr_resource_prefix }}_instance_vpc_2"

@@ -46,6 +46,7 @@
     image: "{{ instance.image | default(omit) }}"
     snapshot: "{{ instance.snapshot | default(omit) }}"
     vpcs: "{{ instance.vpcs | default(omit) }}"
+    user_scheme: "{{ instance.user_scheme | default(omit) }}"
   register: result
 - name: verify test create instance
   ansible.builtin.assert:
@@ -59,6 +60,7 @@
       - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_1') | list | count == 1
       - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_2') | list | count == 1
       - result.vultr_instance.vpcs | list | count == 2
+      - result.vultr_instance.user_scheme == instance.user_scheme | default('root')
 
 - name: test create instance idempotence
   vultr.cloud.instance:
@@ -78,6 +80,7 @@
     image: "{{ instance.image | default(omit) }}"
     snapshot: "{{ instance.snapshot | default(omit) }}"
     vpcs: "{{ instance.vpcs | default(omit) }}"
+    user_scheme: "{{ instance.user_scheme | default(omit) }}"
   register: result
 - name: verify test create instance idempotence
   ansible.builtin.assert:
@@ -91,6 +94,7 @@
       - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_1') | list | count == 1
       - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_2') | list | count == 1
       - result.vultr_instance.vpcs | list | count == 2
+      - result.vultr_instance.user_scheme == instance.user_scheme | default('root')
 
 - name: test update instance in check mode
   vultr.cloud.instance:
@@ -110,6 +114,7 @@
     image: "{{ instance.image | default(omit) }}"
     snapshot: "{{ instance.snapshot | default(omit) }}"
     vpcs: "{{ instance.vpcs_update | default(omit) }}"
+    user_scheme: "{{ instance.user_scheme | default(omit) }}"
   register: result
   check_mode: true
 - name: verify test update instance in check mode
@@ -124,6 +129,7 @@
       - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_1') | list | count == 1
       - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_2') | list | count == 1
       - result.vultr_instance.vpcs | list | count == 2
+      - result.vultr_instance.user_scheme == instance.user_scheme | default('root')
 
 - name: test update instance
   vultr.cloud.instance:
@@ -143,7 +149,11 @@
     image: "{{ instance.image | default(omit) }}"
     snapshot: "{{ instance.snapshot | default(omit) }}"
     vpcs: "{{ instance.vpcs_update | default(omit) }}"
+    user_scheme: "{{ instance.user_scheme | default(omit) }}"
   register: result
+  until: result is not failed
+  retries: 10
+  delay: 3
 - name: verify test update instance
   ansible.builtin.assert:
     that:
@@ -156,6 +166,7 @@
       - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_1') | list | count == 1
       - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_3') | list | count == 1
       - result.vultr_instance.vpcs | list | count == 2
+      - result.vultr_instance.user_scheme == instance.user_scheme | default('root')
 
 - name: test update instance idempotence
   vultr.cloud.instance:
@@ -175,6 +186,7 @@
     image: "{{ instance.image | default(omit) }}"
     snapshot: "{{ instance.snapshot | default(omit) }}"
     vpcs: "{{ instance.vpcs_update | default(omit) }}"
+    user_scheme: "{{ instance.user_scheme | default(omit) }}"
   register: result
 - name: verify test update instance idempotence
   ansible.builtin.assert:
@@ -188,3 +200,4 @@
       - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_1') | list | count == 1
       - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_3') | list | count == 1
       - result.vultr_instance.vpcs | list | count == 2
+      - result.vultr_instance.user_scheme == instance.user_scheme | default('root')
