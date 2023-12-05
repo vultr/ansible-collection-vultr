@@ -75,7 +75,6 @@ class AnsibleVultr:
         resource_update_param_keys=None,
         resource_update_method="PATCH",
     ):
-
         self.module = module
         self.namespace = namespace
 
@@ -202,9 +201,23 @@ class AnsibleVultr:
         found = dict()
         for resource in self.query_list(path=path, result_key=result_key, query_params=query_params):
             if resource.get(key_name) == param_value:
+                # In case the resource has a region, distinguish between the region
+                # This allows to have identical identifiers (e.g. names) per region
+                region_param = self.module.params.get("region")
+                region_resource = resource.get("region")
+                if region_resource and region_param and (region_param != region_resource):
+                    continue
+
                 if found:
-                    self.module.fail_json(msg="More than one record with name=%s found. " "Use multiple=true if module supports it." % param_value)
+                    if region_resource and not region_param:
+                        msg = "More than one record with name=%s found. Use region to distinguish." % param_value
+                    else:
+                        msg = "More than one record with name=%s found. Use multiple=true if module supports it." % param_value
+
+                    self.module.fail_json(msg=msg)
+
                 found = resource
+
         if found:
             if get_details:
                 return self.query_by_id(resource_id=found[key_id], skip_transform=skip_transform)

@@ -22,7 +22,7 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
             "param": "vpc2s",
             "path": "/vpc2",
             "suffix": "2",
-        }
+        },
     }
 
     def get_ssh_key_ids(self):
@@ -61,6 +61,9 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
 
         vpc_ids = list()
         for vpc in vpcs:
+            if self.module.params["region"] != vpc["region"]:
+                continue
+
             if vpc["description"] in vpc_names:
                 vpc_ids.append(vpc["id"])
                 vpc_names.remove(vpc["description"])
