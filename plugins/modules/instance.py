@@ -80,6 +80,14 @@ options:
     description:
       - User data to be passed to the instance.
     type: str
+  user_scheme:
+    description:
+      - The user scheme used as login user (Linux-only).
+      - By default, the I(root) user is configured.
+      - Only considered while creating the instance.
+    type: str
+    choices: [ root, limited ]
+    version_added: "1.11.0"
   startup_script:
     description:
       - Name or ID of the startup script to execute on boot.
@@ -362,6 +370,12 @@ vultr_instance:
       returned: success
       type: str
       sample: I2Nsb3VkLWNvbmZpZwpwYWNrYWdlczoKICAtIGh0b3AK
+    user_scheme:
+      description: The user scheme to login into this instance
+      returned: success
+      type: str
+      sample: root
+      version_added: "1.11.0"
     backups:
       description: Whether backups are enabled or disabled.
       returned: success
@@ -416,7 +430,6 @@ from ..module_utils.vultr_v2 import vultr_argument_spec
 
 
 class AnsibleVultrInstance(AnsibleVultrCommonInstance):
-
     def handle_power_status(self, resource, state, action, power_status, force=False, wait_for_state=True):
         if state == self.module.params["state"] and (resource["power_status"] != power_status or force):
             self.result["changed"] = True
@@ -491,6 +504,7 @@ def main():
             user_data=dict(type="str"),
             ssh_keys=dict(type="list", elements="str", no_log=False),
             region=dict(type="str", required=True),
+            user_scheme=dict(type="str", choices=["root", "limited"]),
             state=dict(
                 choices=[
                     "present",
@@ -538,6 +552,7 @@ def main():
             "sshkey_id",
             "backups",
             "attach_vpc",
+            "user_scheme",
         ],
         resource_update_param_keys=[
             "plan",
