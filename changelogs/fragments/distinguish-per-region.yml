@@ -1,3 +1,0 @@
-minor_changes:
-  - Implemented a feature to distinguish resources by region if available.
-    This allows to have identical name per region e.g. a VPC named ``default`` in each region. (https://github.com/vultr/ansible-collection-vultr/pull/98).

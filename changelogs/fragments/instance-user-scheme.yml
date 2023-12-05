@@ -1,3 +1,0 @@
----
-minor_changes:
-  - instance - Added a new param ``user_scheme`` to change user scheme to non-root on Linux while creating the instance (https://github.com/vultr/ansible-collection-vultr/issues/96).
