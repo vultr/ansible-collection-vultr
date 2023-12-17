@@ -15,6 +15,7 @@ action_groups:
     - firewall_rule_info
     - instance
     - instance_info
+    - object_storage
     - os_info
     - plan_info
     - plan_metal_info
