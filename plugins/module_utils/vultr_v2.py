@@ -273,10 +273,12 @@ class AnsibleVultr:
         for retry in range(0, retries):
             resource = self.query_by_id(resource_id=resource[self.resource_key_id], skip_transform=False)
             if resource and key in resource:
-                if cmp == "=" and resource[key] in states:
-                    break
-                elif resource[key] not in states:
-                    break
+                if cmp == "=":
+                    if resource[key] in states:
+                        break
+                else:
+                    if resource[key] not in states:
+                        break
             backoff(retry=retry)
         else:
             if cmp == "=":
