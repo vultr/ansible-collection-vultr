@@ -1,0 +1,93 @@
+# Copyright (c) 2024, René Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: test create object storage in check mode
+  vultr.cloud.object_storage:
+    label: "{{ vultr_object_storage_name }}"
+    cluster: "{{ vultr_object_storage_cluster1 }}"
+  register: result
+  check_mode: true
+- name: verify test create object storage in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test create object storage cluster 1
+  vultr.cloud.object_storage:
+    label: "{{ vultr_object_storage_name }}"
+    cluster: "{{ vultr_object_storage_cluster1 }}"
+  register: result
+- name: verify test create object storage
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_object_storage.label == vultr_object_storage_name
+      - result.vultr_object_storage.s3_hostname == vultr_object_storage_cluster1
+
+- name: test create object storage cluster 2
+  vultr.cloud.object_storage:
+    label: "{{ vultr_object_storage_name }}"
+    cluster: "{{ vultr_object_storage_cluster2 }}"
+  register: result
+- name: verify test create object storage
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_object_storage.label == vultr_object_storage_name
+      - result.vultr_object_storage.s3_hostname == vultr_object_storage_cluster2
+
+- name: test create object storage idempotence
+  vultr.cloud.object_storage:
+    label: "{{ vultr_object_storage_name }}"
+    cluster: "{{ vultr_object_storage_cluster1 }}"
+  register: result
+- name: verify test create object storage idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+      - result.vultr_object_storage.label == vultr_object_storage_name
+      - result.vultr_object_storage.s3_hostname == vultr_object_storage_cluster1
+
+- name: test delete object storage in check mode
+  vultr.cloud.object_storage:
+    label: "{{ vultr_object_storage_name }}"
+    cluster: "{{ vultr_object_storage_cluster1 }}"
+    state: absent
+  check_mode: true
+  register: result
+- name: verify test delete object storage in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_object_storage.label == vultr_object_storage_name
+      - result.vultr_object_storage.s3_hostname == vultr_object_storage_cluster1
+
+- name: test delete object storage
+  vultr.cloud.object_storage:
+    label: "{{ vultr_object_storage_name }}"
+    cluster: "{{ vultr_object_storage_cluster1 }}"
+    state: absent
+  register: result
+- name: verify test delete object storage
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_object_storage.label == vultr_object_storage_name
+      - result.vultr_object_storage.s3_hostname == vultr_object_storage_cluster1
+
+- name: test delete object storage idempotence
+  vultr.cloud.object_storage:
+    label: "{{ vultr_object_storage_name }}"
+    cluster: "{{ vultr_object_storage_cluster1 }}"
+    state: absent
+  register: result
+- name: verify test delete object storage idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+
+- name: cleanup object storage cluster 2
+  vultr.cloud.object_storage:
+    label: "{{ vultr_object_storage_name }}"
+    cluster: "{{ vultr_object_storage_cluster2 }}"
+    state: absent

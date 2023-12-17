@@ -1,0 +1,10 @@
+---
+- name: test fail if missing required
+  vultr.cloud.object_storage:
+  register: result
+  ignore_errors: true
+- name: verify test fail if missing required
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - 'result.msg == "missing required arguments: cluster, label"'
