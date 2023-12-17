@@ -164,7 +164,8 @@ class AnsibleVultr:
             # Check for:
             # 429 Too Many Requests
             # 500 Internal Server Error
-            if info["status"] not in (429, 500):
+            # 504 Gateway Time-out
+            if info["status"] not in (429, 500, 504):
                 break
 
             # Vultr has a rate limiting requests per second, try to be polite
