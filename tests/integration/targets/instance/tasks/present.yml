@@ -151,9 +151,6 @@
     vpcs: "{{ instance.vpcs_update | default(omit) }}"
     user_scheme: "{{ instance.user_scheme | default(omit) }}"
   register: result
-  until: result is not failed
-  retries: 10
-  delay: 3
 - name: verify test update instance
   ansible.builtin.assert:
     that:
