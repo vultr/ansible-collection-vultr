@@ -1,2 +1,0 @@
-minor_changes:
-  - Added retry on HTTP 504 returned by the API (https://github.com/vultr/ansible-collection-vultr/pull/104).

@@ -1,2 +1,0 @@
-bugfixes:
-  - Fixed an issue with waiting for state (https://github.com/vultr/ansible-collection-vultr/pull/102).

@@ -132,6 +132,20 @@ releases:
     - instance-user-scheme.yml
     - reserved_ip-fix-broken-module.yml
     release_date: '2023-12-05'
+  1.12.0:
+    changes:
+      bugfixes:
+      - Fixed an issue with waiting for state (https://github.com/vultr/ansible-collection-vultr/pull/102).
+      minor_changes:
+      - Added retry on HTTP 504 returned by the API (https://github.com/vultr/ansible-collection-vultr/pull/104).
+    fragments:
+    - 102-state-detect.yml
+    - 104- retry-on-gateway-timeout.yml
+    modules:
+    - description: Manages object storages on Vultr
+      name: object_storage
+      namespace: ''
+    release_date: '2023-12-18'
   1.2.0:
     changes:
       minor_changes:

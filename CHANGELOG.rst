@@ -5,6 +5,24 @@ Vultr Collection Release Notes
 .. contents:: Topics
 
 
+v1.12.0
+=======
+
+Minor Changes
+-------------
+
+- Added retry on HTTP 504 returned by the API (https://github.com/vultr/ansible-collection-vultr/pull/104).
+
+Bugfixes
+--------
+
+- Fixed an issue with waiting for state (https://github.com/vultr/ansible-collection-vultr/pull/102).
+
+New Modules
+-----------
+
+- object_storage - Manages object storages on Vultr
+
 v1.11.0
 =======
 
