@@ -239,8 +239,8 @@ def main():
     argument_spec = vultr_argument_spec()
     argument_spec.update(
         dict(
-            region=dict(type="str", aliases=["name"]),
-            label=dict(type="str"),
+            region=dict(type="str"),
+            label=dict(type="str", aliases=["name"]),
         )  # type: ignore
     )
 
