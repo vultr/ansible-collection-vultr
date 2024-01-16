@@ -271,8 +271,9 @@ class AnsibleVultr:
         return resources[result_key] if resources else []
 
     def wait_for_state(self, resource, key, states, cmp="=", retries=60):
+        resource_id = resource[self.resource_key_id]
         for retry in range(0, retries):
-            resource = self.query_by_id(resource_id=resource[self.resource_key_id], skip_transform=False)
+            resource = self.query_by_id(resource_id=resource_id, skip_transform=False)
             if resource and key in resource:
                 if cmp == "=":
                     if resource[key] in states:
