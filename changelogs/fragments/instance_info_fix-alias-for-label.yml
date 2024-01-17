@@ -1,3 +1,0 @@
-bugfixes:
-- instance_info - Fixed the alias ``name`` being was used on the wrong argument.
-  (https://github.com/vultr/ansible-collection-vultr/issues/105).

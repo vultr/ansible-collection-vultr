@@ -16,4 +16,4 @@ repository: "https://github.com/vultr/ansible-collection-vultr"
 tags:
   - cloud
   - vultr
-version: 1.12.0
+version: 1.12.1

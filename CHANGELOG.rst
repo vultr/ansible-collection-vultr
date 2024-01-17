@@ -5,6 +5,15 @@ Vultr Collection Release Notes
 .. contents:: Topics
 
 
+v1.12.1
+=======
+
+Bugfixes
+--------
+
+- Fixed an error while waiting for a specific state and the API returns an empty response. (https://github.com/vultr/ansible-collection-vultr/issues/108).
+- instance_info - Fixed the alias ``name`` being was used on the wrong argument. (https://github.com/vultr/ansible-collection-vultr/issues/105).
+
 v1.12.0
 =======
 
