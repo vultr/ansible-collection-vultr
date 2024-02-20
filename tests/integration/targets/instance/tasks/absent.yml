@@ -20,6 +20,7 @@
     label: "{{ instance.label }}"
     region: "{{ instance.region }}"
     state: absent
+    api_retries: 20
   register: result
 - name: verify test absent instance
   ansible.builtin.assert:
