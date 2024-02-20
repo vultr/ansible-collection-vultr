@@ -25,7 +25,10 @@ options:
     default: 180
   api_retries:
     description:
-      - Amount of retries in case of the Vultr API retuns an HTTP 503 code.
+      - Amount of retries in case of the Vultr API retuns an HTTP error code, such as
+          - 429 Too Many Requests
+          - 500 Internal Server Error
+          - 504 Gateway Time-out
       - Fallback environment variable C(VULTR_API_RETRIES).
     type: int
     default: 5
