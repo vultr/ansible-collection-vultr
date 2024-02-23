@@ -61,24 +61,23 @@ vultr_instances:
       - "{{ vultr_resource_prefix }}_instance_vpc_1"
       - "{{ vultr_resource_prefix }}_instance_vpc_3"
 
-  #TODO: Disabled, this app does not exist anymore, find a new app
-  # - label: "{{ vultr_resource_prefix }}_app1"
-  #   plan: vc2-1c-1gb
-  #   plan_update: vc2-1c-2gb
-  #   region: ams
-  #   app: Docker on Ubuntu 20.04 x64
-  #   backups: false
-  #   backups_update: false
-  #   ddos_protection: false
-  #   ddos_protection_update: false
-  #   enable_ipv6: false
-  #   enable_ipv6_update: false
-  #   vpcs:
-  #     - "{{ vultr_resource_prefix }}_instance_vpc_1"
-  #     - "{{ vultr_resource_prefix }}_instance_vpc_2"
-  #   vpcs_update:
-  #     - "{{ vultr_resource_prefix }}_instance_vpc_1"
-  #     - "{{ vultr_resource_prefix }}_instance_vpc_3"
+  - label: "{{ vultr_resource_prefix }}_app1"
+    plan: vc2-1c-1gb
+    plan_update: vc2-1c-2gb
+    region: ams
+    app: GitLab on Ubuntu 22.04 x64
+    backups: false
+    backups_update: false
+    ddos_protection: false
+    ddos_protection_update: false
+    enable_ipv6: false
+    enable_ipv6_update: false
+    vpcs:
+      - "{{ vultr_resource_prefix }}_instance_vpc_1"
+      - "{{ vultr_resource_prefix }}_instance_vpc_2"
+    vpcs_update:
+      - "{{ vultr_resource_prefix }}_instance_vpc_1"
+      - "{{ vultr_resource_prefix }}_instance_vpc_3"
 
   - label: "{{ vultr_resource_prefix }}_img1"
     plan: vc2-1c-1gb
