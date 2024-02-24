@@ -64,7 +64,7 @@
     region: "{{ item.region }}"
     state: absent
   with_items: "{{ vutr_instance_vpcs }}"
-  retries: 5
+  retries: 20
   delay: 3
   register: result
   until: result is not failed

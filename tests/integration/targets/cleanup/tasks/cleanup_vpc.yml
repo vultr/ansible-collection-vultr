@@ -27,7 +27,7 @@
       loop_control:
         label: "{{ item.description }}"
         pause: 2
-      retries: 5
+      retries: 20
       delay: 3
       register: result
       until: result is not failed
