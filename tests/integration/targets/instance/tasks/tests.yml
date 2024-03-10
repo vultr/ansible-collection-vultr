@@ -29,6 +29,14 @@
     region: "{{ item.region }}"
   with_items: "{{ vutr_instance_vpcs }}"
 
+- name: setup vpc2s
+  vultr.cloud.vpc2:
+    description: "{{ item.description }}"
+    ip_block: "{{ item.ip_block }}"
+    prefix_length: "{{ item.prefix_length }}"
+    region: "{{ item.region }}"
+  with_items: "{{ vutr_instance_vpc2s }}"
+
 - ansible.builtin.include_tasks: present.yml
   with_items: "{{ vultr_instances }}"
   loop_control:
@@ -64,6 +72,17 @@
     region: "{{ item.region }}"
     state: absent
   with_items: "{{ vutr_instance_vpcs }}"
+  retries: 20
+  delay: 3
+  register: result
+  until: result is not failed
+
+- name: cleanup vpc2s
+  vultr.cloud.vpc2:
+    description: "{{ item.description }}"
+    region: "{{ item.region }}"
+    state: absent
+  with_items: "{{ vutr_instance_vpc2s }}"
   retries: 20
   delay: 3
   register: result
