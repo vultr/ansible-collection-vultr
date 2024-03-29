@@ -120,6 +120,12 @@ options:
     type: list
     elements: str
     version_added: "1.5.0"
+  skip_wait:
+    description:
+      - Whether to skip the wait for the instance to be completely ready for access.
+    type: bool
+    default: false
+    version_added: "1.13.0"
   state:
     description:
       - State of the instance.
@@ -439,19 +445,49 @@ class AnsibleVultrInstance(AnsibleVultrCommonInstance):
                     path="%s/%s/%s" % (self.resource_path, resource[self.resource_key_id], action),
                     method="POST",
                 )
-                if wait_for_state:
-                    resource = self.wait_for_state(resource=resource, key="power_status", states=[power_status])
+                resource = self.wait_for_state(
+                    resource=resource,
+                    key="power_status",
+                    states=[power_status],
+                    skip_wait=not wait_for_state,
+                )
         return resource
 
     def create_or_update(self):
         resource = super(AnsibleVultrInstance, self).create_or_update()
         if resource:
-            resource = self.wait_for_state(resource=resource, key="server_status", states=["none", "locked"], cmp="!=")
+            if not self.module.check_mode and self.module.params.get("state") == "present":
+                resource = self.wait_for_state(
+                    resource=resource,
+                    key="server_status",
+                    states=["none", "locked"],
+                    cmp="!=",
+                    skip_wait=self.module.params.get("skip_wait", False),
+                )
 
             # Hanlde power status
-            resource = self.handle_power_status(resource=resource, state="stopped", action="halt", power_status="stopped")
-            resource = self.handle_power_status(resource=resource, state="started", action="start", power_status="running")
-            resource = self.handle_power_status(resource=resource, state="restarted", action="reboot", power_status="running", force=True)
+            resource = self.handle_power_status(
+                resource=resource,
+                state="stopped",
+                action="halt",
+                power_status="stopped",
+                wait_for_state=not self.module.params.get("skip_wait", False),
+            )
+            resource = self.handle_power_status(
+                resource=resource,
+                state="started",
+                action="start",
+                power_status="running",
+                wait_for_state=not self.module.params.get("skip_wait", False),
+            )
+            resource = self.handle_power_status(
+                resource=resource,
+                state="restarted",
+                action="reboot",
+                power_status="running",
+                force=True,
+                wait_for_state=not self.module.params.get("skip_wait", False),
+            )
             resource = self.handle_power_status(
                 resource=resource,
                 state="reinstalled",
@@ -505,6 +541,7 @@ def main():
             ssh_keys=dict(type="list", elements="str", no_log=False),
             region=dict(type="str", required=True),
             user_scheme=dict(type="str", choices=["root", "limited"]),
+            skip_wait=dict(type="bool", default=False),
             state=dict(
                 choices=[
                     "present",
