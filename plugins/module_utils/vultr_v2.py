@@ -275,7 +275,10 @@ class AnsibleVultr:
         resources = self.api_query(path=path, query_params=query_params)
         return resources[result_key] if resources else []
 
-    def wait_for_state(self, resource, key, states, cmp="=", retries=60):
+    def wait_for_state(self, resource, key, states, cmp="=", retries=60, skip_wait=False):
+        if skip_wait:
+            return resource
+
         resource_id = resource[self.resource_key_id]
         for retry in range(0, retries):
             resource = self.query_by_id(resource_id=resource_id, skip_transform=False)

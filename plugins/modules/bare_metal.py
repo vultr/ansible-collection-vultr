@@ -101,6 +101,12 @@ options:
       - A list of VPCs (VPC 2.0) identified by their description to be assigned to the bare metal machine.
     type: list
     elements: str
+  skip_wait:
+    description:
+      - Whether to skip the wait for the instance to be completely ready for access.
+    type: bool
+    default: false
+    version_added: "1.13.0"
   state:
     description:
       - State of the bare metal machine.
@@ -376,6 +382,7 @@ def main():
             user_data=dict(type="str"),
             ssh_keys=dict(type="list", elements="str", no_log=False),
             region=dict(type="str", required=True),
+            skip_wait=dict(type="bool", default=False),
             state=dict(
                 choices=[
                     "present",
