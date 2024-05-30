@@ -117,9 +117,17 @@ options:
   vpcs:
     description:
       - A list of VPCs identified by their description to be assigned to the instance.
+      - Mutually exclusive with I(vpc2s).
     type: list
     elements: str
     version_added: "1.5.0"
+  vpc2s:
+    description:
+      - A list of VPCs (VPC 2.0) identified by their description to be assigned to the bare metal machine.
+      - Mutually exclusive with I(vpcs).
+    type: list
+    elements: str
+    version_added: "1.13.0"
   state:
     description:
       - State of the instance.
@@ -420,6 +428,37 @@ vultr_instance:
           returned: success
           type: str
           sample: "5a:01:04:3d:5e:72"
+    vpc2s:
+      description: List of VPC2s attached.
+      returned: success
+      type: list
+      version_added: "1.13.0"
+      contains:
+        id:
+          description: ID of the VPC.
+          returned: success
+          type: str
+          sample: 5536d2a4-66fd-4dfb-b839-7672fd5bc116
+        description:
+          description: Description of the VPC.
+          returned: success
+          type: str
+          sample: my vpc
+        ip_address:
+          description: IP assigned from the VPC.
+          returned: success
+          type: str
+          sample: "192.168.23.3"
+        mac_address:
+          description: MAC address of the network interface.
+          returned: success
+          type: str
+          sample: "5a:01:04:3d:5e:72"
+        node_status:
+          description: Node status network interface.
+          returned: success
+          type: str
+          sample: "active"
 """
 
 
@@ -498,6 +537,7 @@ def main():
             enable_ipv6=dict(type="bool"),
             tags=dict(type="list", elements="str"),
             vpcs=dict(type="list", elements="str"),
+            vpc2s=dict(type="list", elements="str"),
             reserved_ipv4=dict(type="str"),
             firewall_group=dict(type="str"),
             startup_script=dict(type="str"),
@@ -522,7 +562,10 @@ def main():
     module = AnsibleModule(
         argument_spec=argument_spec,
         required_if=(("state", "present", ("plan",)),),
-        mutually_exclusive=(("os", "app", "image", "snapshot"),),
+        mutually_exclusive=(
+            ("os", "app", "image", "snapshot"),
+            ("vpcs", "vpc2s"),
+        ),
         supports_check_mode=True,
     )
 
@@ -552,6 +595,7 @@ def main():
             "sshkey_id",
             "backups",
             "attach_vpc",
+            "attach_vpc2",
             "user_scheme",
         ],
         resource_update_param_keys=[
@@ -564,6 +608,8 @@ def main():
             "user_data",
             "attach_vpc",
             "detach_vpc",
+            "attach_vpc2",
+            "detach_vpc2",
         ],
         resource_key_name="label",
     )

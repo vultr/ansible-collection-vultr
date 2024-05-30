@@ -21,6 +21,7 @@
     image: "{{ instance.image | default(omit) }}"
     snapshot: "{{ instance.snapshot | default(omit) }}"
     vpcs: "{{ instance.vpcs | default(omit) }}"
+    vpc2s: "{{ instance.vpc2s | default(omit) }}"
   register: result
   check_mode: true
 - name: verify test create instance in check mode
@@ -46,6 +47,7 @@
     image: "{{ instance.image | default(omit) }}"
     snapshot: "{{ instance.snapshot | default(omit) }}"
     vpcs: "{{ instance.vpcs | default(omit) }}"
+    vpc2s: "{{ instance.vpc2s | default(omit) }}"
     user_scheme: "{{ instance.user_scheme | default(omit) }}"
   register: result
 - name: verify test create instance
@@ -57,9 +59,8 @@
       # - "result.vultr_instance.backups == '{{ 'enabled' if instance.backups else 'disabled' }}'"
       - result.vultr_instance.ddos_protection == instance.ddos_protection
       - result.vultr_instance.enable_ipv6 == instance.enable_ipv6
-      - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_1') | list | count == 1
-      - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_2') | list | count == 1
-      - result.vultr_instance.vpcs | list | count == 2
+      - result.vultr_instance.vpcs | list | count == (instance.vpcs | default([])) | list | count
+      - result.vultr_instance.vpc2s | list | count == (instance.vpc2s | default([])) | list | count
       - result.vultr_instance.user_scheme == instance.user_scheme | default('root')
 
 - name: test create instance idempotence
@@ -80,6 +81,7 @@
     image: "{{ instance.image | default(omit) }}"
     snapshot: "{{ instance.snapshot | default(omit) }}"
     vpcs: "{{ instance.vpcs | default(omit) }}"
+    vpc2s: "{{ instance.vpc2s | default(omit) }}"
     user_scheme: "{{ instance.user_scheme | default(omit) }}"
   register: result
 - name: verify test create instance idempotence
@@ -91,9 +93,8 @@
       # - "result.vultr_instance.backups == '{{ 'enabled' if instance.backups else 'disabled' }}'"
       - result.vultr_instance.ddos_protection == instance.ddos_protection
       - result.vultr_instance.enable_ipv6 == instance.enable_ipv6
-      - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_1') | list | count == 1
-      - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_2') | list | count == 1
-      - result.vultr_instance.vpcs | list | count == 2
+      - result.vultr_instance.vpcs | list | count == (instance.vpcs | default([])) | list | count
+      - result.vultr_instance.vpc2s | list | count == (instance.vpc2s | default([])) | list | count
       - result.vultr_instance.user_scheme == instance.user_scheme | default('root')
 
 - name: test update instance in check mode
@@ -114,6 +115,7 @@
     image: "{{ instance.image | default(omit) }}"
     snapshot: "{{ instance.snapshot | default(omit) }}"
     vpcs: "{{ instance.vpcs_update | default(omit) }}"
+    vpc2s: "{{ instance.vpc2s_update | default(omit) }}"
     user_scheme: "{{ instance.user_scheme | default(omit) }}"
   register: result
   check_mode: true
@@ -126,9 +128,8 @@
       # - "result.vultr_instance.backups == '{{ 'enabled' if instance.backups else 'disabled' }}'"
       - result.vultr_instance.ddos_protection == instance.ddos_protection
       - result.vultr_instance.enable_ipv6 == instance.enable_ipv6
-      - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_1') | list | count == 1
-      - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_2') | list | count == 1
-      - result.vultr_instance.vpcs | list | count == 2
+      - result.vultr_instance.vpcs | list | count == (instance.vpcs | default([])) | list | count
+      - result.vultr_instance.vpc2s | list | count == (instance.vpc2s | default([])) | list | count
       - result.vultr_instance.user_scheme == instance.user_scheme | default('root')
 
 - name: test update instance
@@ -149,6 +150,7 @@
     image: "{{ instance.image | default(omit) }}"
     snapshot: "{{ instance.snapshot | default(omit) }}"
     vpcs: "{{ instance.vpcs_update | default(omit) }}"
+    vpc2s: "{{ instance.vpc2s_update | default(omit) }}"
     user_scheme: "{{ instance.user_scheme | default(omit) }}"
   register: result
 - name: verify test update instance
@@ -160,9 +162,8 @@
       # - "result.vultr_instance.backups == '{{ 'enabled' if instance.backups else 'disabled' }}'"
       - result.vultr_instance.ddos_protection == instance.ddos_protection_update
       - result.vultr_instance.enable_ipv6 == instance.enable_ipv6_update
-      - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_1') | list | count == 1
-      - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_3') | list | count == 1
-      - result.vultr_instance.vpcs | list | count == 2
+      - result.vultr_instance.vpcs | list | count == (instance.vpcs_update | default([])) | list | count
+      - result.vultr_instance.vpc2s | list | count == (instance.vpc2s_update | default([])) | list | count
       - result.vultr_instance.user_scheme == instance.user_scheme | default('root')
 
 - name: test update instance idempotence
@@ -183,6 +184,7 @@
     image: "{{ instance.image | default(omit) }}"
     snapshot: "{{ instance.snapshot | default(omit) }}"
     vpcs: "{{ instance.vpcs_update | default(omit) }}"
+    vpc2s: "{{ instance.vpc2s_update | default(omit) }}"
     user_scheme: "{{ instance.user_scheme | default(omit) }}"
   register: result
 - name: verify test update instance idempotence
@@ -194,7 +196,6 @@
       # - "result.vultr_instance.backups == '{{ 'enabled' if instance.backups else 'disabled' }}'"
       - result.vultr_instance.ddos_protection == instance.ddos_protection_update
       - result.vultr_instance.enable_ipv6 == instance.enable_ipv6_update
-      - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_1') | list | count == 1
-      - result.vultr_instance.vpcs | selectattr('description','equalto',vultr_resource_prefix ~ '_instance_vpc_3') | list | count == 1
-      - result.vultr_instance.vpcs | list | count == 2
+      - result.vultr_instance.vpcs | list | count == (instance.vpcs_update | default([])) | list | count
+      - result.vultr_instance.vpc2s | list | count == (instance.vpc2s_update | default([])) | list | count
       - result.vultr_instance.user_scheme == instance.user_scheme | default('root')
