@@ -5,6 +5,14 @@ Vultr Collection Release Notes
 .. contents:: Topics
 
 
+v1.13.0
+=======
+
+Minor Changes
+-------------
+
+- instance, bare_metal - Implemented a new option ``skip_wait`` (https://github.com/vultr/ansible-collection-vultr/issues/119).
+
 v1.12.1
 =======
 
