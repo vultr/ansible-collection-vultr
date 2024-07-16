@@ -16,6 +16,7 @@ action_groups:
     - instance
     - instance_info
     - object_storage
+    - object_storage_cluster_info
     - object_storage_info
     - os_info
     - plan_info

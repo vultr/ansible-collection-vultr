@@ -1,0 +1,19 @@
+---
+- name: test get vultr object storage cluster infos in check mode
+  vultr.cloud.object_storage_cluster_info:
+  check_mode: true
+  register: check_mode_result
+
+- name: verify test get vultr object storage cluster infos in check mode
+  ansible.builtin.assert:
+    that:
+      - check_mode_result.vultr_object_storage_cluster_info | selectattr('hostname','equalto','ewr1.vultrobjects.com') | list | count == 1
+
+- name: test get vultr object storage cluster infos
+  vultr.cloud.object_storage_cluster_info:
+  register: result
+
+- name: verify test get vultr object storage cluster infos
+  ansible.builtin.assert:
+    that:
+      - result.vultr_object_storage_cluster_info | selectattr('hostname','equalto','ewr1.vultrobjects.com') | list | count == 1
