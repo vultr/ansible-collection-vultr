@@ -1,0 +1,39 @@
+---
+- name: create vultr object stores
+  vultr.cloud.object_storage:
+    label: '{{ obj.label }}'
+    cluster: '{{ obj.cluster }}'
+  register: create_result
+  with_items: '{{ vultr_object_storage_info_stores }}'
+  loop_control:
+    loop_var: obj
+
+- name: test gather vultr object storage info in check mode
+  vultr.cloud.object_storage_info:
+  check_mode: true
+  register: check_mode_result
+
+- name: verify test gather vultr object storage info in check mode
+  ansible.builtin.assert:
+    that:
+      - check_mode_result.vultr_object_storage_info | selectattr('label','search','^' ~ vultr_resource_prefix) | list | count == 2
+      - check_mode_result.vultr_object_storage_info | selectattr('label','equalto',vultr_resource_prefix ~ '-object-storage-info1') | list | count == 1
+
+- name: test gather vultr object storage info
+  vultr.cloud.object_storage_info:
+  register: result
+
+- name: verify test gather vultr object storage info
+  ansible.builtin.assert:
+    that:
+      - result.vultr_object_storage_info | selectattr('label','search','^' ~ vultr_resource_prefix) | list | count == 2
+      - result.vultr_object_storage_info | selectattr('label','equalto',vultr_resource_prefix ~ '-object-storage-info1') | list | count == 1
+
+- name: cleanup
+  vultr.cloud.object_storage:
+    label: "{{ obj.label }}"
+    cluster: "{{ obj.cluster }}"
+    state: absent
+  with_items: "{{ vultr_object_storage_info_stores }}"
+  loop_control:
+    loop_var: obj

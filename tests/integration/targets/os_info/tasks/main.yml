@@ -10,7 +10,7 @@
 - name: verify test get vultr os infos in check mode
   ansible.builtin.assert:
     that:
-      - result.vultr_os_info|selectattr('name','equalto', 'CentOS 7 x64') | list | count == 1
+      - result.vultr_os_info|selectattr('name','equalto', 'Ubuntu 24.04 LTS x64') | list | count == 1
 
 - name: test get vultr os fact
   vultr.cloud.os_info:
@@ -19,4 +19,4 @@
 - name: verify test get vultr os infos
   ansible.builtin.assert:
     that:
-      - result.vultr_os_info|selectattr('name','equalto', 'CentOS 7 x64') | list | count == 1
+      - result.vultr_os_info|selectattr('name','equalto', 'Ubuntu 24.04 LTS x64') | list | count == 1

@@ -110,7 +110,7 @@ vultr_block_storage:
       description: The region for this object storage.
       returned: success
       type: str
-      sample: ews
+      sample: ewr
     status:
       description: The status of this object storage.
       returned: success
