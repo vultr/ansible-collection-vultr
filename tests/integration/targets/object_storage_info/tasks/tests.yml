@@ -1,10 +1,10 @@
 ---
 - name: create vultr object stores
   vultr.cloud.object_storage:
-    label: '{{ obj.label }}'
-    cluster: '{{ obj.cluster }}'
+    label: "{{ obj.label }}"
+    cluster: "{{ obj.cluster }}"
   register: create_result
-  with_items: '{{ vultr_object_storage_info_stores }}'
+  with_items: "{{ vultr_object_storage_info_stores }}"
   loop_control:
     loop_var: obj
 
