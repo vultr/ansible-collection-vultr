@@ -1,8 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2022, René Moser <mail@renemoser.net>
+# Copyright (c) jasites <jsites@vultr.com>
+# Copyright: Contributors to the Ansible project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 from __future__ import absolute_import, division, print_function
 
@@ -11,26 +13,25 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 ---
-module: block_storage_info
-short_description: Get information about the Vultr block storage
-version_added: "1.0.0"
+module: object_storage_cluster_info
+short_description: Get information about the Vultr object storage clusters
+version_added: "1.14.0"
 description:
-  - Get infos about block storages available.
+  - Get infos about object storage clusters available.
 author:
-  - "René Moser (@resmo)"
-  - "Yanis Guenane (@Spredzy)"
+  - "jasites (@jasites)"
 extends_documentation_fragment:
   - vultr.cloud.vultr_v2
 """
 
 EXAMPLES = """
-- name: Get Vultr block_storage infos
-  vultr.cloud.block_storage_info:
+- name: Get Vultr object_storage_cluster infos
+  vultr.cloud.object_storage_cluster_info:
   register: result
 
 - name: Print the infos
   ansible.builtin.debug:
-    var: result.vultr_block_storage_info
+    var: result.vultr_object_storage_cluster_info
 """
 
 RETURN = """
@@ -60,56 +61,31 @@ vultr_api:
       returned: success
       type: str
       sample: "https://api.vultr.com/v2"
-vultr_block_storage_info:
+vultr_object_storage_cluster_info:
   description: Response from Vultr API as list.
   returned: success
   type: list
   contains:
-    attached_to_instance:
-      description: The ID of the server instance the volume is attached to.
-      returned: success
-      type: str
-      sample: cb676a46-66fd-4dfb-b839-443f2e6c0b60
-    cost:
-      description: Cost per month for the volume.
-      returned: success
-      type: float
-      sample: 1.00
-    date_created:
-      description: Date when the volume was created.
-      returned: success
-      type: str
-      sample: "2020-10-10T01:56:20+00:00"
     id:
-      description: ID of the block storage volume.
+      description: ID of the object storage cluster.
       returned: success
-      type: str
-      sample: cb676a46-66fd-4dfb-b839-443f2e6c0b60
-    label:
-      description: Label of the volume.
-      returned: success
-      type: str
-      sample: my volume
+      type: int
+      sample: 2
     region:
-      description: Region the volume was deployed into.
+      description: Region in which the object storage cluster is located.
       returned: success
       type: str
       sample: ewr
-    size_gb:
-      description: Information about the volume size in GB.
-      returned: success
-      type: int
-      sample: 50
-    status:
-      description: Status about the deployment of the volume.
+    deploy:
+      description: Status about the ability to create new object stores on this cluster.
       returned: success
       type: str
-      sample: active
-    mount_id:
-      description: Mount ID of the volume.
+      sample: yes
+    hostname:
+      description: The Cluster hostname for this object storage.
       returned: success
       type: str
-      sample: ewr-2f5d7a314fe44f
+      sample: ewr1.vultrobjects.com
 """
 
 from ansible.module_utils.basic import AnsibleModule
@@ -127,9 +103,9 @@ def main():
 
     vultr = AnsibleVultr(
         module=module,
-        namespace="vultr_block_storage_info",
-        resource_path="/blocks",
-        ressource_result_key_singular="block",
+        namespace="vultr_object_storage_cluster_info",
+        resource_path="/object-storage/clusters",
+        ressource_result_key_singular="cluster",
     )
 
     vultr.get_result(vultr.query_list())

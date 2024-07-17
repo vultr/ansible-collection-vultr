@@ -159,7 +159,7 @@ vultr_block_storage:
       description: Region the volume was deployed into.
       returned: success
       type: str
-      sample: ews
+      sample: ewr
     size_gb:
       description: Information about the volume size in GB.
       returned: success
