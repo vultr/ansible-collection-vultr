@@ -11,6 +11,7 @@ import time
 
 from ansible.module_utils._text import to_text
 from ansible.module_utils.basic import env_fallback
+from ansible.module_utils.common.dict_transformations import dict_merge
 from ansible.module_utils.six.moves.urllib.parse import quote
 from ansible.module_utils.urls import fetch_url
 
@@ -44,6 +45,11 @@ def vultr_argument_spec():
             type="int",
             fallback=(env_fallback, ["VULTR_API_RETRY_MAX_DELAY"]),
             default=12,
+        ),
+        api_results_per_page=dict(
+            type="int",
+            fallback=(env_fallback, ["VULTR_API_RESULTS_PER_PAGE"]),
+            default=100,
         ),
         validate_certs=dict(
             type="bool",
@@ -113,6 +119,7 @@ class AnsibleVultr:
                 "api_timeout": module.params["api_timeout"],
                 "api_retries": module.params["api_retries"],
                 "api_retry_max_delay": module.params["api_retry_max_delay"],
+                "api_results_per_page": module.params["api_results_per_page"],
                 "api_endpoint": module.params["api_endpoint"],
             },
         }
@@ -135,6 +142,35 @@ class AnsibleVultr:
         """
         return resource
 
+    def paginate_api_query(self, path, method="GET", data=None, query_params=None, result_key=None):
+        result_key = result_key or self.ressource_result_key_plural
+        pager_param = dict(per_page=self.module.params["api_results_per_page"])
+        if query_params is not None:
+            query_params = dict_merge(query_params, pager_param)
+        else:
+            query_params = pager_param
+
+        result = dict()
+        cursor = dict()
+        while True:
+            resp = self.api_query(
+                path=path,
+                method=method,
+                data=data,
+                query_params=dict_merge(query_params, cursor),
+            )
+
+            resp_body = resp.get(result_key, {})
+            if isinstance(resp_body, list):
+                if isinstance(result.get(result_key), list):
+                    result[result_key].extend(resp_body)
+                else:
+                    result[result_key] = resp_body
+            cursor["cursor"] = resp.get("meta", {}).get("links", {}).get("next", "")
+
+            if cursor["cursor"] == "":
+                return result
+
     def api_query(self, path, method="GET", data=None, query_params=None):
         if query_params:
             query = "?"
@@ -151,12 +187,12 @@ class AnsibleVultr:
         resp_body = None
         for retry in range(0, self.module.params["api_retries"]):
             resp, info = fetch_url(
-                self.module,
-                self.module.params["api_endpoint"] + path,
+                module=self.module,
+                url=self.module.params["api_endpoint"] + path,
                 method=method,
                 data=data,
                 headers=self.headers,
-                timeout=self.module.params["api_timeout"],
+                timeout=int(self.module.params["api_timeout"]),
             )
 
             resp_body = resp.read() if resp is not None else ""
@@ -254,7 +290,10 @@ class AnsibleVultr:
         path = path or self.resource_path
         result_key = result_key or self.ressource_result_key_singular
 
-        resource = self.api_query(path="%s%s" % (path, "/" + resource_id if resource_id else resource_id))
+        resource = self.api_query(
+            path="%s%s" % (path, "/" + resource_id if resource_id else resource_id)
+        )
+
         if resource:
             if skip_transform:
                 return resource[result_key]
@@ -272,7 +311,11 @@ class AnsibleVultr:
         path = path or self.resource_path
         result_key = result_key or self.ressource_result_key_plural
 
-        resources = self.api_query(path=path, query_params=query_params)
+        resources = self.paginate_api_query(
+            path=path,
+            query_params=query_params,
+            result_key=result_key,
+        )
         return resources[result_key] if resources else []
 
     def wait_for_state(self, resource, key, states, cmp="=", retries=60, skip_wait=False):
