@@ -53,8 +53,8 @@ EXAMPLES = """
 - name: Ensure a VPC is present
   vultr.cloud.vpc:
     description: my VPC.
-    subnet: 10.99.1.0
-    subnet_mask: 24
+    v4_subnet: 10.99.1.0
+    v4_subnet_mask: 24
     region: ewr
 
 - name: Ensure a VPC is absent
