@@ -46,6 +46,7 @@ options:
       - Fallback environment variable C(VULTR_API_RESULTS_PER_PAGE).
     type: int
     default: 100
+    version_added: 1.14.0
   api_endpoint:
     description:
       - URL to API endpint (without trailing slash).
