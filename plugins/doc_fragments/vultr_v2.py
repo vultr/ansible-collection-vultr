@@ -38,6 +38,15 @@ options:
       - Fallback environment variable C(VULTR_API_RETRY_MAX_DELAY).
     type: int
     default: 12
+  api_results_per_page:
+    description:
+      - When receiving large numbers of resources, specify how many results should be returned per call to API.
+      - This does not determine how many results are returned; all resources are returned according to other filters.
+      - Vultr API maximum is 500.
+      - Fallback environment variable C(VULTR_API_RESULTS_PER_PAGE).
+    type: int
+    default: 100
+    version_added: 1.14.0
   api_endpoint:
     description:
       - URL to API endpint (without trailing slash).
