@@ -17,6 +17,10 @@
     plan: "{{ vultr_instance.plan }}"
     region: "{{ vultr_instance.region }}"
     os: "{{ vultr_instance.os }}"
+  register: result
+  until: 'result.vultr_instance.server_status != "installingbooting"'
+  retries: 20
+  delay: 6
 
 - ansible.builtin.include_tasks: present.yml
   with_items: "{{ vultr_snapshots }}"
