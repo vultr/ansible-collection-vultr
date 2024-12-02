@@ -4,6 +4,8 @@
 - debug:
     msg: Cleaning up resources with prefix {{ vultr_resource_prefix }}
 
+- ansible.builtin.import_tasks: cleanup_vpc.yml
+- ansible.builtin.import_tasks: cleanup_vpc2.yml
 - ansible.builtin.import_tasks: cleanup_instance.yml
 - ansible.builtin.import_tasks: cleanup_bare_metal.yml
 - ansible.builtin.import_tasks: cleanup_ssh_key.yml
