@@ -5,17 +5,32 @@
     msg: Cleaning up resources with prefix {{ vultr_resource_prefix }}
 
 - ansible.builtin.import_tasks: cleanup_vpc.yml
+  ignore_errors: true
 - ansible.builtin.import_tasks: cleanup_vpc2.yml
+  ignore_errors: true
 - ansible.builtin.import_tasks: cleanup_instance.yml
+  ignore_errors: true
 - ansible.builtin.import_tasks: cleanup_bare_metal.yml
+  ignore_errors: true
 - ansible.builtin.import_tasks: cleanup_ssh_key.yml
+  ignore_errors: true
 - ansible.builtin.import_tasks: cleanup_vpc.yml
+  ignore_errors: true
 - ansible.builtin.import_tasks: cleanup_vpc2.yml
+  ignore_errors: true
 - ansible.builtin.import_tasks: cleanup_firewall_group.yml
+  ignore_errors: true
 - ansible.builtin.import_tasks: cleanup_snapshot.yml
+  ignore_errors: true
 - ansible.builtin.import_tasks: cleanup_user.yml
+  ignore_errors: true
 - ansible.builtin.import_tasks: cleanup_dns_domain.yml
+  ignore_errors: true
 - ansible.builtin.import_tasks: cleanup_block_storage.yml
+  ignore_errors: true
 - ansible.builtin.import_tasks: cleanup_startup_script.yml
+  ignore_errors: true
 - ansible.builtin.import_tasks: cleanup_reserved_ip.yml
+  ignore_errors: true
 - ansible.builtin.import_tasks: cleanup_network.yml
+  ignore_errors: true
