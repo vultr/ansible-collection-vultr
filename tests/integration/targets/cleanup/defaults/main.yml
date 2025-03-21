@@ -1,3 +1,4 @@
 ---
 vultr_api_url: https://api.vultr.com/v2
 vultr_api_key: "{{ lookup('env', 'VULTR_API_KEY') }}"
+vultr_api_results_per_page: 100

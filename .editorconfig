@@ -1,0 +1,18 @@
+root = true
+
+[*]
+indent_style = space
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+end_of_line = lf
+
+[*.json]
+indent_size = 4
+indent_style = space
+
+[*.py]
+indent_style = space
+
+[*.{yaml,yml}]
+indent_style = space
