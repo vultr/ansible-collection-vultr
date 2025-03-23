@@ -11,10 +11,6 @@
       register: res
       no_log: true
 
-    - name: Found resources
-      ansible.builtin.debug:
-        var: res.json
-
     - name: Remove all container registries created by this test run
       ansible.builtin.uri:
         url: "{{ vultr_api_url }}/registry/{{ item.id }}"
@@ -27,3 +23,4 @@
       with_items: "{{ res.json.registries }}"
       loop_control:
         label: "{{ item.name }}"
+      no_log: true
