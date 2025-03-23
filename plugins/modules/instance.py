@@ -504,6 +504,17 @@ class AnsibleVultrInstance(AnsibleVultrCommonInstance):
 
         return resource
 
+    def update(self, resource):
+        if not self.module.check_mode:
+            resource = self.wait_for_state(
+                resource=resource,
+                key="server_status",
+                states=["none", "locked"],
+                cmp="!=",
+                skip_wait=self.module.params.get("skip_wait", False),
+            )
+        return super(AnsibleVultrInstance, self).update(resource)
+
     def configure(self):
         super(AnsibleVultrInstance, self).configure()
 
