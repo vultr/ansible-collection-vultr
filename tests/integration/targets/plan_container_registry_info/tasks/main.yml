@@ -1,0 +1,19 @@
+---
+- name: test gather vultr container registry plan info in check mode
+  vultr.cloud.plan_container_registry_info:
+  check_mode: true
+  register: result
+
+- name: verify test gather vultr container registry plan info in check mode
+  ansible.builtin.assert:
+    that:
+      - result.vultr_plan_container_registry_info | selectattr('id', 'equalto', 'start_up') | list | count == 1
+
+- name: test gather vultr container registry plan info
+  vultr.cloud.plan_container_registry_info:
+  register: result
+
+- name: verify test gather vultr container registry plan info
+  ansible.builtin.assert:
+    that:
+      - result.vultr_plan_container_registry_info | selectattr('id', 'equalto', 'start_up') | list | count == 1

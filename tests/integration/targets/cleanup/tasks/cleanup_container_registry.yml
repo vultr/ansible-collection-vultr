@@ -1,0 +1,29 @@
+---
+- name: cleanup
+  when: vultr_api_key
+  block:
+    - name: List container registries
+      ansible.builtin.uri:
+        url: "{{ vultr_api_url }}/registries"
+        headers:
+          Authorization: Bearer {{ vultr_api_key }}
+        status_code: 200
+      register: res
+      no_log: true
+
+    - name: Found resources
+      ansible.builtin.debug:
+        var: res.json
+
+    - name: Remove all container registries created by this test run
+      ansible.builtin.uri:
+        url: "{{ vultr_api_url }}/registry/{{ item.id }}"
+        method: "DELETE"
+        headers:
+          Authorization: Bearer {{ vultr_api_key }}
+        status_code: 204
+        timeout: 60
+      when: ( vultr_resource_prefix | replace('-', '') ) in item.name
+      with_items: "{{ res.json.registries }}"
+      loop_control:
+        label: "{{ item.name }}"

@@ -6,6 +6,11 @@ action_groups:
     - bare_metal
     - block_storage
     - block_storage_info
+    - container_registry
+    - container_registry_info
+    - container_registry_region_info
+    - container_registry_repository
+    - container_registry_repository_info
     - dns_domain
     - dns_domain_info
     - dns_record
@@ -19,6 +24,7 @@ action_groups:
     - object_storage_cluster_info
     - object_storage_info
     - os_info
+    - plan_container_registry_info
     - plan_info
     - plan_metal_info
     - region_info

@@ -17,3 +17,4 @@
 - ansible.builtin.import_tasks: cleanup_startup_script.yml
 - ansible.builtin.import_tasks: cleanup_reserved_ip.yml
 - ansible.builtin.import_tasks: cleanup_network.yml
+- ansible.bulitin.import_tasks: cleanup_container_registry.yml
