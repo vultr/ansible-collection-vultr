@@ -4,16 +4,31 @@
   block:
     - name: List networks
       ansible.builtin.uri:
-        url: "{{ vultr_api_url }}/private-networks"
+        url: "{{ vultr_api_url }}/private-networks?per_page={{ vultr_api_results_per_page }}"
+        headers:
+          Authorization: Bearer {{ vultr_api_key }}
+        status_code: 200
+      register: initial_res
+      no_log: true
+
+    - name: Page through subsequent results
+      ansible.builtin.uri:
+        url: "{{ vultr_api_url }}/private-networks?per_page={{ vultr_api_results_per_page }}&cursor={{ res.json.meta.links.next | default(initial_res.json.meta.links.next) }}"
         headers:
           Authorization: Bearer {{ vultr_api_key }}
         status_code: 200
       register: res
+      loop: "{{ range(1, ((initial_res.json.meta.total | int) / (vultr_api_results_per_page | int)) | round(0, 'ceil') | int) | list }}"
+      when: initial_res.json.meta.links.next != ''
       no_log: true
+
+    - name: Compile results
+      ansible.builtin.set_fact:
+        networks: "{{ initial_res.json.networks + (res.results | map(attribute='json') | map(attribute='networks') | flatten) }}"
 
     - name: Found resources
       ansible.builtin.debug:
-        var: res.json
+        var: networks
 
     - name: Remove all networks created by this test run
       ansible.builtin.uri:
@@ -23,7 +38,7 @@
           Authorization: Bearer {{ vultr_api_key }}
         status_code: 204
       when: vultr_resource_prefix in item.description
-      with_items: "{{ res.json.networks }}"
+      with_items: "{{ networks }}"
       loop_control:
         label: "{{ item.description }}"
       no_log: true
