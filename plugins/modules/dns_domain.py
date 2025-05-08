@@ -132,9 +132,6 @@ def main():
 
     module = AnsibleModule(
         argument_spec=argument_spec,
-        required_if=[
-            ("state", "present", ["ip"]),
-        ],
         supports_check_mode=True,
     )
 

@@ -16,17 +16,6 @@
       - result is failed
       - 'result.msg == "missing required arguments: domain"'
 
-- name: test fail if missing params for state=present
-  vultr.cloud.dns_domain:
-    name: "{{ vultr_dns_domain_name }}"
-  register: result
-  ignore_errors: true
-- name: verify fail if missing params for state=present
-  ansible.builtin.assert:
-    that:
-      - result is failed
-      - 'result.msg == "state is present but all of the following are missing: ip"'
-
 - name: test create dns domain in check mode
   vultr.cloud.dns_domain:
     name: "{{ vultr_dns_domain_name }}"
