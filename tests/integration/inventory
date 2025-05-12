@@ -1,0 +1,2 @@
+[testgroup]
+testhost ansible_connection="local" ansible_pipelining="yes" ansible_python_interpreter="/Library/Developer/CommandLineTools/usr/bin/python3"
