@@ -1,0 +1,37 @@
+# Copyright (c) 2025, Samuel Hunter <samuel (at) shunter (dot) xyz>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: test gather vultr file system info - empty resource
+  vultr.cloud.vfs_info:
+
+- name: Create the virtual file system
+  vultr.cloud.vfs:
+    label: "{{ vultr_vfs_name }}"
+    storage_size:
+      gb: "{{ vultr_vfs_size }}"
+    region: "{{ vultr_vfs_region }}"
+    disk_type: "{{ vultr_vfs_disk_type }}"
+
+- name: test gather vultr file system info in check mode
+  vultr.cloud.vfs_info:
+  check_mode: true
+  register: result
+
+- name: verify test gather vultr file system info in check mode
+  ansible.builtin.assert:
+    that:
+      - result.vultr_vfs_info|selectattr('label','equalto',vultr_vfs_name) | list | count == 1
+
+- name: test gather vultr file system info
+  vultr.cloud.vfs_info:
+  register: result
+
+- name: verify test gather vultr file system info
+  ansible.builtin.assert:
+    that:
+      - result.vultr_vfs_info|selectattr('label','equalto',vultr_vfs_name) | list | count == 1
+
+- name: Delete the block storage volume
+  vultr.cloud.vfs:
+    label: "{{ vultr_vfs_name }}"
+    state: absent
