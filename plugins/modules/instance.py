@@ -470,7 +470,7 @@ class AnsibleVultrInstance(AnsibleVultrCommonInstance):
                     skip_wait=self.module.params.get("skip_wait", False),
                 )
 
-            # Hanlde power status
+            # Handle power status
             resource = self.handle_power_status(
                 resource=resource,
                 state="stopped",
