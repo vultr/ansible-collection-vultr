@@ -14,6 +14,7 @@
 - ansible.builtin.import_tasks: cleanup_user.yml
 - ansible.builtin.import_tasks: cleanup_dns_domain.yml
 - ansible.builtin.import_tasks: cleanup_block_storage.yml
+- ansible.builtin.import_tasks: cleanup_vfs.yml
 - ansible.builtin.import_tasks: cleanup_startup_script.yml
 - ansible.builtin.import_tasks: cleanup_reserved_ip.yml
 - ansible.builtin.import_tasks: cleanup_network.yml
