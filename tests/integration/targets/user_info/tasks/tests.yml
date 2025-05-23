@@ -17,7 +17,7 @@
 - name: verify test get vultr user info in check mode
   ansible.builtin.assert:
     that:
-      - result.vultr_user_info|selectattr('name','equalto','{{ user_name }}') | list | count == 1
+      - result.vultr_user_info|selectattr('name','equalto',user_name) | list | count == 1
 
 - name: test get vultr user info
   vultr.cloud.user_info:
@@ -26,7 +26,7 @@
 - name: verify test get vultr user info
   ansible.builtin.assert:
     that:
-      - result.vultr_user_info|selectattr('name','equalto','{{ user_name }}') | list | count == 1
+      - result.vultr_user_info|selectattr('name','equalto',user_name) | list | count == 1
 
 - name: Delete the user
   vultr.cloud.user:
