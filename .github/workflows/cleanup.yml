@@ -11,7 +11,7 @@ jobs:
   integration-test:
     name: Cleaning up cloud test env
     if: ${{ github.event.label.name == 'cleanup' || github.event_name == 'schedule' }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     defaults:
       run:
         working-directory: ansible_collections/vultr/cloud
