@@ -1,0 +1,7 @@
+---
+vultr_container_registry_name: "{{ vultr_resource_prefix | replace('-', '') }}containerregistry"
+vultr_container_registry_plan: start_up
+vultr_container_registry_plan2: premium
+vultr_container_registry_plan3: business
+vultr_container_registry_public: false
+vultr_container_registry_region: sjc
