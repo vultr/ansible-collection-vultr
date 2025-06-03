@@ -7,7 +7,7 @@ This repository contains the `vultr.cloud` Ansible Collection . The collection w
 ---
 **NOTE**
 
-`vultr.cloud` is the successor of deprecated `ngine_io.vultr` collection which used the sunsetted Vultr v1 API.
+`vultr.cloud` is the successor of deprecated `ngine_io.vultr` collection which used the sunset Vultr v1 API.
 
 ---
 

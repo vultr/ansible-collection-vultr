@@ -5,6 +5,7 @@
   vultr.cloud.object_storage:
     label: "{{ vultr_object_storage_name }}"
     cluster: "{{ vultr_object_storage_cluster1 }}"
+    tier: "{{ vultr_object_storage_tier }}"
   register: result
   check_mode: true
 - name: verify test create object storage in check mode
@@ -16,6 +17,7 @@
   vultr.cloud.object_storage:
     label: "{{ vultr_object_storage_name }}"
     cluster: "{{ vultr_object_storage_cluster1 }}"
+    tier: "{{ vultr_object_storage_tier }}"
   register: result
 - name: verify test create object storage
   ansible.builtin.assert:
@@ -28,6 +30,7 @@
   vultr.cloud.object_storage:
     label: "{{ vultr_object_storage_name }}"
     cluster: "{{ vultr_object_storage_cluster2 }}"
+    tier: "{{ vultr_object_storage_tier }}"
   register: result
 - name: verify test create object storage
   ansible.builtin.assert:
@@ -40,6 +43,7 @@
   vultr.cloud.object_storage:
     label: "{{ vultr_object_storage_name }}"
     cluster: "{{ vultr_object_storage_cluster1 }}"
+    tier: "{{ vultr_object_storage_tier }}"
   register: result
 - name: verify test create object storage idempotence
   ansible.builtin.assert:
