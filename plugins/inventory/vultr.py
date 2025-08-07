@@ -135,7 +135,11 @@ from ansible.module_utils._text import to_native
 from ansible.module_utils.six.moves.urllib.error import HTTPError, URLError
 from ansible.module_utils.urls import Request
 from ansible.plugins.inventory import BaseInventoryPlugin, Cacheable, Constructable
-from ansible.template import trust_as_template
+
+try:
+  from ansible.template import trust_as_template
+except ImportError:
+  trust_as_template = None
 
 from ..module_utils.vultr_v2 import VULTR_USER_AGENT
 
@@ -158,7 +162,10 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
     def _get_instances(self):
         instances = []
-        api_key = trust_as_template(self.get_option("api_key"))
+        api_key = self.get_option("api_key")
+        if trust_as_template:
+            api_key = trust_as_template(api_key)
+
         if self.templar.is_template(api_key):
             api_key = self.templar.template(api_key)
 
@@ -265,8 +272,10 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
     def _passes_filters(self, filters, variables, host, strict=False):
         if filters and isinstance(filters, list):
             for template in filters:
+                if trust_as_template:
+                    template = trust_as_template(template)
                 try:
-                    if not self._compose(trust_as_template(template), variables):
+                    if not self._compose(template, variables):
                         return False
                 except Exception as e:
                     if strict:
