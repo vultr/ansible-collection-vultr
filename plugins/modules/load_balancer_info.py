@@ -140,22 +140,22 @@ from ..module_utils.vultr_v2 import AnsibleVultr, vultr_argument_spec
 
 
 def main():
-	argument_spec = vultr_argument_spec()
+    argument_spec = vultr_argument_spec()
 
-	module = AnsibleModule(
-		argument_spec=argument_spec,
-		supports_check_mode=True,
-	)
+    module = AnsibleModule(
+        argument_spec=argument_spec,
+        supports_check_mode=True,
+    )
 
-	vultr = AnsibleVultr(
-		module=module,
-		namespace="vultr_load_balancer_info",
-		resource_path="/load-balancers",
-		ressource_result_key_singular="load_balancer",
-	)
+    vultr = AnsibleVultr(
+        module=module,
+        namespace="vultr_load_balancer_info",
+        resource_path="/load-balancers",
+        ressource_result_key_singular="load_balancer",
+    )
 
-	vultr.get_result(vultr.query_list())
+    vultr.get_result(vultr.query_list())
 
 
 if __name__ == "__main__":
-	main()
+    main()

@@ -318,114 +318,117 @@ vultr_load_balancer:
 from ansible.module_utils.basic import AnsibleModule
 from ..module_utils.vultr_v2 import AnsibleVultr, vultr_argument_spec
 
-class AnsibleVultrLoadBalancer(AnsibleVultr):
-		def configure(self):
-				super(AnsibleVultrLoadBalancer, self).configure()
 
-		def create_or_update(self):
-				resource = super(AnsibleVultrLoadBalancer, self).create_or_update()
-				if resource:
-						resource = self.wait_for_state(resource=resource, key="status", states=["active"])
-				return resource
+class AnsibleVultrLoadBalancer(AnsibleVultr):
+    def configure(self):
+        super(AnsibleVultrLoadBalancer, self).configure()
+
+    def create_or_update(self):
+        resource = super(AnsibleVultrLoadBalancer, self).create_or_update()
+        if resource:
+            resource = self.wait_for_state(
+                resource=resource, key="status", states=["active"]
+            )
+        return resource
 
 
 def main():
-		argument_spec = vultr_argument_spec()
-		argument_spec.update(
-				dict(
-						name=dict(type="str", required=False, aliases=["label"]),
-						region=dict(type="str", required=True),
-						label=dict(type="str", aliases=["name"]),
-						state=dict(type="str", choices=["present", "absent"], default="present"),
-						forwarding_rules=dict(
-								type="list",
-								elements="dict",
-								options=dict(
-										frontend_protocol=dict(type="str", required=True),
-										frontend_port=dict(type="int", required=True),
-										backend_protocol=dict(type="str", required=True),
-										backend_port=dict(type="int", required=True),
-								),
-						),
-						timeout=dict(type="int"),
-						balancing_algorithm=dict(type="str", choices=["roundrobin", "leastconn"]),
-						ssl_redirect=dict(type="bool"),
-						http2=dict(type="bool"),
-						http3=dict(type="bool"),
-						nodes=dict(type="int"),
-						health_check=dict(
-								type="dict",
-								options=dict(
-										protocol=dict(type="str"),
-										port=dict(type="int"),
-										path=dict(type="str"),
-										check_interval=dict(type="int"),
-										response_timeout=dict(type="int"),
-										unhealthy_threshold=dict(type="int"),
-										healthy_threshold=dict(type="int"),
-								),
-						),
-						proxy_protocol=dict(type="bool"),
-						sticky_session=dict(type="dict"),
-						instances=dict(type="list", elements="str"),
-						vpc=dict(type="str"),
-						firewall_rules=dict(type="list", elements="dict"),
-						global_regions=dict(type="list", elements="str"),
-				)
-		)
+    argument_spec = vultr_argument_spec()
+    argument_spec.update(
+        dict(
+            name=dict(type="str", required=False, aliases=["label"]),
+            region=dict(type="str", required=True),
+            label=dict(type="str", aliases=["name"]),
+            state=dict(type="str", choices=["present", "absent"], default="present"),
+            forwarding_rules=dict(
+                type="list",
+                elements="dict",
+                options=dict(
+                    frontend_protocol=dict(type="str", required=True),
+                    frontend_port=dict(type="int", required=True),
+                    backend_protocol=dict(type="str", required=True),
+                    backend_port=dict(type="int", required=True),
+                ),
+            ),
+            timeout=dict(type="int"),
+            balancing_algorithm=dict(type="str", choices=["roundrobin", "leastconn"]),
+            ssl_redirect=dict(type="bool"),
+            http2=dict(type="bool"),
+            http3=dict(type="bool"),
+            nodes=dict(type="int"),
+            health_check=dict(
+                type="dict",
+                options=dict(
+                    protocol=dict(type="str"),
+                    port=dict(type="int"),
+                    path=dict(type="str"),
+                    check_interval=dict(type="int"),
+                    response_timeout=dict(type="int"),
+                    unhealthy_threshold=dict(type="int"),
+                    healthy_threshold=dict(type="int"),
+                ),
+            ),
+            proxy_protocol=dict(type="bool"),
+            sticky_session=dict(type="dict"),
+            instances=dict(type="list", elements="str"),
+            vpc=dict(type="str"),
+            firewall_rules=dict(type="list", elements="dict"),
+            global_regions=dict(type="list", elements="str"),
+        )
+    )
 
-		module = AnsibleModule(
-				argument_spec=argument_spec,
-				supports_check_mode=True,
-		)
+    module = AnsibleModule(
+        argument_spec=argument_spec,
+        supports_check_mode=True,
+    )
 
-		vultr = AnsibleVultrLoadBalancer(
-				module=module,
-				namespace="vultr_load_balancer",
-				resource_path="/load-balancers",
-				ressource_result_key_singular="load_balancer",
-				resource_create_param_keys=[
-						"region",
-						"balancing_algorithm",
-						"ssl_redirect",
-						"http2",
-						"http3",
-						"nodes",
-						"proxy_protocol",
-						"timeout",
-						"label",
-						"health_check",
-						"forwarding_rules",
-						"firewall_rules",
-						"vpc",
-						"global_regions",
-				],
-				resource_update_param_keys=[
-						"ssl",
-						"sticky_session",
-						"forwarding_rules",
-						"firewall_rules",
-						"health_check",
-						"proxy_protocol",
-						"timeout",
-						"ssl_redirect",
-						"http2",
-						"http3",
-						"nodes",
-						"balancing_algorithm",
-						"instances",
-						"vpc",
-						"auto_ssl",
-						"global_regions",
-				],
-				resource_key_name="label",
-		)
+    vultr = AnsibleVultrLoadBalancer(
+        module=module,
+        namespace="vultr_load_balancer",
+        resource_path="/load-balancers",
+        ressource_result_key_singular="load_balancer",
+        resource_create_param_keys=[
+            "region",
+            "balancing_algorithm",
+            "ssl_redirect",
+            "http2",
+            "http3",
+            "nodes",
+            "proxy_protocol",
+            "timeout",
+            "label",
+            "health_check",
+            "forwarding_rules",
+            "firewall_rules",
+            "vpc",
+            "global_regions",
+        ],
+        resource_update_param_keys=[
+            "ssl",
+            "sticky_session",
+            "forwarding_rules",
+            "firewall_rules",
+            "health_check",
+            "proxy_protocol",
+            "timeout",
+            "ssl_redirect",
+            "http2",
+            "http3",
+            "nodes",
+            "balancing_algorithm",
+            "instances",
+            "vpc",
+            "auto_ssl",
+            "global_regions",
+        ],
+        resource_key_name="label",
+    )
 
-		if module.params.get("state") == "absent":
-				vultr.absent()
-		else:
-				vultr.present()
+    if module.params.get("state") == "absent":
+        vultr.absent()
+    else:
+        vultr.present()
 
 
 if __name__ == "__main__":
-		main()
+    main()
