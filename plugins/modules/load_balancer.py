@@ -69,15 +69,18 @@ options:
     default: roundrobin
   ssl_redirect:
     description:
-      - If true, this will redirect all HTTP traffic to HTTPS. You must have an HTTPS rule and SSL certificate installed on the load balancer to enable this option.
+      - If true, this will redirect all HTTP traffic to HTTPS.
+      - You must have an HTTPS rule and SSL certificate installed on the load balancer to enable this option.
     type: bool
   http2:
     description:
-      - If true, this will enable HTTP2 traffic. You must have an HTTPS forwarding rule combo (HTTPS -> HTTPS) to enable this option.
+      - If true, this will enable HTTP2 traffic.
+      - You must have an HTTPS forwarding rule combo (HTTPS -> HTTPS) to enable this option.
     type: bool
   http3:
     description:
-      - If true, this will enable HTTP3/QUIC traffic. You must have HTTP2 enabled.
+      - If true, this will enable HTTP3/QUIC traffic.
+      - You must have HTTP2 enabled.
     type: bool
   nodes:
     description:
@@ -149,6 +152,15 @@ options:
     description:
       - The Auto SSL configuration. Must be using Vultr DNS for Auto SSL.
     type: dict
+    suboptions:
+      domain_zone:
+        description:
+          - The domain zone (example: example.com)
+        type: str
+      domain_sub:
+        description:
+          - Subdomain to append to the domain zone
+        type: str
   global_regions:
     description:
       - Array of Region ids to deploy child Load Balancers to.
@@ -350,12 +362,16 @@ def main():
                     backend_port=dict(type="int", required=True),
                 ),
             ),
-            timeout=dict(type="int"),
-            balancing_algorithm=dict(type="str", choices=["roundrobin", "leastconn"]),
+            timeout=dict(type="int", default=600),
+            balancing_algorithm=dict(
+                type="str",
+                choices=["roundrobin", "leastconn"],
+                default="roundrobin",
+            ),
             ssl_redirect=dict(type="bool"),
             http2=dict(type="bool"),
             http3=dict(type="bool"),
-            nodes=dict(type="int"),
+            nodes=dict(type="int", default=1),
             health_check=dict(
                 type="dict",
                 options=dict(
@@ -368,11 +384,18 @@ def main():
                     healthy_threshold=dict(type="int"),
                 ),
             ),
-            proxy_protocol=dict(type="bool"),
+            proxy_protocol=dict(type="bool", default=False),
             sticky_session=dict(type="dict"),
             instances=dict(type="list", elements="str"),
             vpc=dict(type="str"),
             firewall_rules=dict(type="list", elements="dict"),
+            auto_ssl=dict(
+                type="dict",
+                options=dict(
+                    domain_zone=dict(type="str"),
+                    domain_sub=dict(type="str"),
+                ),
+            ),
             global_regions=dict(type="list", elements="str"),
         )
     )
