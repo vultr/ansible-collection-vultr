@@ -155,7 +155,7 @@ options:
     suboptions:
       domain_zone:
         description:
-          - The domain zone (example: example.com)
+          - The domain zone (ex. example.com)
         type: str
       domain_sub:
         description:
@@ -350,7 +350,6 @@ def main():
         dict(
             name=dict(type="str", required=False, aliases=["label"]),
             region=dict(type="str", required=True),
-            label=dict(type="str", aliases=["name"]),
             state=dict(type="str", choices=["present", "absent"], default="present"),
             forwarding_rules=dict(
                 type="list",
