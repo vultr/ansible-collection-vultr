@@ -12,7 +12,7 @@
   ansible.builtin.debug:
     var: lb_info.vultr_load_balancer_info
 
-- name: Create a load balancer 
+- name: Create a load balancer
   block:
     - name: Create a load balancer
       vultr.cloud.load_balancer:
