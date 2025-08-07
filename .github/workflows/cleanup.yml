@@ -64,6 +64,6 @@ jobs:
           integration
           --docker
           -v
-          --color
+          --color yes
           --continue-on-error
           cloud/vultr/_reset_cloud

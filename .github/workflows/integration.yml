@@ -70,7 +70,7 @@ jobs:
           integration
           --docker
           -v
-          --color
+          --color yes
           --continue-on-error
           --diff
           --python ${{ matrix.python }}

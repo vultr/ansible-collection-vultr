@@ -149,7 +149,7 @@ def test_get_instances_invalid_api_key(inventory, mocker):
 
 def test_get_instances_templated_api_key(inventory, mocker):
     opts = default_options.copy()
-    opts.update({"api_key": "{{ lookup('random_choice', 'TEST_VULTR_API_KEY') }}"})
+    opts.update({"api_key": '{{ lookup("random_choice", "TEST_VULTR_API_KEY") }}'})
 
     inventory.get_option = mocker.MagicMock(side_effect=get_option(opts))
 

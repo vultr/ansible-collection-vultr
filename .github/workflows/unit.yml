@@ -55,7 +55,7 @@ jobs:
           units
           --docker
           -v
-          --color
+          --color yes
           --python ${{ matrix.python }}
           --coverage
 
