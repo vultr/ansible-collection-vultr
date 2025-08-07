@@ -137,9 +137,9 @@ from ansible.module_utils.urls import Request
 from ansible.plugins.inventory import BaseInventoryPlugin, Cacheable, Constructable
 
 try:
-  from ansible.template import trust_as_template
+    from ansible.template import trust_as_template
 except ImportError:
-  trust_as_template = None
+    trust_as_template = None
 
 from ..module_utils.vultr_v2 import VULTR_USER_AGENT
 
