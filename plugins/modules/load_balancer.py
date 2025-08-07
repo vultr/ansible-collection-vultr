@@ -24,6 +24,7 @@ options:
       - The label for your Load Balancer.
     type: str
     required: true
+    aliases: [ name ]
   region:
     description:
       - Region where the load balancer will be created.
