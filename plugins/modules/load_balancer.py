@@ -348,7 +348,7 @@ def main():
     argument_spec = vultr_argument_spec()
     argument_spec.update(
         dict(
-            name=dict(type="str", required=False, aliases=["label"]),
+            label=dict(type="str", required=True, aliases=["name"]),
             region=dict(type="str", required=True),
             state=dict(type="str", choices=["present", "absent"], default="present"),
             forwarding_rules=dict(
