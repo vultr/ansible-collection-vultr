@@ -89,8 +89,8 @@ def test_parse(tmp_path, inventory, mocker, cache_option):
             "cache_plugin": "jsonfile",
         }
     )
-    inventory.get_option = mocker.MagicMock(side_effect=get_option(opts))
 
+    inventory.get_option = mocker.MagicMock(side_effect=get_option(opts))
     mocker.patch("{0}.Request".format(module_under_test.__name__))
     RequestMock = module_under_test.Request
 

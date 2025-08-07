@@ -27,41 +27,8 @@ author:
 extends_documentation_fragment:
   - constructed
   - inventory_cache
+  - vultr.cloud.vultr_v2
 options:
-  api_endpoint:
-    description:
-      - URL to API endpint (without trailing slash).
-      - Fallback environment variable C(VULTR_API_ENDPOINT).
-    type: str
-    env:
-      - name: VULTR_API_ENDPOINT
-    default: https://api.vultr.com/v2
-  api_key:
-    description:
-      - API key of the Vultr API.
-      - Fallback environment variable C(VULTR_API_KEY).
-    type: str
-    env:
-      - name: VULTR_API_KEY
-    required: true
-  api_results_per_page:
-    description:
-      - When receiving large numbers of instances, specify how many instances should be returned per call to API.
-      - This does not determine how many results are returned; all instances are returned according to other filters.
-      - Vultr API maximum is 500.
-      - Fallback environment variable C(VULTR_API_RESULTS_PER_PAGE).
-    type: int
-    env:
-      - name: VULTR_API_RESULTS_PER_PAGE
-    default: 100
-  api_timeout:
-    description:
-      - HTTP timeout to Vultr API.
-      - Fallback environment variable C(VULTR_API_TIMEOUT).
-    type: int
-    env:
-      - name: VULTR_API_TIMEOUT
-    default: 60
   attributes:
     description:
       - Instance attributes to add as host variables to each host added to inventory.
@@ -167,8 +134,8 @@ from ansible.errors import AnsibleError, AnsibleParserError
 from ansible.module_utils._text import to_native
 from ansible.module_utils.six.moves.urllib.error import HTTPError, URLError
 from ansible.module_utils.urls import Request
-from ansible.plugins.inventory import (BaseInventoryPlugin, Cacheable,
-                                       Constructable)
+from ansible.plugins.inventory import BaseInventoryPlugin, Cacheable, Constructable
+from ansible.template import trust_as_template
 
 from ..module_utils.vultr_v2 import VULTR_USER_AGENT
 
@@ -176,6 +143,7 @@ from ..module_utils.vultr_v2 import VULTR_USER_AGENT
 class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
     NAME = "vultr.cloud.vultr"
+    ansible_name = NAME
 
     RESOURCES_PER_TYPE = {
         "cloud": {
@@ -190,7 +158,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
     def _get_instances(self):
         instances = []
-        api_key = self.get_option("api_key")
+        api_key = trust_as_template(self.get_option("api_key"))
         if self.templar.is_template(api_key):
             api_key = self.templar.template(api_key)
 
@@ -247,7 +215,11 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
             instance_label = instance.get("label")
 
             if not instance_label:
-                self.display.warning(msg="instance ID {0} has no label, skipping.".format(instance.get("id")))
+                self.display.warning(
+                    msg="instance ID {0} has no label, skipping.".format(
+                        instance.get("id")
+                    )
+                )
                 continue
 
             host_variables = {}
@@ -294,7 +266,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         if filters and isinstance(filters, list):
             for template in filters:
                 try:
-                    if not self._compose(template, variables):
+                    if not self._compose(trust_as_template(template), variables):
                         return False
                 except Exception as e:
                     if strict:
@@ -333,9 +305,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
     def parse(self, inventory, loader, path, cache=True):
         super(InventoryModule, self).parse(inventory, loader, path)
-
         self._read_config_data(path)
-
         cache_key = self.get_cache_key(path)
         use_cache = self.get_option("cache") and cache
         update_cache = self.get_option("cache") and not cache

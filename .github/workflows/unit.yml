@@ -27,7 +27,7 @@ jobs:
           - stable-2.18
           - stable-2.19
         python:
-          - "3.11"
+          - "3.12"
     steps:
       - name: Check out code
         uses: actions/checkout@v4
