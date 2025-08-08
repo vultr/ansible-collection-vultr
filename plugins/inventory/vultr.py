@@ -147,8 +147,6 @@ from ..module_utils.vultr_v2 import VULTR_USER_AGENT
 class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
 
     NAME = "vultr.cloud.vultr"
-    ansible_name = NAME
-
     RESOURCES_PER_TYPE = {
         "cloud": {
             "resource": "instances",
@@ -315,6 +313,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
     def parse(self, inventory, loader, path, cache=True):
         super(InventoryModule, self).parse(inventory, loader, path)
         self._read_config_data(path)
+        self.load_cache_plugin()
         cache_key = self.get_cache_key(path)
         use_cache = self.get_option("cache") and cache
         update_cache = self.get_option("cache") and not cache

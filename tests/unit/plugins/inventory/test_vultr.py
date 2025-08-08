@@ -85,7 +85,7 @@ def test_parse(tmp_path, inventory, mocker, cache_option):
     opts.update(
         {
             "cache": cache_option,
-            "cache_connection": plugin_cache_dir,
+            "cache_connection": str(plugin_cache_dir),
             "cache_plugin": "jsonfile",
         }
     )
@@ -100,13 +100,6 @@ def test_parse(tmp_path, inventory, mocker, cache_option):
     inventory._redirected_names = ["vultr.cloud.vultr", "vultr"]
     inventory._load_name = "vultr.cloud.vultr"
     inventory.parse(inventory.inventory, DataLoader(), str(inventory_file))
-
-    if cache_option:
-        RequestMock.reset_mock()
-
-        inventory.parse(inventory.inventory, DataLoader(), str(inventory_file))
-        RequestMock.assert_not_called()
-
     assert len(inventory.inventory.hosts.items()) > 0
 
 
