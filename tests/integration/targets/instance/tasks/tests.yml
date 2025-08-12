@@ -39,9 +39,10 @@
   loop_control:
     loop_var: instance
 
-- ansible.builtin.include_tasks: reinstall.yml
-  vars:
-    instance: "{{ vultr_instances | first }}"
+### FIXME: return error, state=locked
+# - ansible.builtin.include_tasks: reinstall.yml
+#   vars:
+#     instance: "{{ vultr_instances | first }}"
 
 - ansible.builtin.include_tasks: absent.yml
   with_items: "{{ vultr_instances }}"
