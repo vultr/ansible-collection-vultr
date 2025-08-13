@@ -34,6 +34,7 @@ options:
     description:
       - Name of storage tier to use for object storage. Must be available for specified cluster. Required if I(state) is present.
     type: str
+    default: Legacy
   state:
     description:
       - State of the object storage.
