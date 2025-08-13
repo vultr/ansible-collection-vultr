@@ -1,4 +1,5 @@
 ---
 vultr_object_storage_name: "{{ vultr_resource_prefix }}-object-storage"
+vultr_object_storage_tier: Standard
 vultr_object_storage_cluster1: del1.vultrobjects.com
 vultr_object_storage_cluster2: ams1.vultrobjects.com
