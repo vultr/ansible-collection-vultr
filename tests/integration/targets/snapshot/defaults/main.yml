@@ -2,7 +2,7 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 ---
 vultr_instance:
-  label: "snap1"
+  label: "{{ vultr_resource_prefix }}_snap1"
   plan: vc2-1c-1gb
   region: ams
   os: Debian 11 x64 (bullseye)

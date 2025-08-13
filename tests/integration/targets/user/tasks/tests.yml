@@ -36,7 +36,7 @@
   vultr.cloud.user:
     name: "{{ vultr_user_name }}"
     email: john.doe{{ vultr_resource_prefix }}@example.com
-    password: s3cr3t
+    password: "z,!B.DpCe.P6/8(pO||z"
     acls:
       - bad
       - dns
@@ -53,7 +53,7 @@
   vultr.cloud.user:
     name: "{{ vultr_user_name }}"
     email: john.doe{{ vultr_resource_prefix }}@example.com
-    password: s3cr3t
+    password: "z,!B.DpCe.P6/8(pO||z"
     acls:
       - upgrade
       - dns
@@ -69,7 +69,7 @@
   vultr.cloud.user:
     name: "{{ vultr_user_name }}"
     email: john.doe{{ vultr_resource_prefix }}@example.com
-    password: s3cr3t
+    password: "z,!B.DpCe.P6/8(pO||z"
     acls:
       - upgrade
       - dns
@@ -90,7 +90,7 @@
   vultr.cloud.user:
     name: "{{ vultr_user_name }}"
     email: john.doe{{ vultr_resource_prefix }}@example.com
-    password: s3cr3t
+    password: "z,!B.DpCe.P6/8(pO||z"
     acls:
       - upgrade
       - dns
@@ -111,7 +111,7 @@
   vultr.cloud.user:
     name: "{{ vultr_user_name }}"
     email: jimmy{{ vultr_resource_prefix }}@example.com
-    password: s3cr3t
+    password: "z,!B.DpCe.P6/8(pO||z"
     api_enabled: false
     acls:
       - manage_users
@@ -134,7 +134,7 @@
   vultr.cloud.user:
     name: "{{ vultr_user_name }}"
     email: jimmy{{ vultr_resource_prefix }}@example.com
-    password: s3cr3t
+    password: "z,!B.DpCe.P6/8(pO||z"
     api_enabled: false
     acls:
       - manage_users
@@ -156,7 +156,7 @@
   vultr.cloud.user:
     name: "{{ vultr_user_name }}"
     email: jimmy{{ vultr_resource_prefix }}@example.com
-    password: s3cr3t
+    password: "z,!B.DpCe.P6/8(pO||z"
     api_enabled: false
     acls:
       - manage_users
