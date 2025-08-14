@@ -1,6 +1,6 @@
 ---
 - name: cleanup
-  when: vultr_api_key
+  when: vultr_api_key is defined and vultr_api_key != ''
   block:
     - name: List bare metals
       ansible.builtin.uri:
