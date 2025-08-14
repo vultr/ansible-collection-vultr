@@ -1,0 +1,11 @@
+name: notify-pr
+
+on: pull_request_target
+
+jobs:
+  pr:
+    uses: vultr/shared-actions/.github/workflows/notify-pr.yml@main
+    secrets: inherit
+    with:
+      repository: ${{ github.repository }}
+      pr_number: ${{ github.event.number }}
