@@ -3,6 +3,7 @@
   vultr.cloud.object_storage:
     label: "{{ obj.label }}"
     cluster: "{{ obj.cluster }}"
+    tier: "{{ obj.tier }}"
   register: create_result
   with_items: "{{ vultr_object_storage_info_stores }}"
   loop_control:

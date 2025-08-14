@@ -2,5 +2,7 @@
 vultr_object_storage_info_stores:
   - label: "{{ vultr_resource_prefix }}-object-storage-info1"
     cluster: sjc1.vultrobjects.com
+    tier: Standard
   - label: "{{ vultr_resource_prefix }}-object-storage-info2"
     cluster: sgp1.vultrobjects.com
+    tier: Standard

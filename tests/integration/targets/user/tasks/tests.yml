@@ -80,7 +80,7 @@
     that:
       - result is changed
       - result.vultr_user.name == vultr_user_name
-      - result.vultr_user.email == 'john.doe{{ vultr_resource_prefix }}@example.com'
+      - result.vultr_user.email == 'john.doe' ~ vultr_resource_prefix ~ '@example.com'
       - result.vultr_user.api_enabled == true
       - "'upgrade' in result.vultr_user.acls"
       - "'manage_users' in result.vultr_user.acls"
@@ -101,7 +101,7 @@
     that:
       - result is not changed
       - result.vultr_user.name == vultr_user_name
-      - result.vultr_user.email == 'john.doe{{ vultr_resource_prefix }}@example.com'
+      - result.vultr_user.email == 'john.doe' ~ vultr_resource_prefix ~ '@example.com'
       - result.vultr_user.api_enabled == true
       - "'upgrade' in result.vultr_user.acls"
       - "'manage_users' in result.vultr_user.acls"
@@ -110,7 +110,7 @@
 - name: test update user in check mode
   vultr.cloud.user:
     name: "{{ vultr_user_name }}"
-    email: jimmy{{ vultr_resource_prefix }}@example.com
+    email: john.doe{{ vultr_resource_prefix }}@example.com
     password: "z,!B.DpCe.P6/8(pO||z"
     api_enabled: false
     acls:
@@ -124,7 +124,7 @@
     that:
       - result is changed
       - result.vultr_user.name == vultr_user_name
-      - result.vultr_user.email == 'john.doe{{ vultr_resource_prefix }}@example.com'
+      - result.vultr_user.email == 'john.doe' ~ vultr_resource_prefix ~ '@example.com'
       - "'upgrade' in result.vultr_user.acls"
       - "'manage_users' in result.vultr_user.acls"
       - "'dns' in result.vultr_user.acls"
@@ -133,7 +133,7 @@
 - name: test update user
   vultr.cloud.user:
     name: "{{ vultr_user_name }}"
-    email: jimmy{{ vultr_resource_prefix }}@example.com
+    email: john.doe{{ vultr_resource_prefix }}@example.com
     password: "z,!B.DpCe.P6/8(pO||z"
     api_enabled: false
     acls:
@@ -146,7 +146,7 @@
     that:
       - result is changed
       - result.vultr_user.name == vultr_user_name
-      - result.vultr_user.email == 'jimmy{{ vultr_resource_prefix }}@example.com'
+      - result.vultr_user.email == 'john.doe' ~ vultr_resource_prefix ~ '@example.com'
       - "'upgrade' in result.vultr_user.acls"
       - "'manage_users' in result.vultr_user.acls"
       - "'support' in result.vultr_user.acls"
@@ -155,7 +155,7 @@
 - name: test update user idempotence
   vultr.cloud.user:
     name: "{{ vultr_user_name }}"
-    email: jimmy{{ vultr_resource_prefix }}@example.com
+    email: john.doe{{ vultr_resource_prefix }}@example.com
     password: "z,!B.DpCe.P6/8(pO||z"
     api_enabled: false
     acls:
@@ -168,7 +168,7 @@
     that:
       - result is not changed
       - result.vultr_user.name == vultr_user_name
-      - result.vultr_user.email == 'jimmy{{ vultr_resource_prefix }}@example.com'
+      - result.vultr_user.email == 'john.doe' ~ vultr_resource_prefix ~ '@example.com'
       - "'upgrade' in result.vultr_user.acls"
       - "'manage_users' in result.vultr_user.acls"
       - "'support' in result.vultr_user.acls"
@@ -185,7 +185,7 @@
     that:
       - result is changed
       - result.vultr_user.name == vultr_user_name
-      - result.vultr_user.email == 'jimmy{{ vultr_resource_prefix }}@example.com'
+      - result.vultr_user.email == 'john.doe' ~ vultr_resource_prefix ~ '@example.com'
       - "'upgrade' in result.vultr_user.acls"
       - "'manage_users' in result.vultr_user.acls"
       - "'support' in result.vultr_user.acls"
@@ -201,7 +201,7 @@
     that:
       - result is changed
       - result.vultr_user.name == vultr_user_name
-      - result.vultr_user.email == 'jimmy{{ vultr_resource_prefix }}@example.com'
+      - result.vultr_user.email == 'john.doe' ~ vultr_resource_prefix ~ '@example.com'
       - "'upgrade' in result.vultr_user.acls"
       - "'manage_users' in result.vultr_user.acls"
       - "'support' in result.vultr_user.acls"
