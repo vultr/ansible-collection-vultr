@@ -1,0 +1,50 @@
+---
+- name: create container registry
+  vultr.cloud.container_registry:
+    name: "{{ vultr_container_registry_name }}"
+    plan: "{{ vultr_container_registry_plan }}"
+    public: "{{ vultr_container_registry_public }}"
+    region: "{{ vultr_container_registry_region }}"
+  register: create_result
+
+- name: test gather vultr container registry repository info - empty resources
+  vultr.cloud.container_registry_repository_info:
+    registry: "{{ vultr_container_registry_name }}"
+
+# Before the remaining tests can be enabled, it will be necessary to determine how to get a container image
+# built (either before invoking the test, or by adding the appropriate parameters here), as well as
+# ensuring the containers.podman or community.docker collections are installed without making them
+# dependencies unnecessarily
+#- name: push container image to vultr container registry repository
+#  containers.podman.podman_image:
+#    name: "{{ create_result.vultr_container_registry.urn ~ '/' ~ vultr_container_image_name }}"
+#    username: "{{ create_result.vultr_container_registry.root_user.username }}"
+#    password: "{{ create_result.vultr_container_registry.root_user.password }}"
+#    push: true
+#    tag: latest
+#    push_args:
+#      dest: "{{ create_result.vultr_container_registry.urn }}"
+
+#- name: test gather vultr container registry repository in check mode
+#  vultr.cloud.container_registry_repository_info:
+#    registry: "{{ vultr_container_registry_name }}"
+#  check_mode: true
+#  register: result
+#- name: verify test gather vultr container registry repository in check mode
+#  ansible.builtin.assert:
+#    that:
+#      - result.vultr_container_registry_repository_info | selectattr('name', 'equalto', vultr_container_registry_name ~ '/' ~ vultr_container_image_name) | list | count == 1
+
+#- name: test gather vultr container registry repository
+#  vultr.cloud.container_registry_repository_info:
+#    registry: "{{ vultr_container_registry_name }}"
+#  register: result
+#- name: verify test gather vultr container registry repository
+#  ansible.builtin.assert:
+#    that:
+#      - result.vultr_container_registry_repository_info | selectattr('name', 'equalto', vultr_container_registry_name ~ '/' ~ vultr_container_image_name) | list | count == 1
+
+- name: delete container registry
+  vultr.cloud.container_registry:
+    name: "{{ vultr_container_registry_name }}"
+    state: absent
