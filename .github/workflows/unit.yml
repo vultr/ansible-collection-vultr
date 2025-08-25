@@ -30,7 +30,7 @@ jobs:
           - "3.12"
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: ansible_collections/vultr/cloud
 
