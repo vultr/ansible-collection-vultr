@@ -191,7 +191,7 @@ vultr_instance_info:
       description: Region the instance was deployed into.
       returned: success
       type: str
-      sample: ews
+      sample: ewr
     status:
       description: Status about the deployment of the instance.
       returned: success

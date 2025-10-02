@@ -1,0 +1,22 @@
+---
+- name: test fail if missing required - registry
+  vultr.cloud.container_registry_repository:
+  register: result
+  ignore_errors: true
+- name: verify test fail if missing required - registry
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - 'result.msg ==  "missing required arguments: image, registry"'
+
+- name: test fail if missing required - image
+  vultr.cloud.container_registry_repository:
+    registry: "{{ vultr_container_registry_name }}"
+    state: absent
+  register: result
+  ignore_errors: true
+- name: verify test fail if missing required - image
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - 'result.msg ==  "missing required arguments: image"'
