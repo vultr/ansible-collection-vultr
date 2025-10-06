@@ -189,7 +189,7 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
                 self.module.params["image_id"] = self.get_image()["image_id"]
 
             if self.module.params.get("user_data") is not None:
-                self.module.params["user_data"] = base64.b64encode(self.module.params["user_data"].encode())
+                self.module.params["user_data"] = base64.b64encode(self.module.params["user_data"].encode()).decode('utf-8')
 
             if self.module.params.get("ssh_keys") is not None:
                 # sshkey_id ist a list of ids
