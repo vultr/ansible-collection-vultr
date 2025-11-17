@@ -13,3 +13,7 @@ vultr_snapshots:
 
   - description: "{{ vultr_resource_prefix }}_desc2"
     url: https://cloud.debian.org/images/cloud/bullseye/latest/debian-11-generic-amd64.raw
+
+  - description: "{{ vultr_resource_prefix }}_desc3"
+    url: https://cloud.debian.org/images/cloud/bullseye/latest/debian-11-generic-amd64.raw
+    uefi: true
