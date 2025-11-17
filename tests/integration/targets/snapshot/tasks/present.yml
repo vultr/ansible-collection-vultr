@@ -15,6 +15,7 @@
   vultr.cloud.snapshot:
     description: "{{ snapshot.description }}"
     instance: "{{ snapshot.instance | default(omit) }}"
+    uefi: "{{ snapshot.uefi | default(omit) }}"
     url: "{{ snapshot.url | default(omit) }}"
   register: result
 - name: verify test create snapshot
