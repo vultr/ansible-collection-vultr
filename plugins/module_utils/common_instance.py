@@ -6,7 +6,8 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-import base64
+from base64 import b64decode, b64encode
+from binascii import Error as binascii_error
 
 from .vultr_v2 import AnsibleVultr
 
@@ -134,7 +135,11 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
             path="%s/%s/%s" % (self.resource_path, resource[self.resource_key_id], "user-data"),
         )
         if res:
-            return str(res.get("user_data", dict()).get("data"))
+            data = res.get("user_data", dict()).get("data")
+            try:
+                return b64decode(data).decode('utf-8') if data else ""
+            except (TypeError, binascii_error):
+                return str(data) if data else ""
         return ""
 
     def transform_resource(self, resource):
@@ -189,7 +194,7 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
                 self.module.params["image_id"] = self.get_image()["image_id"]
 
             if self.module.params.get("user_data") is not None:
-                self.module.params["user_data"] = base64.b64encode(self.module.params["user_data"].encode()).decode('utf-8')
+                self.module.params["user_data"] = b64encode(self.module.params["user_data"].encode()).decode('utf-8')
 
             if self.module.params.get("ssh_keys") is not None:
                 # sshkey_id ist a list of ids
@@ -210,8 +215,8 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
         return super(AnsibleVultrCommonInstance, self).create()
 
     def update(self, resource):
-        user_data = self.get_user_data(resource=resource)
-        resource["user_data"] = user_data.encode()
+        user_data = self.get_user_data(resource=resource) or ""
+        resource["user_data"] = b64encode(user_data.encode()).decode('utf-8')
 
         # VPC1
         if self.module.params.get("vpcs") is not None:
@@ -243,5 +248,6 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
 
     def transform_result(self, resource):
         if resource:
-            resource["user_data"] = self.get_user_data(resource=resource)
+            user_data = self.get_user_data(resource=resource) or ""
+            resource["user_data"] = b64encode(user_data.encode()).decode('utf-8')
         return resource

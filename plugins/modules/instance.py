@@ -514,8 +514,10 @@ class AnsibleVultrInstance(AnsibleVultrCommonInstance):
             if self.module.params.get("backups") is not None:
                 self.module.params["backups"] = "enabled" if self.module.params["backups"] else "disabled"
 
-    def absent(self):
-        resource = self.query()
+    def absent(self, resource=None):
+        if resource is None:
+            resource = self.query()
+
         if resource and not self.module.check_mode:
             resource = self.wait_for_state(resource=resource, key="server_status", states=["none", "locked"], cmp="!=")
 
