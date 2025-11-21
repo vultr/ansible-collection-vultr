@@ -22,7 +22,7 @@ jobs:
         ansible:
           - stable-2.18
         python:
-          - "3.14"
+          - "3.13"
     steps:
       - name: Check out code
         uses: actions/checkout@v5
