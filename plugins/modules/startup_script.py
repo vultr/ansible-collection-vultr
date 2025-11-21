@@ -142,7 +142,7 @@ from ..module_utils.vultr_v2 import AnsibleVultr, vultr_argument_spec
 class AnsibleVultrStartupScript(AnsibleVultr):
     def configure(self):
         if self.module.params["script"]:
-            self.module.params["script"] = base64.b64encode(self.module.params["script"].encode())
+            self.module.params["script"] = base64.b64encode(self.module.params["script"].encode()).decode('utf-8')
 
     def update(self, resource):
         resource["script"] = resource["script"].encode()
@@ -150,7 +150,7 @@ class AnsibleVultrStartupScript(AnsibleVultr):
 
     def transform_result(self, resource):
         if resource:
-            resource["script"] = base64.b64decode(resource["script"]).decode()
+            resource["script"] = base64.b64decode(resource["script"]).decode('utf-8')
         return resource
 
 

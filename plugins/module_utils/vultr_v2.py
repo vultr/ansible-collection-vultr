@@ -160,15 +160,18 @@ class AnsibleVultr:
                 query_params=dict_merge(query_params, cursor),
             )
 
-            resp_body = resp.get(result_key, {})
-            if isinstance(resp_body, list):
-                if isinstance(result.get(result_key), list):
-                    result[result_key].extend(resp_body)
-                else:
-                    result[result_key] = resp_body
-            cursor["cursor"] = resp.get("meta", {}).get("links", {}).get("next", "")
+            if isinstance(resp, dict):
+                resp_body = resp.get(result_key, {})
+                if isinstance(resp_body, list):
+                    if isinstance(result.get(result_key), list):
+                        result[result_key].extend(resp_body)
+                    else:
+                        result[result_key] = resp_body
+                cursor["cursor"] = resp.get("meta", {}).get("links", {}).get("next", "")
 
-            if cursor["cursor"] == "":
+                if cursor["cursor"] == "":
+                    return result
+            else:
                 return result
 
     def api_query(self, path, method="GET", data=None, query_params=None):
@@ -185,6 +188,7 @@ class AnsibleVultr:
 
         info = dict()
         resp_body = None
+        retry = 0
         for retry in range(0, self.module.params["api_retries"]):
             resp, info = fetch_url(
                 module=self.module,
