@@ -144,10 +144,6 @@ class AnsibleVultrStartupScript(AnsibleVultr):
         if self.module.params["script"]:
             self.module.params["script"] = base64.b64encode(self.module.params["script"].encode()).decode('utf-8')
 
-    def update(self, resource):
-        resource["script"] = resource["script"].encode().decode('utf-8')
-        return super(AnsibleVultrStartupScript, self).update(resource=resource)
-
     def transform_result(self, resource):
         if resource:
             resource["script"] = base64.b64decode(resource["script"]).decode('utf-8')
