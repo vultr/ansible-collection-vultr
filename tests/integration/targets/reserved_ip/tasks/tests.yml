@@ -86,7 +86,7 @@
       - result is changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
       - not result.vultr_reserved_ip.instance_id
-      - result.vultr_reserved_ip.subnet
+      - result.vultr_reserved_ip.subnet is defined
       - result.vultr_reserved_ip.ip_type == 'v4'
 
 - name: test attach instance of reserved ip
@@ -102,7 +102,7 @@
       - result is changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
       - result.vultr_reserved_ip.instance_id
-      - result.vultr_reserved_ip.subnet
+      - result.vultr_reserved_ip.subnet is defined
       - result.vultr_reserved_ip.ip_type == 'v4'
 
 - name: test attach instance of reserved ip idempotence
@@ -118,7 +118,7 @@
       - result is not changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
       - result.vultr_reserved_ip.instance_id
-      - result.vultr_reserved_ip.subnet
+      - result.vultr_reserved_ip.subnet is defined
       - result.vultr_reserved_ip.ip_type == 'v4'
 
 - name: test ignore instance attached reserved ip idempotence
@@ -133,7 +133,7 @@
       - result is not changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
       - result.vultr_reserved_ip.instance_id
-      - result.vultr_reserved_ip.subnet
+      - result.vultr_reserved_ip.subnet is defined
       - result.vultr_reserved_ip.ip_type == 'v4'
 
 - name: test detach instance of reserved ip in check mode
@@ -150,7 +150,7 @@
       - result is changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
       - result.vultr_reserved_ip.instance_id
-      - result.vultr_reserved_ip.subnet
+      - result.vultr_reserved_ip.subnet is defined
       - result.vultr_reserved_ip.ip_type == 'v4'
 
 - name: test detach instance of reserved ip
@@ -166,7 +166,7 @@
       - result is changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
       - not result.vultr_reserved_ip.instance_id
-      - result.vultr_reserved_ip.subnet
+      - result.vultr_reserved_ip.subnet is defined
       - result.vultr_reserved_ip.ip_type == 'v4'
 
 - name: test detach instance of reserved ip idempotence
@@ -182,7 +182,7 @@
       - result is not changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
       - not result.vultr_reserved_ip.instance_id
-      - result.vultr_reserved_ip.subnet
+      - result.vultr_reserved_ip.subnet is defined
       - result.vultr_reserved_ip.ip_type == 'v4'
 
 - name: test absent reserved ip in check mode
@@ -199,7 +199,7 @@
       - result is changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
       - not result.vultr_reserved_ip.instance_id
-      - result.vultr_reserved_ip.subnet
+      - result.vultr_reserved_ip.subnet is defined
       - result.vultr_reserved_ip.ip_type == 'v4'
 
 - name: test absent reserved ip
@@ -216,7 +216,7 @@
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
       - not result.vultr_reserved_ip.instance_id
-      - result.vultr_reserved_ip.subnet
+      - result.vultr_reserved_ip.subnet is defined
       - result.vultr_reserved_ip.ip_type == 'v4'
 
 - name: test absent reserved ip idempotence

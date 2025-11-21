@@ -134,7 +134,7 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
             path="%s/%s/%s" % (self.resource_path, resource[self.resource_key_id], "user-data"),
         )
         if res:
-            return str(res.get("user_data", dict()).get("data"))
+            return base64.b64decode(res.get("user_data", dict()).get("data")).decode('utf-8')
         return ""
 
     def transform_resource(self, resource):
@@ -210,8 +210,7 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
         return super(AnsibleVultrCommonInstance, self).create()
 
     def update(self, resource):
-        user_data = self.get_user_data(resource=resource)
-        resource["user_data"] = user_data.encode()
+        resource["user_data"] = base64.b64encode(self.get_user_data(resource=resource).encode()).decode('utf-8')
 
         # VPC1
         if self.module.params.get("vpcs") is not None:
@@ -243,5 +242,5 @@ class AnsibleVultrCommonInstance(AnsibleVultr):
 
     def transform_result(self, resource):
         if resource:
-            resource["user_data"] = self.get_user_data(resource=resource)
+            resource["user_data"] = base64.b64encode(self.get_user_data(resource=resource).encode()).decode('utf-8')
         return resource

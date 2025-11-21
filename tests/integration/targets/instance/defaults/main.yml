@@ -62,8 +62,8 @@ vultr_instances:
       - "{{ vultr_resource_prefix }}_instance_vpc_3"
 
   - label: "{{ vultr_resource_prefix }}_app1"
-    plan: vc2-4c-8gb
-    plan_update: vc2-6c-16gb
+    plan: vc2-2c-4gb
+    plan_update: vc2-4c-8gb
     region: ams
     app: GitLab on Ubuntu 22.04 x64
     backups: false
