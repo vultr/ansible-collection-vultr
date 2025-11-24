@@ -30,6 +30,12 @@ options:
       - Mutually exclusive with I(url).
       - I(instance) or I(url) is required if I(state=present).
     type: str
+  uefi:
+    description:
+      - Whether or not the snapshot uses UEFI.
+      - Only considered on creation when I(url) is provided.
+    type: bool
+    default: false
   url:
     description:
       - The URL of the snapshot image (RAW) to be uploaded.
@@ -164,6 +170,8 @@ class AnsibleVultrSnapshot(AnsibleVultr):
 
         if self.module.params.get("url") is not None:
             self.resource_create_param_keys.append("url")
+            if self.module.params.get("uefi") is not None:
+                self.resource_create_param_keys.append("uefi")
             # Upload by URL has a different endpoint
             self.resource_path = self.resource_path + "/create-from-url"
         else:
@@ -187,6 +195,7 @@ def main():
         dict(
             description=dict(type="str", required=True, aliases=["name"]),
             instance=dict(type="str"),
+            uefi=dict(type="bool", default=False),
             url=dict(type="str"),
             state=dict(type="str", choices=["present", "absent"], default="present"),
         )  # type: ignore
