@@ -54,6 +54,12 @@ options:
       - Only considered on creation.
     type: bool
     default: false
+  mdisk_mode:
+    description:
+      - Multi-disk operating mode of the bare metal server
+    default: none
+    choices: [ none, jbod, raid1 ]
+    type: str
   persistent_pxe:
     description:
       - Whether to enable persistent PXE or not.
@@ -379,6 +385,11 @@ def main():
             plan=dict(type="str"),
             activation_email=dict(type="bool", default=False),
             enable_ipv6=dict(type="bool"),
+            mdisk_mode=dict(
+                type="str",
+                choices=["none", "jbod", "raid1"],
+                default="none",
+            ),
             persistent_pxe=dict(type="bool"),
             tags=dict(type="list", elements="str"),
             vpc2s=dict(type="list", elements="str"),
@@ -427,6 +438,7 @@ def main():
             "tags",
             "activation_email",
             "sshkey_id",
+            "mdisk_mode",
             "persistent_pxe",
             "attach_vpc2",
         ],

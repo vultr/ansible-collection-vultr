@@ -18,6 +18,7 @@
     image: "{{ bare_metal.image | default(omit) }}"
     snapshot: "{{ bare_metal.snapshot | default(omit) }}"
     vpc2s: "{{ bare_metal.vpc2s | default(omit) }}"
+    mdisk_mode: "{{ bare_metal.mdisk_mode | default(omit) }}"
   register: result
   check_mode: true
 - name: verify test create bare_metal in check mode
@@ -40,6 +41,7 @@
     image: "{{ bare_metal.image | default(omit) }}"
     snapshot: "{{ bare_metal.snapshot | default(omit) }}"
     vpc2s: "{{ bare_metal.vpc2s | default(omit) }}"
+    mdisk_mode: "{{ bare_metal.mdisk_mode | default(omit) }}"
   register: result
 - name: verify test create bare_metal
   ansible.builtin.assert:
@@ -65,6 +67,7 @@
     image: "{{ bare_metal.image | default(omit) }}"
     snapshot: "{{ bare_metal.snapshot | default(omit) }}"
     vpc2s: "{{ bare_metal.vpc2s | default(omit) }}"
+    mdisk_mode: "{{ bare_metal.mdisk_mode | default(omit) }}"
   register: result
 - name: verify test create bare_metal idempotence
   ansible.builtin.assert:
@@ -90,6 +93,7 @@
     image: "{{ bare_metal.image | default(omit) }}"
     snapshot: "{{ bare_metal.snapshot | default(omit) }}"
     vpc2s: "{{ bare_metal.vpc2s_update | default(omit) }}"
+    mdisk_mode: "{{ bare_metal.mdisk_mode | default(omit) }}"
   register: result
   check_mode: true
 - name: verify test update bare_metal in check mode
@@ -116,6 +120,7 @@
     image: "{{ bare_metal.image | default(omit) }}"
     snapshot: "{{ bare_metal.snapshot | default(omit) }}"
     vpc2s: "{{ bare_metal.vpc2s_update | default(omit) }}"
+    mdisk_mode: "{{ bare_metal.mdisk_mode | default(omit) }}"
   register: result
 - name: verify test update bare_metal
   ansible.builtin.assert:
@@ -141,6 +146,7 @@
     image: "{{ bare_metal.image | default(omit) }}"
     snapshot: "{{ bare_metal.snapshot | default(omit) }}"
     vpc2s: "{{ bare_metal.vpc2s_update | default(omit) }}"
+    mdisk_mode: "{{ bare_metal.mdisk_mode | default(omit) }}"
   register: result
 - name: verify test update bare_metal idempotence
   ansible.builtin.assert:
