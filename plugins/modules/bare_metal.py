@@ -57,6 +57,10 @@ options:
   mdisk_mode:
     description:
       - Multi-disk operating mode of the bare metal server
+      - "none" leaves all non-OS disks unformatted
+      - "jbod" (Just a Bunch Of Disks) formats and mounts all non-OS disks
+      - "raid1" creates the instance with the OS disk configured in a software RAID1
+      - "raid1" is not applicable for Windows OS
     default: none
     choices: [ none, jbod, raid1 ]
     type: str
