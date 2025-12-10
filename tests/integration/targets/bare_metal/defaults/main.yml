@@ -28,6 +28,7 @@ vultr_bare_metals:
       - four
     region: ams
     os: Debian 12 x64 (bookworm)
+    mdisk_mode: raid1
     enable_ipv6: false
     enable_ipv6_update: true
     # vpc2s:

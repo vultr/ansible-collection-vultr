@@ -54,6 +54,16 @@ options:
       - Only considered on creation.
     type: bool
     default: false
+  mdisk_mode:
+    description:
+      - Multi-disk operating mode of the bare metal server.
+      - If C(none), leaves all non-OS disks unformatted.
+      - If C(jbod) (Just a Bunch Of Disks), formats and mounts all non-OS disks.
+      - If C(raid1), creates the instance with the OS disk configured in a software RAID1.
+      - The C(raid1) choice is not applicable for Windows OS.
+    default: none
+    choices: [ none, jbod, raid1 ]
+    type: str
   persistent_pxe:
     description:
       - Whether to enable persistent PXE or not.
@@ -379,6 +389,11 @@ def main():
             plan=dict(type="str"),
             activation_email=dict(type="bool", default=False),
             enable_ipv6=dict(type="bool"),
+            mdisk_mode=dict(
+                type="str",
+                choices=["none", "jbod", "raid1"],
+                default="none",
+            ),
             persistent_pxe=dict(type="bool"),
             tags=dict(type="list", elements="str"),
             vpc2s=dict(type="list", elements="str"),
@@ -427,6 +442,7 @@ def main():
             "tags",
             "activation_email",
             "sshkey_id",
+            "mdisk_mode",
             "persistent_pxe",
             "attach_vpc2",
         ],
