@@ -53,7 +53,7 @@
     that:
       - result is changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-      - not result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.instance_id == ''
       - result.vultr_reserved_ip.subnet is defined
       - result.vultr_reserved_ip.ip_type == 'v4'
 
@@ -68,7 +68,7 @@
     that:
       - result is not changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-      - not result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.instance_id == ''
       - result.vultr_reserved_ip.subnet is defined
       - result.vultr_reserved_ip.ip_type == 'v4'
 
@@ -85,7 +85,7 @@
     that:
       - result is changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-      - not result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.instance_id == ''
       - result.vultr_reserved_ip.subnet is defined
       - result.vultr_reserved_ip.ip_type == 'v4'
 
@@ -101,7 +101,7 @@
     that:
       - result is changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-      - result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.instance_id != ''
       - result.vultr_reserved_ip.subnet is defined
       - result.vultr_reserved_ip.ip_type == 'v4'
 
@@ -117,7 +117,7 @@
     that:
       - result is not changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-      - result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.instance_id != ''
       - result.vultr_reserved_ip.subnet is defined
       - result.vultr_reserved_ip.ip_type == 'v4'
 
@@ -132,7 +132,7 @@
     that:
       - result is not changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-      - result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.instance_id != ''
       - result.vultr_reserved_ip.subnet is defined
       - result.vultr_reserved_ip.ip_type == 'v4'
 
@@ -149,7 +149,7 @@
     that:
       - result is changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-      - result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.instance_id != ''
       - result.vultr_reserved_ip.subnet is defined
       - result.vultr_reserved_ip.ip_type == 'v4'
 
@@ -165,7 +165,7 @@
     that:
       - result is changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-      - not result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.instance_id == ''
       - result.vultr_reserved_ip.subnet is defined
       - result.vultr_reserved_ip.ip_type == 'v4'
 
@@ -181,7 +181,7 @@
     that:
       - result is not changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-      - not result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.instance_id == ''
       - result.vultr_reserved_ip.subnet is defined
       - result.vultr_reserved_ip.ip_type == 'v4'
 
@@ -198,7 +198,7 @@
     that:
       - result is changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-      - not result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.instance_id == ''
       - result.vultr_reserved_ip.subnet is defined
       - result.vultr_reserved_ip.ip_type == 'v4'
 
@@ -214,8 +214,7 @@
     that:
       - result is changed
       - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-      - result.vultr_reserved_ip.label == vultr_reserved_ip_name
-      - not result.vultr_reserved_ip.instance_id
+      - result.vultr_reserved_ip.instance_id == ''
       - result.vultr_reserved_ip.subnet is defined
       - result.vultr_reserved_ip.ip_type == 'v4'
 
