@@ -1,0 +1,33 @@
+---
+- name: cleanup
+  when: vultr_api_key
+  block:
+    - name: List file systems
+      ansible.builtin.uri:
+        url: "{{ vultr_api_url }}/vfs"
+        headers:
+          Authorization: Bearer {{ vultr_api_key }}
+        status_code: 200
+      register: res
+      no_log: true
+
+    - name: Compile results
+      ansible.builtin.set_fact:
+        vfs: "{{ res.json.vfs }}"
+
+    - name: Found resources
+      ansible.builtin.debug:
+        var: vfs
+
+    - name: Remove all file systems created by this test run
+      ansible.builtin.uri:
+        url: "{{ vultr_api_url }}/vfs/{{ item.id }}"
+        method: "DELETE"
+        headers:
+          Authorization: Bearer {{ vultr_api_key }}
+        status_code: 204
+      when: vultr_resource_prefix in item.label
+      with_items: "{{ vfs }}"
+      loop_control:
+        label: "{{ item.label }}"
+      no_log: true
