@@ -93,7 +93,7 @@ plugin: vultr.cloud.vultr
 plugin: vultr.cloud.vultr
 api_key: '{{ lookup("pipe"), "./get_vultr_api_key.sh" }}'
 keyed_groups:
-  - key: vultr_tags | lower
+  - key: vultr_tags | map('lower')
     prefix: ''
     separator: ''
 filters:
