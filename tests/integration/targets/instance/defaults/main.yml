@@ -46,7 +46,7 @@ vultr_instances:
       - three
       - four
     region: ams
-    os: Debian 12 x64 (bookworm)
+    os: Debian 13 x64 (trixie)
     backups: true
     backups_update: false
     ddos_protection: true
@@ -65,7 +65,7 @@ vultr_instances:
     plan: vc2-2c-4gb
     plan_update: vc2-4c-8gb
     region: ams
-    app: GitLab on Ubuntu 22.04 x64
+    app: GitLab on Ubuntu 24.04 x64
     backups: false
     backups_update: false
     ddos_protection: false
