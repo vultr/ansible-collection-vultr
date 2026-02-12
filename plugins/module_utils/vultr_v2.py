@@ -80,6 +80,7 @@ class AnsibleVultr:
         resource_create_param_keys=None,
         resource_update_param_keys=None,
         resource_update_method="PATCH",
+        response_in_list=True,
     ):
         self.module = module
         self.namespace = namespace
@@ -96,7 +97,7 @@ class AnsibleVultr:
         # The name key of the resource, usually 'name'
         self.resource_key_name = resource_key_name
 
-        # The name key of the resource, usually 'id'
+        # The id key of the resource, usually 'id'
         self.resource_key_id = resource_key_id
 
         # Some resources need an additional GET request to get all attributes
@@ -110,6 +111,9 @@ class AnsibleVultr:
 
         # Some resources have PUT, many have PATCH
         self.resource_update_method = resource_update_method
+
+        # Some resources return objects as the top level, not in an array
+        self.response_in_list = response_in_list
 
         self.result = {
             "changed": False,
@@ -241,8 +245,9 @@ class AnsibleVultr:
         get_details=False,
         fail_not_found=False,
         skip_transform=True,
+        param_value=None,
     ):
-        param_value = self.module.params.get(param_key or key_name)
+        param_value = param_value or self.module.params.get(param_key or key_name)
 
         found = dict()
         for resource in self.query_list(path=path, result_key=result_key, query_params=query_params):
@@ -279,7 +284,7 @@ class AnsibleVultr:
         return dict()
 
     def query_filter_list(self):
-        # Returns a single dict representing the resource queryied by name
+        # Returns a single dict representing the resource queried by name
         return self.query_filter_list_by_name(
             key_name=self.resource_key_name,
             key_id=self.resource_key_id,
@@ -299,10 +304,14 @@ class AnsibleVultr:
         )
 
         if resource:
-            if skip_transform:
-                return resource[result_key]
-            else:
+            if self.response_in_list:
+                if skip_transform:
+                    return resource[result_key]
                 return self.transform_resource(resource[result_key])
+            else:
+                if skip_transform:
+                    return resource
+                return self.transform_resource(resource)
 
         return dict()
 
@@ -320,6 +329,7 @@ class AnsibleVultr:
             query_params=query_params,
             result_key=result_key,
         )
+
         return resources[result_key] if resources else []
 
     def wait_for_state(self, resource, key, states, cmp="=", retries=60, skip_wait=False):
@@ -374,7 +384,10 @@ class AnsibleVultr:
                 method="POST",
                 data=data,
             )
-        return resource.get(self.ressource_result_key_singular) if resource else dict()
+        
+        if self.response_in_list:
+            return resource.get(self.ressource_result_key_singular) if resource else dict()
+        return resource if resource else dict()
 
     def is_diff(self, param, resource):
         value = self.module.params.get(param)

@@ -1,0 +1,19 @@
+---
+- name: test gather vultr container registry region info in check mode
+  vultr.cloud.container_registry_region_info:
+  check_mode: true
+  register: result
+
+- name: verify test gather vultr container registry region info in check mode
+  ansible.builtin.assert:
+    that:
+      - result.vultr_container_registry_region_info | selectattr('urn', 'equalto', 'sjc.vultrcr.com') | list | count == 1
+
+- name: test gather vultr container registry region info
+  vultr.cloud.container_registry_region_info:
+  register: result
+
+- name: verify test gather vultr container registry region info
+  ansible.builtin.assert:
+    that:
+      - result.vultr_container_registry_region_info | selectattr('urn', 'equalto', 'sjc.vultrcr.com') | list | count == 1
