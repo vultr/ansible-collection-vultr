@@ -437,7 +437,7 @@ vultr_instance:
 from ansible.module_utils.basic import AnsibleModule
 
 from ..module_utils.common_instance import AnsibleVultrCommonInstance
-from ..module_utils.vultr_v2 import vultr_argument_spec
+from ..module_utils.vultr_v2 import backoff, vultr_argument_spec
 
 
 class AnsibleVultrInstance(AnsibleVultrCommonInstance):
@@ -503,6 +503,39 @@ class AnsibleVultrInstance(AnsibleVultrCommonInstance):
             )
 
         return resource
+
+    def do_update(self, data, resource):
+        resp = self.api_query(
+            path="%s/%s" % (self.resource_path, resource[self.resource_key_id]),
+            method=self.resource_update_method,
+            data=data,
+        )
+
+        # Not properly documented, but visible in the Response sample:
+        # https://www.vultr.com/api/#tag/instances/operation/update-instance
+
+        in_process_jobs = []
+        if resp:
+            job_ids = resp.get("job_ids", [])
+            for job in job_ids:
+                job_resp = self.api_query(path="%s/jobs/%s" % (self.resource_path, job))
+                if job_resp and job_resp.get("state") == "processing":
+                    in_process_jobs.append(job)
+
+        if len(in_process_jobs) > 0:
+            for job in in_process_jobs:
+                self.wait_for_instance_job(job)
+
+        return self.query_by_id(resource_id=resource[self.resource_key_id])
+
+    def wait_for_instance_job(self, job_id, retries=120):
+        for retry in range(0, retries):
+            resp = self.api_query(path="%s/jobs/%s" % (self.resource_path, job_id))
+            if resp and resp.get("state") == "success":
+                break
+            backoff(retry=retry)
+        else:
+            self.module.fail_json(msg="Wait for instance update completion timed out")
 
     def configure(self):
         super(AnsibleVultrInstance, self).configure()

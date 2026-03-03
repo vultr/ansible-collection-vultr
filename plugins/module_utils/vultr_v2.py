@@ -407,13 +407,18 @@ class AnsibleVultr:
             self.result["diff"]["after"].update(data)
 
             if not self.module.check_mode:
-                self.api_query(
-                    path="%s/%s" % (self.resource_path, resource[self.resource_key_id]),
-                    method=self.resource_update_method,
-                    data=data,
-                )
-                resource = self.query_by_id(resource_id=resource[self.resource_key_id])
+                resource = self.do_update(data, resource)
+
         return resource
+
+    def do_update(self, data, resource):
+        self.api_query(
+            path="%s/%s" % (self.resource_path, resource[self.resource_key_id]),
+            method=self.resource_update_method,
+            data=data,
+        )
+
+        return self.query_by_id(resource_id=resource[self.resource_key_id])
 
     def absent(self, resource=None):
         if resource is None:
