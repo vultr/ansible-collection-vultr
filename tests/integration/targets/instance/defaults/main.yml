@@ -36,7 +36,7 @@ vultr_instances:
         - htop
         - vim
     plan: vc2-1c-1gb
-    plan_update: vc2-1c-2gb
+    plan_update: vc2-4c-8gb
     ssh_keys:
       - "{{ vultr_instance_ssh_key_name }}"
     tags:
