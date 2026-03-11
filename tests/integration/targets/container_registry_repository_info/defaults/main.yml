@@ -1,0 +1,7 @@
+---
+vultr_container_registry_name: "{{ vultr_resource_prefix | replace('-', '') }}infocontainerregistryrepository"
+vultr_container_registry_plan: start_up
+vultr_container_registry_public: false
+vultr_container_registry_region: ewr
+
+vultr_container_image_name: "{{ vultr_resource_prefix }}"

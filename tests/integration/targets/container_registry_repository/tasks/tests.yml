@@ -1,0 +1,110 @@
+---
+- name: setup container registry
+  vultr.cloud.container_registry:
+    name: "{{ vultr_container_registry_name }}"
+    plan: "{{ vultr_container_registry_plan }}"
+    public: "{{ vultr_container_registry_public }}"
+    region: "{{ vultr_container_registry_region }}"
+  register: create_result
+
+# Before the remaining tests can be enabled, it will be necessary to determine how to get a container image
+# built (either before invoking the test, or by adding the appropriate parameters here), as well as
+# ensuring the containers.podman or community.docker collections are installed without making them
+# dependencies unnecessarily
+#- name: push container image to vultr container registry repository
+#  containers.podman.podman_image:
+#    name: "{{ create_result.vultr_container_registry.urn ~ '/' ~ vultr_container_image_name }}"
+#    username: "{{ create_result.vultr_container_registry.root_user.username }}"
+#    password: "{{ create_result.vultr_container_registry.root_user.password }}"
+#    push: true
+#    tag: latest
+#    push_args:
+#      dest: "{{ create_result.vultr_container_registry.urn }}"
+
+#- name: test repository was created by container push
+#  vultr.cloud.container_registry_repository_info:
+#    registry: "{{ vultr_container_registry_name }}"
+#  register: result
+#- name: verify test repository was created by container push
+#  ansible.builtin.assert:
+#    that:
+#      - result.vultr_container_registry_repository_info | selectattr('name', 'equalto', vultr_container_registry_name ~ '/' ~ vultr_container_image_name) | list | count == 1
+#      - result.vultr_container_registry_repository_info | selectattr('name', 'equalto', vultr_container_registry_name ~ '/' ~ vultr_container_image_name) | selectattr('description', 'equalto', '') | list | count == 1
+
+#- name: test update container registry repository update description check mode
+#  vultr.cloud.container_registry_repository:
+#    registry: "{{ vultr_container_registry_name }}"
+#    image: "{{ vultr_container_image_name }}"
+#    description: "{{ vultr_resource_prefix }}"
+#  register: result
+#  check_mode: true
+#- name: verify test update container registry repository update description check mode
+#  ansible.builtin.assert:
+#    that:
+#      - result is changed
+#      - result.vultr_container_registry_repository.description == ''
+
+#- name: test update container registry repository update description
+#  vultr.cloud.container_registry_repository:
+#    registry: "{{ vultr_container_registry_name }}"
+#    image: "{{ vultr_container_image_name }}"
+#    description: "{{ vultr_resource_prefix }}"
+#  register: result
+#- name: verify test update container registry repository update description
+#  ansible.builtin.assert:
+#    that:
+#      - result is changed
+#      - result.vultr_container_registry_repository.description == vultr_resource_prefix
+
+#- name: test update container registry repository update description idempotence
+#  vultr.cloud.container_registry_repository:
+#    registry: "{{ vultr_container_registry_name }}"
+#    image: "{{ vultr_container_image_name }}"
+#    description: "{{ vultr_resource_prefix }}"
+#  register: result
+#- name: verify test update container registry repository update description idempotence
+#  ansible.builtin.assert:
+#    that:
+#      - result is not changed
+#      - result.vultr_container_registry_repository.description == vultr_resource_prefix
+
+#- name: test delete container registry repository check mode
+#  vultr.cloud.container_registry_repository:
+#    registry: "{{ vultr_container_registry_name }}"
+#    image: "{{ vultr_container_image_name }}"
+#    state: absent
+#  register: result
+#  check_mode: true
+#- name: verify test delete container registry repository check mode
+#  ansible.builtin.assert:
+#    that:
+#      - result is changed
+#      - result.vultr_container_registry_repository.description == vultr_resource_prefix
+
+#- name: test delete container registry repository
+#  vultr.cloud.container_registry_repository:
+#    registry: "{{ vultr_container_registry_name }}"
+#    image: "{{ vultr_container_image_name }}"
+#    state: absent
+#  register: result
+#- name: verify test delete container registry repository
+#  ansible.builtin.assert:
+#    that:
+#      - result is changed
+#      - result.vultr_container_registry_repository.description == vultr_resource_prefix
+
+#- name: test delete container registry repository idempotence
+#  vultr.cloud.container_registry_repository:
+#    registry: "{{ vultr_container_registry_name }}"
+#    image: "{{ vultr_container_image_name }}"
+#    state: absent
+#  register: result
+#- name: verify test delete container registry repository idempotence
+#  ansible.builtin.assert:
+#    that:
+#      - result is not changed
+
+- name: delete container registry
+  vultr.cloud.container_registry:
+    name: "{{ vultr_container_registry_name }}"
+    state: absent
