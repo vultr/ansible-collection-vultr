@@ -1,4 +1,4 @@
-bug_fixes:
-- instance, bare_metal - Fixed an issue where the ``user_data`` response returned a JSON serialization error (https://github.com/vultr/ansible-collection-vultr/issues/156).
-- startup_script - Fixed an issue where the ``script`` response returned a JSON serialization error (https://github.com/vultr/ansible-collection-vultr/pull/162).
-- dns_domain - Removed requirement for the ``ip`` argument when creating a new domain (https://github.com/vultr/ansible-collection-vultr/issues/140).
+bugfixes:
+  - instance, bare_metal - Fixed an issue where the ``user_data`` response returned a JSON serialization error (https://github.com/vultr/ansible-collection-vultr/issues/156).
+  - startup_script - Fixed an issue where the ``script`` response returned a JSON serialization error (https://github.com/vultr/ansible-collection-vultr/pull/162).
+  - dns_domain - Removed requirement for the ``ip`` argument when creating a new domain (https://github.com/vultr/ansible-collection-vultr/issues/140).
