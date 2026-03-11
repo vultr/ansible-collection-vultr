@@ -4,6 +4,31 @@ Vultr Collection Release Notes
 
 .. contents:: Topics
 
+v1.14.0
+=======
+
+Minor Changes
+-------------
+
+- Added pagination support by adding ``api_results_per_page`` to the common attributes.
+- bare_metal - Added support for multi-disk operation mode by adding ``mdisk_mode`` to the attributes (https://github.com/vultr/ansible-collection-vultr/issues/165).
+- object_storage - Object storage subscriptions require specifying a tier upon creation, added ``tier`` to the attributes (https://github.com/vultr/ansible-collection-vultr/issues/135).
+- snapshot - Added UEFI support adding ``uefi`` to the attributes (https://github.com/vultr/ansible-collection-vultr/pull/160).
+
+Bugfixes
+--------
+
+- dns_domain - Removed requirement for the ``ip`` argument when creating a new domain (https://github.com/vultr/ansible-collection-vultr/issues/140).
+- instance, bare_metal - Fixed an issue where the ``user_data`` response returned a JSON serialization error (https://github.com/vultr/ansible-collection-vultr/issues/156).
+- startup_script - Fixed an issue where the ``script`` response returned a JSON serialization error (https://github.com/vultr/ansible-collection-vultr/pull/162).
+
+New Modules
+-----------
+
+- load_balancer - Manages load balancers on Vultr
+- load_balancer_info - Get information about Vultr load balancers
+- object_storage_cluster_info - Get information about the Vultr object storage clusters
+- object_storage_info - Get information about the Vultr object stores
 
 v1.13.0
 =======

@@ -1,2 +1,0 @@
-minor_changes:
-  - Added pagination support by adding ``api_results_per_page`` to the common attributes.

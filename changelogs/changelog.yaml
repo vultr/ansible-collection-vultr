@@ -164,6 +164,43 @@ releases:
     fragments:
     - instance-skip_wait.yml
     release_date: '2024-05-31'
+  1.14.0:
+    changes:
+      bugfixes:
+      - dns_domain - Removed requirement for the ``ip`` argument when creating a new
+        domain (https://github.com/vultr/ansible-collection-vultr/issues/140).
+      - instance, bare_metal - Fixed an issue where the ``user_data`` response returned
+        a JSON serialization error (https://github.com/vultr/ansible-collection-vultr/issues/156).
+      - startup_script - Fixed an issue where the ``script`` response returned a JSON
+        serialization error (https://github.com/vultr/ansible-collection-vultr/pull/162).
+      minor_changes:
+      - Added pagination support by adding ``api_results_per_page`` to the common
+        attributes.
+      - bare_metal - Added support for multi-disk operation mode by adding ``mdisk_mode``
+        to the attributes (https://github.com/vultr/ansible-collection-vultr/issues/165).
+      - object_storage - Object storage subscriptions require specifying a tier upon
+        creation, added ``tier`` to the attributes (https://github.com/vultr/ansible-collection-vultr/issues/135).
+      - snapshot - Added UEFI support adding ``uefi`` to the attributes (https://github.com/vultr/ansible-collection-vultr/pull/160).
+    fragments:
+    - 1.4.0-bug-fixes.yml
+    - 135-object_storage-tier.yml
+    - 160-snapshot-added-uefi.yml
+    - 165-bare_metal-multi-disk.yml
+    - add-pagination.yml
+    modules:
+    - description: Manages load balancers on Vultr
+      name: load_balancer
+      namespace: ''
+    - description: Get information about Vultr load balancers
+      name: load_balancer_info
+      namespace: ''
+    - description: Get information about the Vultr object storage clusters
+      name: object_storage_cluster_info
+      namespace: ''
+    - description: Get information about the Vultr object stores
+      name: object_storage_info
+      namespace: ''
+    release_date: '2026-03-11'
   1.2.0:
     changes:
       minor_changes:
