@@ -13,7 +13,7 @@ DOCUMENTATION = """
 ---
 module: load_balancer_info
 short_description: Get information about Vultr load balancers
-version_added: "1.13.0"
+version_added: "1.14.0"
 description:
   - Retrieve details about load balancers on Vultr.
 author:

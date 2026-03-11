@@ -15,7 +15,7 @@ module: load_balancer
 short_description: Manages load balancers on Vultr
 description:
   - Create, update, or delete load balancers on Vultr.
-version_added: "1.13.0"
+version_added: "1.14.0"
 author:
   - "Garrett Haughawout (@ghaughawout)"
 options:
