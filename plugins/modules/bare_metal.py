@@ -64,6 +64,7 @@ options:
     default: none
     choices: [ none, jbod, raid1 ]
     type: str
+    version_added: "1.14.0"
   persistent_pxe:
     description:
       - Whether to enable persistent PXE or not.
