@@ -1,2 +1,0 @@
-minor_changes:
-  - bare_metal - Added support for multi-disk operation mode by adding ``mdisk_mode`` to the attributes (https://github.com/vultr/ansible-collection-vultr/issues/165).
