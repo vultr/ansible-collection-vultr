@@ -1,2 +1,2 @@
 minor_changes:
-- snapshot - Added UEFI support adding ``uefi`` to the attributes (https://github.com/vultr/ansible-collection-vultr/pull/160).
+  - snapshot - Added UEFI support adding ``uefi`` to the attributes (https://github.com/vultr/ansible-collection-vultr/pull/160).
