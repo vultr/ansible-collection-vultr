@@ -1,0 +1,136 @@
+---
+- name: test create container registry in check mode
+  vultr.cloud.container_registry:
+    name: "{{ vultr_container_registry_name }}"
+    plan: "{{ vultr_container_registry_plan }}"
+    public: "{{ vultr_container_registry_public }}"
+    region: "{{ vultr_container_registry_region }}"
+  register: result
+  check_mode: true
+- name: verify test create container registry in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test create container registry
+  vultr.cloud.container_registry:
+    name: "{{ vultr_container_registry_name }}"
+    plan: "{{ vultr_container_registry_plan }}"
+    public: "{{ vultr_container_registry_public }}"
+    region: "{{ vultr_container_registry_region }}"
+  register: result
+- name: verify test create container registry
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_container_registry.name == vultr_container_registry_name
+      - result.vultr_container_registry.public == vultr_container_registry_public
+      - result.vultr_container_registry.metadata.region.name == vultr_container_registry_region
+
+- name: test create container registry idempotence
+  vultr.cloud.container_registry:
+    name: "{{ vultr_container_registry_name }}"
+    plan: "{{ vultr_container_registry_plan }}"
+    public: "{{ vultr_container_registry_public }}"
+    region: "{{ vultr_container_registry_region }}"
+  register: result
+- name: verify test create container registry idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+      - result.vultr_container_registry.name == vultr_container_registry_name
+      - result.vultr_container_registry.public == vultr_container_registry_public
+      - result.vultr_container_registry.metadata.region.name == vultr_container_registry_region
+
+- name: test update container registry in check mode
+  vultr.cloud.container_registry:
+    name: "{{ vultr_container_registry_name }}"
+    plan: "{{ vultr_container_registry_plan2 }}"
+    public: "{{ not vultr_container_registry_public }}"
+    region: "{{ vultr_container_registry_region }}"
+  register: result
+  check_mode: true
+- name: verify test update container registry in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_container_registry.name == vultr_container_registry_name
+      - result.vultr_container_registry.public == vultr_container_registry_public
+      - result.vultr_container_registry.metadata.region.name == vultr_container_registry_region
+
+- name: test update container registry
+  vultr.cloud.container_registry:
+    name: "{{ vultr_container_registry_name }}"
+    plan: "{{ vultr_container_registry_plan2 }}"
+    public: "{{ not vultr_container_registry_public }}"
+    region: "{{ vultr_container_registry_region }}"
+  register: result
+- name: verify test update container registry
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_container_registry.name == vultr_container_registry_name
+      - result.vultr_container_registry.public != vultr_container_registry_public
+      - result.vultr_container_registry.metadata.region.name == vultr_container_registry_region
+
+- name: test update container registry idempotence
+  vultr.cloud.container_registry:
+    name: "{{ vultr_container_registry_name }}"
+    plan: "{{ vultr_container_registry_plan2 }}"
+    public: "{{ not vultr_container_registry_public }}"
+    region: "{{ vultr_container_registry_region }}"
+  register: result
+- name: verify test update container registry idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+      - result.vultr_container_registry.name == vultr_container_registry_name
+      - result.vultr_container_registry.public != vultr_container_registry_public
+      - result.vultr_container_registry.metadata.region.name == vultr_container_registry_region
+
+- name: test update container registry not updated if new plan has smaller allowed storage capacity
+  vultr.cloud.container_registry:
+    name: "{{ vultr_container_registry_name }}"
+    plan: "{{ vultr_container_registry_plan3 }}"
+    public: "{{ not vultr_container_registry_public }}"
+    region: "{{ vultr_container_registry_region }}"
+  register: result
+  ignore_errors: true
+- name: verify test update container registry not updated if new plan has smaller allowed storage capacity
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+      - result.vultr_container_registry.name == vultr_container_registry_name
+      - result.vultr_container_registry.public != vultr_container_registry_public
+      - result.vultr_container_registry.metadata.region.name == vultr_container_registry_region
+
+- name: test delete container registry in check mode
+  vultr.cloud.container_registry:
+    name: "{{ vultr_container_registry_name }}"
+    state: absent
+  check_mode: true
+  register: result
+- name: verify test delete container registry in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test delete container registry
+  vultr.cloud.container_registry:
+    name: "{{ vultr_container_registry_name }}"
+    state: absent
+  register: result
+- name: verify test delete container registry
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test delete container registry idempotence
+  vultr.cloud.container_registry:
+    name: "{{ vultr_container_registry_name }}"
+    state: absent
+  register: result
+- name: verify test delete container registry idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed

@@ -1,0 +1,24 @@
+---
+- name: create the container registry
+  vultr.cloud.container_registry:
+    name: "{{ vultr_container_registry_name }}"
+    public: false
+    plan: start_up
+    region: sjc
+
+- name: test gather vultr container registry info in check mode
+  vultr.cloud.container_registry_info:
+  check_mode: true
+  register: result
+- name: verify test gather vultr container registry info in check mode
+  ansible.builtin.assert:
+    that:
+      - result.vultr_container_registry_info | selectattr('name', 'equalto', vultr_container_registry_name | replace('-', '') ) | list | count == 1
+
+- name: test gather vultr container registry info
+  vultr.cloud.container_registry_info:
+  register: result
+- name: verify test gather vultr container registry info
+  ansible.builtin.assert:
+    that:
+      - result.vultr_container_registry_info | selectattr('name', 'equalto', vultr_container_registry_name | replace('-', '') ) | list | count == 1

@@ -1,0 +1,21 @@
+---
+- name: test fail if missing required
+  vultr.cloud.container_registry:
+  register: result
+  ignore_errors: true
+- name: verify test fail if missing required
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - 'result.msg == "missing required arguments: name"'
+
+- name: test fail if missing required and state=present
+  vultr.cloud.container_registry:
+    name: "{{ vultr_container_registry_name }}"
+  register: result
+  ignore_errors: true
+- name: verify test fail if missing required and state=present
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - 'result.msg == "state is present but all of the following are missing: public, region, plan"'
