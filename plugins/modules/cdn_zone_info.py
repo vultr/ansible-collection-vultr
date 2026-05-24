@@ -73,16 +73,16 @@ def main():
         module=module,
         namespace="vultr_cdn_zone_info",
         resource_path="/cdns/pull-zones",
-        ressource_result_key_singular="pull_zone",
-        ressource_result_key_plural="pull_zones",
+        resource_result_key_singular="pull_zone",
+        resource_result_key_plural="pull_zones",
     )
 
     push_vultr = AnsibleVultr(
         module=module,
         namespace="vultr_cdn_zone_info",
         resource_path="/cdns/push-zones",
-        ressource_result_key_singular="push_zone",
-        ressource_result_key_plural="push_zones",
+        resource_result_key_singular="push_zone",
+        resource_result_key_plural="push_zones",
     )
 
     pull_zones = pull_vultr.query_list()

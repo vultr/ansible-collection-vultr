@@ -166,8 +166,8 @@ def main():
         module=module,
         namespace="vultr_cdn_zone_pull",
         resource_path="/cdns/pull-zones",
-        ressource_result_key_singular="pull_zone",
-        ressource_result_key_plural="pull_zones",
+        resource_result_key_singular="pull_zone",
+        resource_result_key_plural="pull_zones",
         resource_create_param_keys=[
             "label",
             "origin_scheme",

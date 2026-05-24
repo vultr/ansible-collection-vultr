@@ -140,8 +140,8 @@ def main():
         module=module,
         namespace="vultr_cdn_zone_push",
         resource_path="/cdns/push-zones",
-        ressource_result_key_singular="push_zone",
-        ressource_result_key_plural="push_zones",
+        resource_result_key_singular="push_zone",
+        resource_result_key_plural="push_zones",
         resource_create_param_keys=[
             "label",
             "vanity_domain",
