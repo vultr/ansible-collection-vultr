@@ -4,7 +4,7 @@
   always:
     - ansible.builtin.import_role:
         name: cleanup
-      tasks_from: cleanup_cdn_zone_pull
+        tasks_from: cleanup_cdn_zone_pull
     - ansible.builtin.import_role:
         name: cleanup
         tasks_from: cleanup_cdn_zone_push
