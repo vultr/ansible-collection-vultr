@@ -258,8 +258,8 @@ def main():
         module=module,
         namespace="vultr_instance_info",
         resource_path="/instances",
-        ressource_result_key_singular="instance",
-        ressource_result_key_plural="instances",
+        resource_result_key_singular="instance",
+        resource_result_key_plural="instances",
     )
 
     query_params = dict()

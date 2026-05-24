@@ -180,7 +180,7 @@ def main():
         module=module,
         namespace="vultr_startup_script",
         resource_path="/startup-scripts",
-        ressource_result_key_singular="startup_script",
+        resource_result_key_singular="startup_script",
         resource_get_details=True,
         resource_create_param_keys=["name", "type", "script"],
         resource_update_param_keys=["name", "script"],

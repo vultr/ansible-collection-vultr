@@ -112,7 +112,7 @@ def main():
         module=module,
         namespace="vultr_account_info",
         resource_path="/account",
-        ressource_result_key_singular="account",
+        resource_result_key_singular="account",
     )
 
     vultr.get_result(vultr.query_by_id(resource_id=""))

@@ -195,7 +195,7 @@ class AnsibleVultrReservedIp(AnsibleVultr):
         resources = self.api_query(path=self.resource_path) or dict()
 
         resources_filtered = list()
-        for resource in resources[self.ressource_result_key_plural]:
+        for resource in resources[self.resource_result_key_plural]:
             # Skip IP with different type
             if resource["ip_type"] != self.module.params["ip_type"]:
                 continue
@@ -279,7 +279,7 @@ def main():
         module=module,
         namespace="vultr_reserved_ip",
         resource_path="/reserved-ips",
-        ressource_result_key_singular="reserved_ip",
+        resource_result_key_singular="reserved_ip",
         resource_create_param_keys=["region", "ip_type", "label"],
         resource_key_name="label",
     )

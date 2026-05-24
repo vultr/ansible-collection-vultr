@@ -258,7 +258,7 @@ def main():
         module=module,
         namespace="vultr_block_storage",
         resource_path="/blocks",
-        ressource_result_key_singular="block",
+        resource_result_key_singular="block",
         resource_create_param_keys=["label", "size_gb", "region", "block_type"],
         resource_update_param_keys=["size_gb"],
         resource_key_name="label",

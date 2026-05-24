@@ -101,7 +101,7 @@ def main():
         module=module,
         namespace="vultr_region_info",
         resource_path="/regions",
-        ressource_result_key_singular="region",
+        resource_result_key_singular="region",
     )
 
     vultr.get_result(vultr.query_list())

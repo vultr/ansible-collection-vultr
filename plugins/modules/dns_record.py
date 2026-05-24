@@ -256,7 +256,7 @@ def main():
         module=module,
         namespace="vultr_dns_record",
         resource_path="/domains/%s/records" % module.params.get("domain"),  # type: ignore
-        ressource_result_key_singular="record",
+        resource_result_key_singular="record",
         resource_create_param_keys=["name", "ttl", "data", "priority", "type"],
         resource_update_param_keys=["name", "ttl", "data", "priority"],
         resource_key_name="name",

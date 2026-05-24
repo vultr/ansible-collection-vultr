@@ -607,7 +607,7 @@ def main():
         module=module,
         namespace="vultr_instance",
         resource_path="/instances",
-        ressource_result_key_singular="instance",
+        resource_result_key_singular="instance",
         resource_create_param_keys=[
             "label",
             "hostname",

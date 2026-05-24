@@ -139,7 +139,7 @@ def main():
         module=module,
         namespace="vultr_dns_domain",
         resource_path="/domains",
-        ressource_result_key_singular="domain",
+        resource_result_key_singular="domain",
         resource_create_param_keys=["domain", "dns_sec", "ip"],
         resource_update_param_keys=["domain", "dns_sec"],
         resource_key_name="domain",

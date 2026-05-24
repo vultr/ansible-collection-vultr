@@ -127,7 +127,7 @@ def main():
         module=module,
         namespace="vultr_snapshot_info",
         resource_path="/snapshots",
-        ressource_result_key_singular="snapshot",
+        resource_result_key_singular="snapshot",
     )
 
     vultr.get_result(vultr.query_list())

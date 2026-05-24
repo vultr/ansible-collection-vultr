@@ -173,7 +173,7 @@ def main():
         module=module,
         namespace="vultr_vpc2",
         resource_path="/vpc2",
-        ressource_result_key_singular="vpc",
+        resource_result_key_singular="vpc",
         resource_create_param_keys=[
             "description",
             "ip_type",

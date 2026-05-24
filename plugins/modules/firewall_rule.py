@@ -294,7 +294,7 @@ def main():
         module=module,
         namespace="vultr_firewall_rule",
         resource_path="/firewalls/%s/rules",
-        ressource_result_key_singular="firewall_rule",
+        resource_result_key_singular="firewall_rule",
         resource_key_name="##unused##",
         resource_create_param_keys=[
             "notes",

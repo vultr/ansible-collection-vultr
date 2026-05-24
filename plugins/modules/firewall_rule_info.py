@@ -157,7 +157,7 @@ def main():
         module=module,
         namespace="vultr_firewall_rule_info",
         resource_path="/firewalls/%s/rules",
-        ressource_result_key_singular="firewall_rule",
+        resource_result_key_singular="firewall_rule",
     )
 
     vultr.get_result(vultr.query_list())

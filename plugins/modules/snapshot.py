@@ -223,7 +223,7 @@ def main():
         module=module,
         namespace="vultr_snapshot",
         resource_path="/snapshots",
-        ressource_result_key_singular="snapshot",
+        resource_result_key_singular="snapshot",
         resource_create_param_keys=[
             "description",
         ],

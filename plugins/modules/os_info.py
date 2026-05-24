@@ -109,8 +109,8 @@ def main():
         module=module,
         namespace="vultr_os_info",
         resource_path="/os",
-        ressource_result_key_singular="os",
-        ressource_result_key_plural="os",
+        resource_result_key_singular="os",
+        resource_result_key_plural="os",
     )
 
     vultr.get_result(vultr.query_list())
