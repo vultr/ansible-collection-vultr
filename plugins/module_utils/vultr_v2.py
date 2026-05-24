@@ -72,8 +72,8 @@ class AnsibleVultr:
         module,
         namespace,
         resource_path,
-        ressource_result_key_singular,
-        ressource_result_key_plural=None,
+        resource_result_key_singular,
+        resource_result_key_plural=None,
         resource_key_name=None,
         resource_key_id="id",
         resource_get_details=False,
@@ -85,10 +85,12 @@ class AnsibleVultr:
         self.namespace = namespace
 
         # The API resource path e.g ssh_key
-        self.ressource_result_key_singular = ressource_result_key_singular
+        self.resource_result_key_singular = resource_result_key_singular
 
         # The API result data key e.g ssh_keys
-        self.ressource_result_key_plural = ressource_result_key_plural or "%ss" % ressource_result_key_singular
+        self.resource_result_key_plural = (
+            resource_result_key_plural or "%ss" % resource_result_key_singular
+        )
 
         # The API resource path e.g /ssh-keys
         self.resource_path = resource_path
@@ -142,8 +144,10 @@ class AnsibleVultr:
         """
         return resource
 
-    def paginate_api_query(self, path, method="GET", data=None, query_params=None, result_key=None):
-        result_key = result_key or self.ressource_result_key_plural
+    def paginate_api_query(
+        self, path, method="GET", data=None, query_params=None, result_key=None
+    ):
+        result_key = result_key or self.resource_result_key_plural
         pager_param = dict(per_page=self.module.params["api_results_per_page"])
         if query_params is not None:
             query_params = dict_merge(query_params, pager_param)
@@ -285,14 +289,14 @@ class AnsibleVultr:
             key_id=self.resource_key_id,
             get_details=self.resource_get_details,
             path=self.resource_path,
-            result_key=self.ressource_result_key_plural,
+            result_key=self.resource_result_key_plural,
             skip_transform=False,
         )
 
     def query_by_id(self, resource_id=None, path=None, result_key=None, skip_transform=True):
         # Defaults
         path = path or self.resource_path
-        result_key = result_key or self.ressource_result_key_singular
+        result_key = result_key or self.resource_result_key_singular
 
         resource = self.api_query(
             path="%s%s" % (path, "/" + resource_id if resource_id else resource_id)
@@ -313,7 +317,7 @@ class AnsibleVultr:
     def query_list(self, path=None, result_key=None, query_params=None):
         # Defaults
         path = path or self.resource_path
-        result_key = result_key or self.ressource_result_key_plural
+        result_key = result_key or self.resource_result_key_plural
 
         resources = self.paginate_api_query(
             path=path,
@@ -374,7 +378,7 @@ class AnsibleVultr:
                 method="POST",
                 data=data,
             )
-        return resource.get(self.ressource_result_key_singular) if resource else dict()
+        return resource.get(self.resource_result_key_singular) if resource else dict()
 
     def is_diff(self, param, resource):
         value = self.module.params.get(param)

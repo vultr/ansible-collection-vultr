@@ -409,7 +409,7 @@ def main():
         module=module,
         namespace="vultr_load_balancer",
         resource_path="/load-balancers",
-        ressource_result_key_singular="load_balancer",
+        resource_result_key_singular="load_balancer",
         resource_create_param_keys=[
             "region",
             "balancing_algorithm",

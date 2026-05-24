@@ -104,7 +104,7 @@ def main():
         module=module,
         namespace="vultr_dns_domain_info",
         resource_path="/domains",
-        ressource_result_key_singular="domain",
+        resource_result_key_singular="domain",
     )
 
     vultr.get_result(vultr.query_list())

@@ -135,7 +135,7 @@ def main():
         module=module,
         namespace="vultr_object_storage_info",
         resource_path="/object-storage",
-        ressource_result_key_singular="object_storage",
+        resource_result_key_singular="object_storage",
     )
 
     vultr.get_result(vultr.query_list())

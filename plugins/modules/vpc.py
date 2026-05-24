@@ -165,7 +165,7 @@ def main():
         module=module,
         namespace="vultr_vpc",
         resource_path="/vpcs",
-        ressource_result_key_singular="vpc",
+        resource_result_key_singular="vpc",
         resource_create_param_keys=[
             "description",
             "v4_subnet",

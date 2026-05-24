@@ -112,7 +112,7 @@ def main():
         module=module,
         namespace="vultr_ssh_key_info",
         resource_path="/ssh-keys",
-        ressource_result_key_singular="ssh_key",
+        resource_result_key_singular="ssh_key",
     )
 
     vultr.get_result(vultr.query_list())

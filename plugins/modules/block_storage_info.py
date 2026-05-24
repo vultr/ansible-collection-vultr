@@ -134,7 +134,7 @@ def main():
         module=module,
         namespace="vultr_block_storage_info",
         resource_path="/blocks",
-        ressource_result_key_singular="block",
+        resource_result_key_singular="block",
     )
 
     vultr.get_result(vultr.query_list())

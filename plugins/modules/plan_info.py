@@ -135,7 +135,7 @@ def main():
         module=module,
         namespace="vultr_plan_info",
         resource_path="/plans",
-        ressource_result_key_singular="plan",
+        resource_result_key_singular="plan",
     )
 
     vultr.get_result(vultr.query_list())

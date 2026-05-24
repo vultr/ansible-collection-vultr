@@ -137,7 +137,7 @@ def main():
         module=module,
         namespace="vultr_ssh_key",
         resource_path="/ssh-keys",
-        ressource_result_key_singular="ssh_key",
+        resource_result_key_singular="ssh_key",
         resource_create_param_keys=["name", "ssh_key"],
         resource_update_param_keys=["name", "ssh_key"],
         resource_key_name="name",

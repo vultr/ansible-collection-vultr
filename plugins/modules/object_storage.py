@@ -209,7 +209,7 @@ def main():
         module=module,
         namespace="vultr_object_storage",
         resource_path="/object-storage",
-        ressource_result_key_singular="object_storage",
+        resource_result_key_singular="object_storage",
         resource_create_param_keys=["label", "cluster_id", "tier_id"],
         resource_update_param_keys=["label"],
         resource_key_name="label",

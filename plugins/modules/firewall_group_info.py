@@ -109,7 +109,7 @@ def main():
         module=module,
         namespace="vultr_firewall_group_info",
         resource_path="/firewalls",
-        ressource_result_key_singular="firewall_group",
+        resource_result_key_singular="firewall_group",
     )
 
     vultr.get_result(vultr.query_list())

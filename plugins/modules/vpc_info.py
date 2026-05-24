@@ -117,7 +117,7 @@ def main():
         module=module,
         namespace="vultr_vpc_info",
         resource_path="/vpcs",
-        ressource_result_key_singular="vpc",
+        resource_result_key_singular="vpc",
     )
 
     vultr.get_result(vultr.query_list())

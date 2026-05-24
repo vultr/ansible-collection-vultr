@@ -115,7 +115,7 @@ def main():
         module=module,
         namespace="vultr_startup_script_info",
         resource_path="/startup-scripts",
-        ressource_result_key_singular="startup_script",
+        resource_result_key_singular="startup_script",
     )
 
     vultr.get_result(vultr.query_list())

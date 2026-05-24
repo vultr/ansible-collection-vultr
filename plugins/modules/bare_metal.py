@@ -425,7 +425,7 @@ def main():
         module=module,
         namespace="vultr_bare_metal",
         resource_path="/bare-metals",
-        ressource_result_key_singular="bare_metal",
+        resource_result_key_singular="bare_metal",
         resource_create_param_keys=[
             "label",
             "hostname",

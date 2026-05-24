@@ -110,7 +110,7 @@ def main():
         module=module,
         namespace="vultr_object_storage_cluster_info",
         resource_path="/object-storage/clusters",
-        ressource_result_key_singular="cluster",
+        resource_result_key_singular="cluster",
     )
 
     vultr.get_result(vultr.query_list())

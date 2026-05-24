@@ -120,7 +120,7 @@ def main():
         module=module,
         namespace="vultr_user_info",
         resource_path="/users",
-        ressource_result_key_singular="user",
+        resource_result_key_singular="user",
     )
 
     vultr.get_result(vultr.query_list())

@@ -127,7 +127,7 @@ def main():
         module=module,
         namespace="vultr_firewall_group",
         resource_path="/firewalls",
-        ressource_result_key_singular="firewall_group",
+        resource_result_key_singular="firewall_group",
         resource_create_param_keys=["description"],
         resource_update_param_keys=["description"],
         resource_key_name="description",

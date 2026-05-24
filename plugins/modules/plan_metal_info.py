@@ -147,8 +147,8 @@ def main():
         module=module,
         namespace="vultr_plan_metal_info",
         resource_path="/plans-metal",
-        ressource_result_key_singular="plan_metal",
-        ressource_result_key_plural="plans_metal",
+        resource_result_key_singular="plan_metal",
+        resource_result_key_plural="plans_metal",
     )
 
     vultr.get_result(vultr.query_list())

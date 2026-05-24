@@ -151,7 +151,7 @@ def main():
         module=module,
         namespace="vultr_load_balancer_info",
         resource_path="/load-balancers",
-        ressource_result_key_singular="load_balancer",
+        resource_result_key_singular="load_balancer",
     )
 
     vultr.get_result(vultr.query_list())
