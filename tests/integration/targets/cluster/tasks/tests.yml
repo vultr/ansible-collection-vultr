@@ -1,0 +1,198 @@
+# Copyright (c) 2026, Rene Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: setup
+  vultr.cloud.cluster:
+    label: "{{ vultr_cluster_label }}"
+    region: "{{ vultr_cluster_region }}"
+    state: absent
+  register: result
+- name: verify setup
+  ansible.builtin.assert:
+    that:
+      - result is success
+
+- name: get cluster availability
+  ansible.builtin.uri:
+    url: "{{ vultr_api_url }}/clusters/availability"
+    method: GET
+    body_format: json
+    body:
+      region: "{{ vultr_cluster_region }}"
+      type: vps
+    headers:
+      Authorization: Bearer {{ vultr_api_key }}
+      Content-Type: application/json
+    status_code: 200
+  register: availability_result
+  no_log: true
+
+- name: select available cluster plan
+  ansible.builtin.set_fact:
+    vultr_cluster_plan: "{{ availability_result.json.availability.vps | selectattr('available', 'equalto', true) | map(attribute='id') | first | default('') }}"
+
+- name: verify available cluster plan found
+  ansible.builtin.assert:
+    that:
+      - vultr_cluster_plan != ''
+
+- name: test fail if missing label
+  vultr.cloud.cluster:
+  register: result
+  ignore_errors: true
+- name: verify test fail if missing label
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - 'result.msg == "missing required arguments: label"'
+
+- name: test fail if missing params for state=present
+  vultr.cloud.cluster:
+    label: "{{ vultr_cluster_label }}"
+  register: result
+  ignore_errors: true
+- name: verify fail if missing params for state=present
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - 'result.msg == "state is present but all of the following are missing: region"'
+
+- name: test fail if missing plan and instance_template for state=present
+  vultr.cloud.cluster:
+    label: "{{ vultr_cluster_label }}"
+    region: "{{ vultr_cluster_region }}"
+  register: result
+  ignore_errors: true
+- name: verify fail if missing plan and instance_template for state=present
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - 'result.msg.startswith("state is present but")'
+      - "'plan' in result.msg"
+      - "'instance_template' in result.msg"
+
+- name: test create cluster in check mode
+  vultr.cloud.cluster:
+    label: "{{ vultr_cluster_label }}"
+    region: "{{ vultr_cluster_region }}"
+    plan: "{{ vultr_cluster_plan }}"
+    min_pool_count: 1
+    desired_pool_count: 1
+    hostname: "{{ vultr_cluster_hostname }}"
+  register: result
+  check_mode: true
+- name: verify test create cluster in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test create cluster
+  vultr.cloud.cluster:
+    label: "{{ vultr_cluster_label }}"
+    region: "{{ vultr_cluster_region }}"
+    plan: "{{ vultr_cluster_plan }}"
+    min_pool_count: 1
+    desired_pool_count: 1
+    hostname: "{{ vultr_cluster_hostname }}"
+  register: result
+- name: verify test create cluster
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_cluster.label == vultr_cluster_label
+      - result.vultr_cluster.region == vultr_cluster_region
+      - result.vultr_cluster.plan == vultr_cluster_plan
+      - result.vultr_cluster.desired_pool_count == 1
+
+- name: test create cluster idempotence
+  vultr.cloud.cluster:
+    label: "{{ vultr_cluster_label }}"
+    region: "{{ vultr_cluster_region }}"
+    plan: "{{ vultr_cluster_plan }}"
+    min_pool_count: 1
+    desired_pool_count: 1
+    hostname: "{{ vultr_cluster_hostname }}"
+  register: result
+- name: verify test create cluster idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+
+- name: test update cluster in check mode
+  vultr.cloud.cluster:
+    label: "{{ vultr_cluster_label }}"
+    region: "{{ vultr_cluster_region }}"
+    plan: "{{ vultr_cluster_plan }}"
+    min_pool_count: 1
+    desired_pool_count: 2
+    hostname: "{{ vultr_cluster_hostname }}-updated"
+  register: result
+  check_mode: true
+- name: verify test update cluster in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test update cluster
+  vultr.cloud.cluster:
+    label: "{{ vultr_cluster_label }}"
+    region: "{{ vultr_cluster_region }}"
+    plan: "{{ vultr_cluster_plan }}"
+    min_pool_count: 1
+    desired_pool_count: 2
+    hostname: "{{ vultr_cluster_hostname }}-updated"
+  register: result
+- name: verify test update cluster
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_cluster.desired_pool_count == 2
+      - result.vultr_cluster.hostname == vultr_cluster_hostname ~ '-updated'
+
+- name: test update cluster idempotence
+  vultr.cloud.cluster:
+    label: "{{ vultr_cluster_label }}"
+    region: "{{ vultr_cluster_region }}"
+    plan: "{{ vultr_cluster_plan }}"
+    min_pool_count: 1
+    desired_pool_count: 2
+    hostname: "{{ vultr_cluster_hostname }}-updated"
+  register: result
+- name: verify test update cluster idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+
+- name: test absent cluster in check mode
+  vultr.cloud.cluster:
+    label: "{{ vultr_cluster_label }}"
+    region: "{{ vultr_cluster_region }}"
+    state: absent
+  register: result
+  check_mode: true
+- name: verify test absent cluster in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test absent cluster
+  vultr.cloud.cluster:
+    label: "{{ vultr_cluster_label }}"
+    region: "{{ vultr_cluster_region }}"
+    state: absent
+  register: result
+- name: verify test absent cluster
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test absent cluster idempotence
+  vultr.cloud.cluster:
+    label: "{{ vultr_cluster_label }}"
+    region: "{{ vultr_cluster_region }}"
+    state: absent
+  register: result
+- name: verify test absent cluster idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
