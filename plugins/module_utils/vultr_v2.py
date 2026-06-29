@@ -126,6 +126,7 @@ class AnsibleVultr:
 
         self.headers = {
             "Authorization": "Bearer %s" % self.module.params["api_key"],
+            "Content-Type": "application/json",
             "User-Agent": VULTR_USER_AGENT,
             "Accept": "application/json",
         }
