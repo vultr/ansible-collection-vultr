@@ -107,6 +107,32 @@ ansible-test integration --docker --diff -v cloud/vultr/ssh_key_info
 
 See the [Releasing Guidelines](https://docs.ansible.com/ansible/devel/community/collection_contributors/collection_releasing.html#releasing) to learn how to release this collection.
 
+### How to Release
+
+1. Release Branch
+  - Create a release branch locally `git checkout -b release/<version>` e.g. `release/1.1.1`
+2. Add Changelogs
+  - Ensure all changelog files are created and committed in `changelogs/`
+  - Changelog filename convention `<issue-nr>-<short-descr>.(yml|yaml)`. See _changelogs/changelog.yaml_ for content examples.
+  - Run `git add changelogs && git commit -m "add changelogs"`
+3. Update Version
+  - Update version in galaxy.yml and run `git add galaxy.yml && git commit -m "bump version"`
+4. Generate Changelogs
+  - (Make sure, the working directory is not dirty, sometimes we need to rollback to here using `git reset`)
+  - Ensure `antsibull-changelog` is installed (`pip install antsibull-changelog`)
+  - Run `antsibull-changelog release` and `git add . && git commit -m "release <version>"`
+5. Run Sanity Tests
+  - Push the release branch to upstream `git push upstream release/<version>`, wait for tests passed.
+  - Rebase merge the branch on GitHub and delete it on remote.
+6. Tag and Publish
+  - Checkout and pull main `git checkout main && git pull --ff-only upstream main`
+  - (Cleanup local branch `git branch -D release/<version>`)
+  - Create release tag `git tag -a -m "Release <version>" v<version>` NOTE: we prefix git tags with `v`!
+  - Push tag created: `git push upstream v<version>`
+7. Create a release on GitHub
+  - Go to https://github.com/vultr/ansible-collection-vultr/releases/new, select the new tag and generate the github changelog.
+  - A GitHub action is triggered to publish the release on galaxy.ansible.com (see https://galaxy.ansible.com/ui/repo/published/vultr/cloud/import-log/).
+
 ## Code of Conduct
 
 We follow the Ansible Code of Conduct in all our interactions within this project.
