@@ -4,6 +4,14 @@ Vultr Collection Release Notes
 
 .. contents:: Topics
 
+v1.14.1
+=======
+
+Bugfixes
+--------
+
+- Fixed an issue with missing Content-Type HTTP request header, which resulted in 400 Bad Request (https://github.com/vultr/ansible-collection-vultr/issues/186).
+
 v1.14.0
 =======
 
