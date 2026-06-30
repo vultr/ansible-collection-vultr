@@ -120,7 +120,7 @@ See the [Releasing Guidelines](https://docs.ansible.com/ansible/devel/community/
 4. Generate Changelogs
   - (Make sure, the working directory is not dirty, sometimes we need to rollback to here using `git reset`)
   - Ensure `antsibull-changelog` is installed (`pip install antsibull-changelog`)
-  - Run `antisbull-changelog release` and `git add . && git commit -m "release <version>"`
+  - Run `antsibull-changelog release` and `git add . && git commit -m "release <version>"`
 5. Run Sanity Tests
   - Push the release branch to upstream `git push upstream release/<version>`, wait for tests passed.
   - Rebase merge the branch on GitHub and delete it on remote.
