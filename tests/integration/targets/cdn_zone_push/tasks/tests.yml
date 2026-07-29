@@ -1,0 +1,118 @@
+# Copyright (c) 2026, Rene Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: setup
+  vultr.cloud.cdn_zone_push:
+    label: "{{ vultr_cdn_zone_push_label }}"
+    state: absent
+  register: result
+- name: verify setup
+  ansible.builtin.assert:
+    that:
+      - result is success
+
+- name: test fail if missing label
+  vultr.cloud.cdn_zone_push:
+  register: result
+  ignore_errors: true
+- name: verify test fail if missing label
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - 'result.msg == "missing required arguments: label"'
+
+- name: test create cdn push zone in check mode
+  vultr.cloud.cdn_zone_push:
+    label: "{{ vultr_cdn_zone_push_label }}"
+    gzip: true
+  register: result
+  check_mode: true
+- name: verify test create cdn push zone in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test create cdn push zone
+  vultr.cloud.cdn_zone_push:
+    label: "{{ vultr_cdn_zone_push_label }}"
+    gzip: true
+  register: result
+- name: verify test create cdn push zone
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_cdn_zone_push.label == vultr_cdn_zone_push_label
+      - result.vultr_cdn_zone_push.gzip
+
+- name: test create cdn push zone idempotence
+  vultr.cloud.cdn_zone_push:
+    label: "{{ vultr_cdn_zone_push_label }}"
+    gzip: true
+  register: result
+- name: verify test create cdn push zone idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+
+- name: test update cdn push zone in check mode
+  vultr.cloud.cdn_zone_push:
+    label: "{{ vultr_cdn_zone_push_label }}"
+    gzip: false
+  register: result
+  check_mode: true
+- name: verify test update cdn push zone in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test update cdn push zone
+  vultr.cloud.cdn_zone_push:
+    label: "{{ vultr_cdn_zone_push_label }}"
+    gzip: false
+  register: result
+- name: verify test update cdn push zone
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - not result.vultr_cdn_zone_push.gzip
+
+- name: test update cdn push zone idempotence
+  vultr.cloud.cdn_zone_push:
+    label: "{{ vultr_cdn_zone_push_label }}"
+    gzip: false
+  register: result
+- name: verify test update cdn push zone idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+
+- name: test absent cdn push zone in check mode
+  vultr.cloud.cdn_zone_push:
+    label: "{{ vultr_cdn_zone_push_label }}"
+    state: absent
+  register: result
+  check_mode: true
+- name: verify test absent cdn push zone in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test absent cdn push zone
+  vultr.cloud.cdn_zone_push:
+    label: "{{ vultr_cdn_zone_push_label }}"
+    state: absent
+  register: result
+- name: verify test absent cdn push zone
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test absent cdn push zone idempotence
+  vultr.cloud.cdn_zone_push:
+    label: "{{ vultr_cdn_zone_push_label }}"
+    state: absent
+  register: result
+- name: verify test absent cdn push zone idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed

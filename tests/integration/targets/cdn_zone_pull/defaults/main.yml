@@ -1,0 +1,4 @@
+---
+vultr_cdn_zone_pull_label: "{{ vultr_resource_prefix }}-cdn-pull-zone"
+vultr_cdn_zone_pull_origin_domain: www.vultr.com
+vultr_cdn_zone_pull_origin_scheme: https

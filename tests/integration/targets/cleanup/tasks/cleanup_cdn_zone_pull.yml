@@ -1,0 +1,44 @@
+---
+- name: cleanup
+  when: vultr_api_key is defined and vultr_api_key != ''
+  block:
+    - name: List CDN pull zones
+      ansible.builtin.uri:
+        url: "{{ vultr_api_url }}/cdns/pull-zones?per_page={{ vultr_api_results_per_page }}"
+        headers:
+          Authorization: Bearer {{ vultr_api_key }}
+        status_code: 200
+      register: initial_res
+      no_log: true
+
+    - name: Page through subsequent results
+      ansible.builtin.uri:
+        url: "{{ vultr_api_url }}/cdns/pull-zones?per_page={{ vultr_api_results_per_page }}&cursor={{ res.json.meta.links.next | default(initial_res.json.meta.links.next) }}"
+        headers:
+          Authorization: Bearer {{ vultr_api_key }}
+        status_code: 200
+      register: res
+      loop: "{{ range(1, ((initial_res.json.meta.total | int) / (vultr_api_results_per_page | int)) | round(0, 'ceil') | int) | list }}"
+      when: initial_res.json.meta.links.next != ''
+      no_log: true
+
+    - name: Compile results
+      ansible.builtin.set_fact:
+        cdn_pull_zones: "{{ initial_res.json.pull_zones + (res.results | map(attribute='json') | map(attribute='pull_zones') | flatten) }}"
+
+    - name: Found resources
+      ansible.builtin.debug:
+        var: cdn_pull_zones
+
+    - name: Remove all CDN pull zones created by this test run
+      ansible.builtin.uri:
+        url: "{{ vultr_api_url }}/cdns/pull-zones/{{ item.id }}"
+        method: "DELETE"
+        headers:
+          Authorization: Bearer {{ vultr_api_key }}
+        status_code: 204
+      when: vultr_resource_prefix in item.label
+      with_items: "{{ cdn_pull_zones }}"
+      loop_control:
+        label: "{{ item.label }}"
+      no_log: true

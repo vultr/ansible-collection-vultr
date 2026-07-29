@@ -1,0 +1,4 @@
+---
+vultr_cdn_zone_info_pull_label: "{{ vultr_resource_prefix }}-cdn-pull-zone-info"
+vultr_cdn_zone_info_pull_origin_domain: www.vultr.com
+vultr_cdn_zone_info_push_label: "{{ vultr_resource_prefix }}-cdn-push-zone-info"
