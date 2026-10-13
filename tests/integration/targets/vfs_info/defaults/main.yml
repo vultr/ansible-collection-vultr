@@ -1,0 +1,6 @@
+---
+vultr_resource_prefix: "vultr-test-prefix"
+vultr_vfs_name: "{{ vultr_resource_prefix }}-filesystem"
+vultr_vfs_size: 10
+vultr_vfs_storage_region: ewr
+vultr_vfs_disk_type: nvme
