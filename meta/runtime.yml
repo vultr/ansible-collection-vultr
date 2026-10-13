@@ -9,6 +9,7 @@ action_groups:
     - dns_domain
     - dns_domain_info
     - dns_record
+    - dns_record_info
     - firewall_group
     - firewall_group_info
     - firewall_rule

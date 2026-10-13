@@ -1,0 +1,2 @@
+minor_changes:
+  - dns_record_info - New module to gather information about DNS records of a domain, with optional ``name`` and ``type`` filters.

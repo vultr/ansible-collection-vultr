@@ -1,0 +1,80 @@
+# Copyright (c) 2026, Joel Wilson <jwilson@vultr.com>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: setup dns domain
+  vultr.cloud.dns_domain:
+    name: "{{ vultr_dns_domain_name }}"
+    server_ip: 10.10.10.10
+
+- name: setup dns records
+  vultr.cloud.dns_record:
+    name: "{{ item.name }}"
+    domain: "{{ vultr_dns_domain_name }}"
+    data: "{{ item.data }}"
+    record_type: "{{ item.record_type }}"
+    multiple: "{{ item.multiple | default(false) }}"
+  loop: "{{ vultr_dns_record_info_items }}"
+
+- name: test gather vultr dns record info in check mode
+  vultr.cloud.dns_record_info:
+    domain: "{{ vultr_dns_domain_name }}"
+  check_mode: true
+  register: result
+- name: verify test gather vultr dns record info in check mode
+  ansible.builtin.assert:
+    that:
+      - result.vultr_dns_record_info | length == vultr_dns_record_info_items | length
+
+- name: test gather all vultr dns record info
+  vultr.cloud.dns_record_info:
+    domain: "{{ vultr_dns_domain_name }}"
+  register: result
+- name: verify test gather all vultr dns record info
+  ansible.builtin.assert:
+    that:
+      - result.vultr_dns_record_info | length == vultr_dns_record_info_items | length
+
+- name: test gather vultr dns record info filtered by name
+  vultr.cloud.dns_record_info:
+    domain: "{{ vultr_dns_domain_name }}"
+    name: test-www
+  register: result
+- name: verify test gather vultr dns record info filtered by name
+  ansible.builtin.assert:
+    that:
+      - result.vultr_dns_record_info | length == 2
+      - result.vultr_dns_record_info | map(attribute='name') | unique == ['test-www']
+
+- name: test gather vultr dns record info filtered by type
+  vultr.cloud.dns_record_info:
+    domain: "{{ vultr_dns_domain_name }}"
+    type: AAAA
+  register: result
+- name: verify test gather vultr dns record info filtered by type
+  ansible.builtin.assert:
+    that:
+      - result.vultr_dns_record_info | length == 1
+      - result.vultr_dns_record_info | map(attribute='type') | unique == ['AAAA']
+
+- name: test gather vultr dns record info filtered by name and type
+  vultr.cloud.dns_record_info:
+    domain: "{{ vultr_dns_domain_name }}"
+    name: test-www
+    type: A
+  register: result
+- name: verify test gather vultr dns record info filtered by name and type
+  ansible.builtin.assert:
+    that:
+      - result.vultr_dns_record_info | length == 2
+      - result.vultr_dns_record_info | map(attribute='type') | unique == ['A']
+
+- name: test gather vultr dns record info filtered by name and type - no match
+  vultr.cloud.dns_record_info:
+    domain: "{{ vultr_dns_domain_name }}"
+    name: test-www
+    type: AAAA
+  register: result
+- name: verify test gather vultr dns record info filtered by name and type - no match
+  ansible.builtin.assert:
+    that:
+      - result.vultr_dns_record_info | length == 0
