@@ -1,0 +1,4 @@
+---
+vultr_cluster_label: "{{ vultr_resource_prefix }}-cluster"
+vultr_cluster_region: ewr
+vultr_cluster_hostname: "{{ vultr_resource_prefix }}-cluster-host"
