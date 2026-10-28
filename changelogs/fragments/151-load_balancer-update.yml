@@ -1,0 +1,4 @@
+bugfixes:
+  - load_balancer - Fixed updating an existing load balancer, which failed with ``Can not diff, key proxy_protocol not found in resource`` because the API returns ``proxy_protocol``, ``timeout``, ``vpc`` and other settings under ``generic_info`` (https://github.com/vultr/ansible-collection-vultr/issues/151).
+  - load_balancer - Fixed ``forwarding_rules`` and ``firewall_rules`` always reporting a change, and rules or ``instances`` removed from the task not being detected.
+  - load_balancer - Fixed ``instances`` being ignored when creating a load balancer.

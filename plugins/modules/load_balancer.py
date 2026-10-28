@@ -328,6 +328,8 @@ vultr_load_balancer:
 """
 
 
+import json
+
 from ansible.module_utils.basic import AnsibleModule
 from ..module_utils.vultr_v2 import AnsibleVultr, vultr_argument_spec
 
@@ -335,6 +337,47 @@ from ..module_utils.vultr_v2 import AnsibleVultr, vultr_argument_spec
 class AnsibleVultrLoadBalancer(AnsibleVultr):
     def configure(self):
         super(AnsibleVultrLoadBalancer, self).configure()
+
+    def transform_resource(self, resource):
+        if not resource:
+            return resource
+
+        # The API returns these options under generic_info, and sticky_session as sticky_sessions.
+        generic_info = resource.get("generic_info") or dict()
+        for key in ("balancing_algorithm", "proxy_protocol", "ssl_redirect", "timeout", "vpc"):
+            if key in generic_info:
+                resource[key] = generic_info[key]
+        resource["sticky_session"] = generic_info.get("sticky_sessions") or dict()
+
+        # The API adds an id to each rule, which the options don't have.
+        for key in ("forwarding_rules", "firewall_rules"):
+            resource[key] = [dict((k, v) for k, v in rule.items() if k != "id") for rule in resource.get(key) or []]
+
+        return resource
+
+    def is_diff(self, param, resource):
+        value = self.module.params.get(param)
+        if value is None:
+            return False
+
+        if param not in resource:
+            self.module.fail_json(msg="Can not diff, key %s not found in resource" % param)
+
+        current = resource[param]
+
+        # Compare only the suboptions the task sets. Unset ones are None.
+        if isinstance(value, dict):
+            return any(v is not None and (current or dict()).get(k) != v for k, v in value.items())
+
+        # The API replaces a list with the one sent, so compare whole lists and ignore order.
+        # The base class only checks that each item is present, which misses removals.
+        if isinstance(value, list):
+            def key(item):
+                return json.dumps(item, sort_keys=True)
+
+            return sorted(map(key, value)) != sorted(map(key, current or []))
+
+        return current != value
 
     def create_or_update(self):
         resource = super(AnsibleVultrLoadBalancer, self).create_or_update()
@@ -425,6 +468,7 @@ def main():
             "firewall_rules",
             "vpc",
             "global_regions",
+            "instances",
         ],
         resource_update_param_keys=[
             "ssl",

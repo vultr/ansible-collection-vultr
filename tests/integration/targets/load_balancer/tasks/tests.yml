@@ -1,76 +1,119 @@
-# Disabling update test until the module is fixed
-# - name: Create a load balancer
-#   vultr.cloud.load_balancer:
-#     region: "{{ load_balancer_defaults.region | default(omit) }}"
-#     label: "{{ load_balancer_defaults.label | default(omit) }}"
-#     state: "{{ load_balancer_defaults.state | default(omit) }}"
-#     balancing_algorithm: "{{ load_balancer_defaults.balancing_algorithm | default(omit) }}"
-#     ssl_redirect: "{{ load_balancer_defaults.ssl_redirect | default(omit) }}"
-#     http2: "{{ load_balancer_defaults.http2 | default(omit) }}"
-#     http3: "{{ load_balancer_defaults.http3 | default(omit) }}"
-#     proxy_protocol: "{{ load_balancer_defaults.proxy_protocol | default(omit) }}"
-#     timeout: "{{ load_balancer_defaults.timeout | default(omit) }}"
-#     nodes: "{{ load_balancer_defaults.nodes | default(omit) }}"
-#     health_check: "{{ load_balancer_defaults.health_check | default(omit) }}"
-#     forwarding_rules: "{{ load_balancer_defaults.forwarding_rules | default(omit) }}"
-#     firewall_rules: "{{ load_balancer_defaults.firewall_rules | default(omit) }}"
-#     global_regions: "{{ load_balancer_defaults.global_regions | default(omit) }}"
-#   register: result
+---
+- name: test create load balancer in check mode
+  vultr.cloud.load_balancer: &create
+    label: "{{ load_balancer_defaults.label }}"
+    region: "{{ load_balancer_defaults.region }}"
+    balancing_algorithm: "{{ load_balancer_defaults.balancing_algorithm }}"
+    ssl_redirect: "{{ load_balancer_defaults.ssl_redirect }}"
+    http2: "{{ load_balancer_defaults.http2 }}"
+    http3: "{{ load_balancer_defaults.http3 }}"
+    proxy_protocol: "{{ load_balancer_defaults.proxy_protocol }}"
+    timeout: "{{ load_balancer_defaults.timeout }}"
+    nodes: "{{ load_balancer_defaults.nodes }}"
+    health_check: "{{ load_balancer_defaults.health_check }}"
+    forwarding_rules: "{{ load_balancer_defaults.forwarding_rules }}"
+    firewall_rules: "{{ load_balancer_defaults.firewall_rules }}"
+  register: result
+  check_mode: true
+- name: verify test create load balancer in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
 
-# - name: Assert load balancer creation was successful
-#   ansible.builtin.assert:
-#     that:
-#       - result is changed
-#       - result is not failed
+- name: test create load balancer
+  vultr.cloud.load_balancer: *create
+  register: result
+- name: verify test create load balancer
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_load_balancer.label == load_balancer_defaults.label
+      - result.vultr_load_balancer.region == load_balancer_defaults.region
 
-- name: Check if load balancer exists
-  vultr.cloud.load_balancer_info:
-  register: lb_info
+- name: test create load balancer idempotence
+  vultr.cloud.load_balancer: *create
+  register: result
+- name: verify test create load balancer idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+      - result.vultr_load_balancer.label == load_balancer_defaults.label
+      - result.vultr_load_balancer.proxy_protocol == load_balancer_defaults.proxy_protocol
+      - result.vultr_load_balancer.timeout == load_balancer_defaults.timeout
 
-- name: Print all load balancer info
-  ansible.builtin.debug:
-    var: lb_info.vultr_load_balancer_info
+- name: test update load balancer in check mode
+  vultr.cloud.load_balancer: &update
+    label: "{{ load_balancer_defaults.label }}"
+    region: "{{ load_balancer_defaults.region }}"
+    proxy_protocol: true
+    forwarding_rules:
+      - frontend_protocol: http
+        frontend_port: 80
+        backend_protocol: http
+        backend_port: 8080
+      - frontend_protocol: http
+        frontend_port: 443
+        backend_protocol: http
+        backend_port: 8443
+    # Drop one firewall rule to test that a removal counts as a change.
+    firewall_rules: "{{ load_balancer_defaults.firewall_rules[:1] }}"
+  register: result
+  check_mode: true
+- name: verify test update load balancer in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
 
-# - name: Assert load balancer exists
-#   ansible.builtin.assert:
-#     that:
-#       - lb_info.vultr_load_balancer_info is defined
-#       - lb_info.vultr_load_balancer_info | selectattr('label', 'equalto', load_balancer_defaults.label) | list | count == 1
+- name: test update load balancer
+  vultr.cloud.load_balancer: *update
+  register: result
+  until: result is not failed
+  retries: 6
+  delay: 30
+- name: verify test update load balancer
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_load_balancer.label == load_balancer_defaults.label
+      - result.vultr_load_balancer.forwarding_rules | length == 2
+      - result.vultr_load_balancer.firewall_rules | length == 1
 
-# - name: Update the load balancer
-#   vultr.cloud.load_balancer:
-#     name: "{{ load_balancer_defaults.label | default(omit) }}"
-#     label: "{{ load_balancer_defaults.label | default(omit) }}"
-#     region: "{{ load_balancer_defaults.region | default(omit) }}"
-#     state: "{{ load_balancer_defaults.state | default(omit) }}"
-#     proxy_protocol: "{{ load_balancer_defaults.proxy_protocol | default(omit) }}"
-#     forwarding_rules:
-#       - frontend_protocol: http
-#         frontend_port: 80
-#         backend_protocol: http
-#         backend_port: 8080
-#       - frontend_protocol: http
-#         frontend_port: 443
-#         backend_protocol: http
-#         backend_port: 8443
-#     nodes: 3
-#   register: result
+- name: test update load balancer idempotence
+  vultr.cloud.load_balancer: *update
+  register: result
+- name: verify test update load balancer idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+      - result.vultr_load_balancer.proxy_protocol is true
 
-# - name: Assert load balancer update was successful
-#   ansible.builtin.assert:
-#     that:
-#       - result.changed == true
-#       - result.failed == false
+- name: test absent load balancer in check mode
+  vultr.cloud.load_balancer: &absent
+    label: "{{ load_balancer_defaults.label }}"
+    region: "{{ load_balancer_defaults.region }}"
+    state: absent
+  register: result
+  check_mode: true
+- name: verify test absent load balancer in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
 
-# - name: Delete the load balancer
-#   vultr.cloud.load_balancer:
-#     name: "{{ load_balancer_defaults.label | default(omit) }}"
-#     region: "{{ load_balancer_defaults.region | default(omit) }}"
-#     state: absent
-#   register: result
+- name: test absent load balancer
+  vultr.cloud.load_balancer: *absent
+  register: result
+  until: result is not failed
+  retries: 6
+  delay: 30
+- name: verify test absent load balancer
+  ansible.builtin.assert:
+    that:
+      - result is changed
 
-# - name: Assert load balancer deletion was successful
-#   ansible.builtin.assert:
-#     that:
-#       - result is changed
-#       - result is not failed
+- name: test absent load balancer idempotence
+  vultr.cloud.load_balancer: *absent
+  register: result
+- name: verify test absent load balancer idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed

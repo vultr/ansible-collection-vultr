@@ -9,7 +9,7 @@ load_balancer_defaults:
       backend_port: 8080
       backend_protocol: http
   balancing_algorithm: roundrobin
-  ssl_redirect: true
+  ssl_redirect: false
   http2: false
   http3: false
   nodes: 1

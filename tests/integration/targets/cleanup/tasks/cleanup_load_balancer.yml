@@ -32,11 +32,15 @@
 
     - name: Remove all load balancers created by this test run
       ansible.builtin.uri:
-        url: "{{ vultr_api_url }}/load_balancers/{{ item.id }}"
+        url: "{{ vultr_api_url }}/load-balancers/{{ item.id }}"
         method: "DELETE"
         headers:
           Authorization: Bearer {{ vultr_api_key }}
         status_code: 204
+      register: result
+      until: result.status == 204
+      retries: 6
+      delay: 30
       when: vultr_resource_prefix in item.label
       with_items: "{{ load_balancers }}"
       loop_control:
