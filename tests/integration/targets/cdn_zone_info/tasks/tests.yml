@@ -1,0 +1,45 @@
+# Copyright (c) 2026, Rene Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: create pull zone for info tests
+  vultr.cloud.cdn_zone_pull:
+    label: "{{ vultr_cdn_zone_info_pull_label }}"
+    origin_scheme: https
+    origin_domain: "{{ vultr_cdn_zone_info_pull_origin_domain }}"
+    gzip: true
+
+- name: create push zone for info tests
+  vultr.cloud.cdn_zone_push:
+    label: "{{ vultr_cdn_zone_info_push_label }}"
+    gzip: true
+
+- name: test gather cdn zone info in check mode
+  vultr.cloud.cdn_zone_info:
+  check_mode: true
+  register: check_mode_result
+
+- name: verify test gather cdn zone info in check mode
+  ansible.builtin.assert:
+    that:
+      - check_mode_result.vultr_cdn_zone_info.pull_zones | selectattr('label','equalto',vultr_cdn_zone_info_pull_label) | list | count == 1
+      - check_mode_result.vultr_cdn_zone_info.push_zones | selectattr('label','equalto',vultr_cdn_zone_info_push_label) | list | count == 1
+
+- name: test gather cdn zone info
+  vultr.cloud.cdn_zone_info:
+  register: result
+
+- name: verify test gather cdn zone info
+  ansible.builtin.assert:
+    that:
+      - result.vultr_cdn_zone_info.pull_zones | selectattr('label','equalto',vultr_cdn_zone_info_pull_label) | list | count == 1
+      - result.vultr_cdn_zone_info.push_zones | selectattr('label','equalto',vultr_cdn_zone_info_push_label) | list | count == 1
+
+- name: cleanup pull zone
+  vultr.cloud.cdn_zone_pull:
+    label: "{{ vultr_cdn_zone_info_pull_label }}"
+    state: absent
+
+- name: cleanup push zone
+  vultr.cloud.cdn_zone_push:
+    label: "{{ vultr_cdn_zone_info_push_label }}"
+    state: absent

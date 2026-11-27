@@ -1,0 +1,143 @@
+# Copyright (c) 2026, Rene Moser <mail@renemoser.net>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+---
+- name: setup
+  vultr.cloud.cdn_zone_pull:
+    label: "{{ vultr_cdn_zone_pull_label }}"
+    state: absent
+  register: result
+- name: verify setup
+  ansible.builtin.assert:
+    that:
+      - result is success
+
+- name: test fail if missing label
+  vultr.cloud.cdn_zone_pull:
+  register: result
+  ignore_errors: true
+- name: verify test fail if missing label
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - 'result.msg == "missing required arguments: label"'
+
+- name: test fail if missing params for state=present
+  vultr.cloud.cdn_zone_pull:
+    label: "{{ vultr_cdn_zone_pull_label }}"
+  register: result
+  ignore_errors: true
+- name: verify fail if missing params for state=present
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - 'result.msg == "state is present but all of the following are missing: origin_scheme, origin_domain"'
+
+- name: test create cdn pull zone in check mode
+  vultr.cloud.cdn_zone_pull:
+    label: "{{ vultr_cdn_zone_pull_label }}"
+    origin_scheme: "{{ vultr_cdn_zone_pull_origin_scheme }}"
+    origin_domain: "{{ vultr_cdn_zone_pull_origin_domain }}"
+    gzip: true
+  register: result
+  check_mode: true
+- name: verify test create cdn pull zone in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test create cdn pull zone
+  vultr.cloud.cdn_zone_pull:
+    label: "{{ vultr_cdn_zone_pull_label }}"
+    origin_scheme: "{{ vultr_cdn_zone_pull_origin_scheme }}"
+    origin_domain: "{{ vultr_cdn_zone_pull_origin_domain }}"
+    gzip: true
+  register: result
+- name: verify test create cdn pull zone
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - result.vultr_cdn_zone_pull.label == vultr_cdn_zone_pull_label
+      - result.vultr_cdn_zone_pull.origin_scheme == vultr_cdn_zone_pull_origin_scheme
+      - result.vultr_cdn_zone_pull.origin_domain == vultr_cdn_zone_pull_origin_domain
+      - result.vultr_cdn_zone_pull.gzip
+
+- name: test create cdn pull zone idempotence
+  vultr.cloud.cdn_zone_pull:
+    label: "{{ vultr_cdn_zone_pull_label }}"
+    origin_scheme: "{{ vultr_cdn_zone_pull_origin_scheme }}"
+    origin_domain: "{{ vultr_cdn_zone_pull_origin_domain }}"
+    gzip: true
+  register: result
+- name: verify test create cdn pull zone idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+
+- name: test update cdn pull zone in check mode
+  vultr.cloud.cdn_zone_pull:
+    label: "{{ vultr_cdn_zone_pull_label }}"
+    origin_scheme: "{{ vultr_cdn_zone_pull_origin_scheme }}"
+    origin_domain: "{{ vultr_cdn_zone_pull_origin_domain }}"
+    gzip: false
+  register: result
+  check_mode: true
+- name: verify test update cdn pull zone in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test update cdn pull zone
+  vultr.cloud.cdn_zone_pull:
+    label: "{{ vultr_cdn_zone_pull_label }}"
+    origin_scheme: "{{ vultr_cdn_zone_pull_origin_scheme }}"
+    origin_domain: "{{ vultr_cdn_zone_pull_origin_domain }}"
+    gzip: false
+  register: result
+- name: verify test update cdn pull zone
+  ansible.builtin.assert:
+    that:
+      - result is changed
+      - not result.vultr_cdn_zone_pull.gzip
+
+- name: test update cdn pull zone idempotence
+  vultr.cloud.cdn_zone_pull:
+    label: "{{ vultr_cdn_zone_pull_label }}"
+    origin_scheme: "{{ vultr_cdn_zone_pull_origin_scheme }}"
+    origin_domain: "{{ vultr_cdn_zone_pull_origin_domain }}"
+    gzip: false
+  register: result
+- name: verify test update cdn pull zone idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+
+- name: test absent cdn pull zone in check mode
+  vultr.cloud.cdn_zone_pull:
+    label: "{{ vultr_cdn_zone_pull_label }}"
+    state: absent
+  register: result
+  check_mode: true
+- name: verify test absent cdn pull zone in check mode
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test absent cdn pull zone
+  vultr.cloud.cdn_zone_pull:
+    label: "{{ vultr_cdn_zone_pull_label }}"
+    state: absent
+  register: result
+- name: verify test absent cdn pull zone
+  ansible.builtin.assert:
+    that:
+      - result is changed
+
+- name: test absent cdn pull zone idempotence
+  vultr.cloud.cdn_zone_pull:
+    label: "{{ vultr_cdn_zone_pull_label }}"
+    state: absent
+  register: result
+- name: verify test absent cdn pull zone idempotence
+  ansible.builtin.assert:
+    that:
+      - result is not changed
